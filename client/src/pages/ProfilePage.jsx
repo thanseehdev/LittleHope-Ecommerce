@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import ProfileForm from "../components/profileComponents/ProfileForm";
-import OrderDetails from "../components/profileComponents/OrderDetails";
+import AddressManager from "../components/profileComponents/AddressManager";
 import Coupons from "../components/profileComponents/Coupons";
 import Navbar from "../components/common/Navbar";
 
-const tabs = ["Profile", "Orders", "Coupons & Offers"];
+const tabs = ["Profile", "Address", "Coupons | Offers"];
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("Profile");
@@ -36,8 +36,8 @@ export default function ProfilePage() {
         {/* Tab Content */}
         <div>
           {activeTab === "Profile" && <ProfileForm />}
-          {activeTab === "Orders" && <OrderDetails />}
-          {activeTab === "Coupons & Offers" && <Coupons />}
+          {activeTab === "Address" && <AddressManager />}
+          {activeTab === "Coupons | Offers" && <Coupons />}
         </div>
       </div>
     </div>

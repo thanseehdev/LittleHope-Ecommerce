@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   FaSearch,
   FaRegUser,
@@ -17,7 +18,11 @@ import {
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+ const navigate = useNavigate();
 
+  const handleClick = () => {
+    navigate('/contact');
+  };
   return (
     <>
       <nav className="w-full shadow-sm border-b border-gray-200 bg-white sticky top-0 z-50">
@@ -106,7 +111,7 @@ const Navbar = () => {
             <FaBox />
             <span>Orders</span>
           </div>
-          <div className="flex items-center  rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
+          <div  onClick={handleClick} className="flex items-center  rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
             <span> <FaComments  /></span>
             <span>Contact</span>
           </div>

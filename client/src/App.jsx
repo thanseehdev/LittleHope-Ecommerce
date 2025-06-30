@@ -11,8 +11,10 @@ import WishlistCard from './pages/Wishlist'
 import AddressPage from './pages/AddressPage'
 import CheckoutPayment from './pages/CheckoutPage'
 import ProfilePage from './pages/ProfilePage'
-
-
+import OrderSuccess from './pages/OrderSuccessPage'
+import OrderPage from './pages/OrderPage'
+import OrderDetailPage from './pages/OrderDetails'
+import ContactPage from './pages/Contact'
 
 
 
@@ -32,6 +34,12 @@ function App() {
         <Route path='/checkoutAddress' element={<AddressPage/>} />
          <Route path='/checkoutPayment' element={<CheckoutPayment/>} />
          <Route path='/profile' element={<ProfilePage/>} />
+         <Route path='/orderSuccess' element={<OrderSuccess/>} />
+         <Route path='/order' element={<OrderPage/>} />
+          <Route path="/order/:orderId" element={<OrderDetailPage />} />
+          <Route path='/contact' element={<ContactPage/>} />
+         
+        
 
     </Routes>
 
