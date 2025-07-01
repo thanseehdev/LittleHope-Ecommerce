@@ -2,7 +2,7 @@ import React from "react";
 
 const AdminNavbar = () => {
   return (
-    <nav className="bg-[#2874F0] text-white shadow-md px-6 py-3 flex justify-between items-center">
+    <nav className="bg-[#2874F0] text-white shadow-md px-6 py-3 flex justify-between items-center ">
       {/* Logo / Brand */}
       <div className="text-xl font-bold tracking-wide">Little-Hope</div>
 

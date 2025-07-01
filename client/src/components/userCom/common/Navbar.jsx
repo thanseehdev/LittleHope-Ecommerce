@@ -11,18 +11,19 @@ import {
   FaBox,
   FaPhone,
   FaInfoCircle,
-  FaComments 
+  FaComments,
+  FaTag  
 } from "react-icons/fa";
-
-
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
- const navigate = useNavigate();
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false); // New state for dropdown visibility
+  const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/contact');
   };
+
   return (
     <>
       <nav className="w-full shadow-sm border-b border-gray-200 bg-white sticky top-0 z-50">
@@ -61,10 +62,41 @@ const Navbar = () => {
 
             {/* Show these on md and above */}
             <div className="hidden md:flex items-center space-x-6">
-              <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
+              {/* Profile Section with Dropdown */}
+              <div
+                className="relative flex flex-col items-center cursor-pointer"
+                onMouseEnter={() => setIsProfileDropdownOpen(true)} // Show dropdown on hover
+                onMouseLeave={() => setIsProfileDropdownOpen(false)} // Hide dropdown on mouse leave
+              >
                 <FaRegUser size={18} />
                 <span className="mt-1">Profile</span>
+
+                {/* Dropdown Menu */}
+                {isProfileDropdownOpen && (
+                  <div className="absolute top-10 left-0 bg-white shadow rounded-md w-62 h-50 py-2 text-gray-700">
+                    <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
+                      <FaRegUser size={18} />
+                      <span>Profile</span>
+                    </div>
+                    <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
+                      <FaBox size={18} />
+                      <span>Orders</span>
+                    </div>
+                    <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
+                      <FaTag size={18} />
+                      <span>Coupons</span>
+                    </div>
+                    <div
+                      onClick={handleClick}
+                      className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600"
+                    >
+                      <FaComments size={18} />
+                      <span>Contact</span>
+                    </div>
+                  </div>
+                )}
               </div>
+
               <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
                 <FaHeart size={18} />
                 <span className="mt-1">Wishlist</span>
@@ -73,7 +105,6 @@ const Navbar = () => {
                 <FaShoppingBag size={18} />
                 <span className="mt-1">Bag</span>
               </div>
-              
             </div>
           </div>
         </div>
@@ -112,15 +143,14 @@ const Navbar = () => {
             <FaBox />
             <span>Orders</span>
           </div>
-          <div  onClick={handleClick} className="flex items-center  rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
-            <span> <FaComments  /></span>
+          <div onClick={handleClick} className="flex items-center  rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
+            <span> <FaComments /></span>
             <span>Contact</span>
           </div>
           <div className="flex items-center rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
-  <FaInfoCircle />
-  <span>Logout</span>
-</div>
-
+            <FaInfoCircle />
+            <span>Logout</span>
+          </div>
         </div>
       </div>
 
@@ -136,6 +166,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
 
