@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../redux/features/user/userActions';
 
 export default function Register() {
+
+  const [form,setForm]=useState({name:"",email:"",password:"",confirmPassword:""})
+  const {error,loading}=useSelector(state=>state.user)
+  const dispatch=useDispatch()
+  const handleSubmit=()=>{
+    dispatch(registerUser(form).then((res)=>{
+      if(!res.error){
+        useNavigate('/otp')
+      }
+    }))
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
       <div className="w-full max-w-xl bg-white shadow-lg  overflow-hidden p-6 sm:p-10">
@@ -26,6 +40,7 @@ export default function Register() {
               Full Name <span className="text-red-500">*</span>
             </label>
             <input
+              onChange={(e)=>setForm({...form,name:e.target.value})}
               type="text"
               placeholder="Enter your full name"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -37,6 +52,7 @@ export default function Register() {
               Email Address <span className="text-red-500">*</span>
             </label>
             <input
+              onChange={(e)=>setForm({...form,email:e.target.value})}
               type="email"
               placeholder="Enter your email"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -48,6 +64,7 @@ export default function Register() {
               Password <span className="text-red-500">*</span>
             </label>
             <input
+              onChange={(e)=>setForm({...form,password:e.target.value})}
               type="password"
               placeholder="Enter password"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -59,6 +76,7 @@ export default function Register() {
               Confirm Password <span className="text-red-500">*</span>
             </label>
             <input
+              onChange={(e)=>setForm({...form,confirmPassword:e.target.value})}
               type="password"
               placeholder="Confirm password"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -68,6 +86,7 @@ export default function Register() {
           <p className="text-xs text-gray-500 mt-1">An OTP will be sent to your email address.</p>
 
           <button
+            onSubmit={handleSubmit}
             type="submit"
             className="w-full bg-green-600 text-white font-semibold py-2 rounded-md hover:bg-green-700 transition-colors"
           >
@@ -82,6 +101,8 @@ export default function Register() {
           <a href="#" className="text-blue-600 underline hover:text-blue-800 transition">Privacy Policy</a>.
         </p>
       </div>
+       {loading && <p>Loading...</p>}
+      {error && <p style={{color: 'red'}}>{error}</p>}
     </div>
   );
 }

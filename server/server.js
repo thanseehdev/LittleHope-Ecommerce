@@ -7,7 +7,10 @@ const {connectDB,getDB}=require('./config/db/db.connection')
 
 app.use(express.json());
 
-app.use(cors());
+app.use(cors({
+  origin: ' http://localhost:5173'
+}));
+
 
 async function initializeDatabase() {
     try {
@@ -20,11 +23,7 @@ async function initializeDatabase() {
 
 
 
-app.post('/auth/register',(req,res)=>{
-    const formData=req.body
-    console.log(formData)
-     res.status(200).json({ msg: 'User registered successfully' });
-})
+app.use('/api/auth')
 
 app.listen(process.env.PORT||4000,async()=>{
     await initializeDatabase()
