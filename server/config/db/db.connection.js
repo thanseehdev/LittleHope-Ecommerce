@@ -1,36 +1,19 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const mongoose = require('mongoose');
 require('dotenv').config();
-
-const uri = `mongodb+srv://littehope_dbUser:${process.env.MONGO_PASSWORD}@littlehope-ecommerce.j1kapcz.mongodb.net/?retryWrites=true&w=majority&appName=LittleHope-Ecommerce`;
-
-let client;
+const encodedPassword = encodeURIComponent(process.env.MONGO_PASSWORD);
+const uri = `mongodb+srv://littehope_dbUser:${encodedPassword}@littlehope-ecommerce.j1kapcz.mongodb.net/LittleHope-Ecommerce?retryWrites=true&w=majority&appName=LittleHope-Ecommerce`;
 
 async function connectDB() {
-    if (client) {
-        console.log('Already connected to mongoDB')
-        return client
-    }
     try {
-        client = new MongoClient(uri, {
-            serverApi: {
-                version: ServerApiVersion.v1,
-                strict: true,
-                deprecationErrors: true,
-            }
-        })
-        await client.connect()
-        console.log('connected to mongoDB')
-        return client
+        await mongoose.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('Connected to MongoDB using Mongoose');
     } catch (error) {
-
+        console.error('Failed to connect to MongoDB with Mongoose:', error);
+        throw error;
     }
 }
 
-function getDB(){
-    if(!client){
-        throw new Error('mongoDB client is not connected yet!')
-    }
-    return client.db('LittleHope-Ecommerce')
-}
-
-module.exports={connectDB,getDB}
+module.exports = { connectDB };

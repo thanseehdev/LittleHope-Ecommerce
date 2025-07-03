@@ -3,6 +3,7 @@ const cors = require('cors');
 const app=express()
 require('dotenv').config();
 const {connectDB,getDB}=require('./config/db/db.connection')
+const authRoute=require('../server/routes/userRoute/authRoutes')
 
 
 app.use(express.json());
@@ -22,8 +23,7 @@ async function initializeDatabase() {
 }
 
 
-
-app.use('/api/auth')
+app.use('/api/auth',authRoute)
 
 app.listen(process.env.PORT||4000,async()=>{
     await initializeDatabase()
