@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../redux/features/user/userActions';
+import { validateRegisterForm } from '../../utils/validation';
+import Notification from '../../utils/notification.jsx';
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -10,23 +12,50 @@ export default function Register() {
     password: '',
     confirmPassword: '',
   });
+  const [formErrors, setFormErrors] = useState({})
+  const [message, setMessage] = useState(null)
+  const [showNotification, setShowNotification] = useState(false)
+
 
   const { error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleInputChange = (field, value) => {
+    setForm({ ...form, [field]: value });
+
+    // Clear errors for the specific field
+    setFormErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors };
+      delete updatedErrors[field];  // Clear specific error for the changed field
+      return updatedErrors;
+    });
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match');
+    const errors = validateRegisterForm(form);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
       return;
     }
+
+    setFormErrors({});
 
     try {
       dispatch(registerUser(form)).then((resultAction) => {
         if (registerUser.fulfilled.match(resultAction)) {
-          navigate('/otp');
+
+           const { message } = resultAction.payload
+           setMessage(message);
+           setShowNotification(true); // Show notification
+
+          setTimeout(() => {
+            setShowNotification(false);
+            navigate('/otp'); // Redirect to OTP page
+          }, 3000); 
+
         } else {
           // Optional: handle rejected action
           alert('Registration failed. Please try again.');
@@ -64,9 +93,17 @@ export default function Register() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Full Name <span className="text-red-500">*</span>
             </label>
+            {formErrors.name && (
+              <div className="flex items-center">
+                <span className="ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                  !
+                </span>
+                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.name}</p>
+              </div>
+            )}
             <input
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onChange={(e) => handleInputChange('name', e.target.value)}
               type="text"
               placeholder="Enter your full name"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -77,9 +114,17 @@ export default function Register() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address <span className="text-red-500">*</span>
             </label>
+            {formErrors.email && (
+              <div className="flex items-center">
+                <span className=" ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                  !
+                </span>
+                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.email}</p>
+              </div>
+            )}
             <input
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={(e) => handleInputChange('email', e.target.value)}
               type="email"
               placeholder="Enter your email"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -90,9 +135,17 @@ export default function Register() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password <span className="text-red-500">*</span>
             </label>
+            {formErrors.password && (
+              <div className="flex items-center">
+                <span className="ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                  !
+                </span>
+                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.password}</p>
+              </div>
+            )}
             <input
               value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              onChange={(e) => handleInputChange('password', e.target.value)}
               type="password"
               placeholder="Enter password"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -103,9 +156,17 @@ export default function Register() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Confirm Password <span className="text-red-500">*</span>
             </label>
+            {formErrors.confirmPassword && (
+              <div className="flex items-center">
+                <span className="ml-1  w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                  !
+                </span>
+                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.confirmPassword}</p>
+              </div>
+            )}
             <input
               value={form.confirmPassword}
-              onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               type="password"
               placeholder="Confirm password"
               className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
@@ -132,14 +193,16 @@ export default function Register() {
         </p>
       </div>
       {/* Loading overlay */}
-    {loading && (
-      <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-        <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    )}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
 
-    {/* Error message */}
-    {error && <p style={{ color: 'red', position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)' }}>{error}</p>}
+      {/* Error message */}
+      {error && <p style={{ color: 'red', position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)' }}>{error}</p>}
+        {/* Show Notification only if it's true */}
+      {showNotification && <Notification message={message} onClose={() => setShowNotification(false)} />}
     </div>
   );
 }

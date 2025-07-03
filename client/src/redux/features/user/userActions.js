@@ -18,6 +18,6 @@ export const verifyOTP=createAsyncThunk('user/verifyOTP',async(userData,{rejectW
         const res= await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/verify-otp`,userData)
         return res.data
     } catch (error) {
-        return rejectWithValue(error.data.message)
+        return rejectWithValue(error.response?.data?.message || 'Something went wrong')
     }
 })

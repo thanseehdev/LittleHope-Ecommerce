@@ -8,7 +8,52 @@
   display: none; /* Chrome, Safari, and Opera */
 }
 
-/*navbar css
+.notification-box {
+  display: flex;
+  align-items: center;
+  background-color: #c8e6c9; /* Soft, professional green */
+  color: #388e3c; /* Rich green */
+  border-radius: 4px; /* Slightly less rounded for a sleeker look */
+  padding: 15px 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow for depth */
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  font-family: 'Roboto', sans-serif; /* Modern font */
+  font-size: 18px; /* Increased font size for better readability */
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Smooth fade and slide-out */
+}
+
+.green-tick {
+  font-size: 24px; /* Larger tick icon for better visibility */
+  margin-right: 15px;
+}
+
+.message {
+  font-size: 18px; /* Consistent size with the text for readability */
+  flex-grow: 1;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #388e3c;
+  font-size: 22px; /* Larger button for easy click */
+  cursor: pointer;
+  margin-left: 15px;
+  padding: 5px 10px; /* Padding around the button */
+  border-radius: 4px; /* Subtle rounding */
+  transition: background-color 0.2s ease; /* Button hover effect */
+}
+
+.close-btn:hover {
+  background-color: #a5d6a7; /* Slight hover effect for button */
+}
+
 
 
 

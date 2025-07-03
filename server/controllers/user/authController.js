@@ -1,11 +1,11 @@
 const User = require('../../models/userModel')
 const { sendOTPEmail } = require('../../utils/sendEmail')
 const generateToken = require('../../utils/generateToken')
-const bcrypt=require('bcryptjs')
+const bcrypt = require('bcryptjs')
 
 const register = async (req, res) => {
     const { name, email, password } = req.body
-console.log('inside register controller')
+    console.log('inside register controller')
     const userExist = await User.findOne({ email })
     if (userExist) {
         console.log('user exist')
@@ -27,7 +27,7 @@ console.log('inside register controller')
 
 const verifyOTP = async (req, res) => {
     const { email, otp } = req.body
-console.log('inside verify otp');
+    console.log('inside verify otp');
 
     const user = await User.findOne({ email })
     if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
@@ -43,7 +43,7 @@ console.log('inside verify otp');
     res.status(200).json({ message: 'otp successfull', token: generateToken(user._id), user })
 }
 
-module.exports={
+module.exports = {
     register,
     verifyOTP
 }
