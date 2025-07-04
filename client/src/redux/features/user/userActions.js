@@ -21,3 +21,14 @@ export const verifyOTP=createAsyncThunk('user/verifyOTP',async(userData,{rejectW
         return rejectWithValue(error.response?.data?.message || 'Something went wrong')
     }
 })
+
+export const login=createAsyncThunk('user/login',async(userData,{rejectWithValue})=>{
+    console.log('inside login action');
+    try {
+        const res=await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`,userData)
+        return res.data
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message||'Something went wrong')
+    }
+    
+})

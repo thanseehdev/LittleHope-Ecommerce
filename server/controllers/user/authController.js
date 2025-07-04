@@ -9,7 +9,7 @@ const register = async (req, res) => {
     const userExist = await User.findOne({ email })
     if (userExist) {
         console.log('user exist')
-        return res.status(400).json({ message: "User already exists" })
+        return res.status(400).json({ message: "User already exists, please login" })
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString()
 
@@ -31,7 +31,7 @@ const verifyOTP = async (req, res) => {
 
     const user = await User.findOne({ email })
     if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
-        res.status(400).json({ message: "'Invalid or expired OTP' " })
+        res.status(400).json({ message: "Invalid or expired OTP" })
     }
     console.log('otp entered successfull')
     user.isVerified = true
@@ -43,7 +43,13 @@ const verifyOTP = async (req, res) => {
     res.status(200).json({ message: 'otp successfull', token: generateToken(user._id), user })
 }
 
+const login=async(req,res)=>{
+    const {email,password}=req.body
+    console.log('inside login')
+}
+
 module.exports = {
     register,
-    verifyOTP
+    verifyOTP,
+    login
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../redux/features/user/userActions';
@@ -47,18 +48,17 @@ export default function Register() {
       dispatch(registerUser(form)).then((resultAction) => {
         if (registerUser.fulfilled.match(resultAction)) {
 
-           const { message } = resultAction.payload
-           setMessage(message);
-           setShowNotification(true); // Show notification
+          const { message } = resultAction.payload
+          setMessage(message);
+          setShowNotification(true); // Show notification
 
           setTimeout(() => {
             setShowNotification(false);
             navigate('/otp'); // Redirect to OTP page
-          }, 3000); 
+          }, 3000);
 
         } else {
-          // Optional: handle rejected action
-          alert('Registration failed. Please try again.');
+          
         }
       })
     } catch (err) {
@@ -72,7 +72,7 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
-      <div className="w-full max-w-xl bg-white shadow-lg  overflow-hidden p-6 sm:p-10">
+      <div className="w-full max-w-xl bg-white shadow-md  overflow-hidden p-6 sm:p-10">
 
         {/* Top right image inside form */}
         <div className="flex justify-end">
@@ -86,7 +86,17 @@ export default function Register() {
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center sm:text-left">
           Register
         </h2>
+{error && (
+  <div className="flex items-center justify-center">
+    <span className="ml-1 w-5 mb-3 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+      !
+    </span>
+    <p className="text-red-500 ml-1 text-sm mb-3">{error}</p>
+  </div>
+)}
 
+
+              
         {/* Form */}
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
@@ -106,7 +116,8 @@ export default function Register() {
               onChange={(e) => handleInputChange('name', e.target.value)}
               type="text"
               placeholder="Enter your full name"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
+              className={`w-full border ${formErrors.name ? 'border-red-500' : 'border-gray-300'
+                } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
             />
           </div>
 
@@ -127,7 +138,8 @@ export default function Register() {
               onChange={(e) => handleInputChange('email', e.target.value)}
               type="email"
               placeholder="Enter your email"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
+              className={`w-full border ${formErrors.email ? 'border-red-500' : 'border-gray-300'
+                } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
             />
           </div>
 
@@ -148,7 +160,8 @@ export default function Register() {
               onChange={(e) => handleInputChange('password', e.target.value)}
               type="password"
               placeholder="Enter password"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
+              className={`w-full border ${formErrors.password ? 'border-red-500' : 'border-gray-300'
+                } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
             />
           </div>
 
@@ -169,7 +182,8 @@ export default function Register() {
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               type="password"
               placeholder="Confirm password"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:border-green-500"
+              className={`w-full border ${formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                } px-4 py-2 rounded-md  shadow-sm  focus:outline-none focus:border-green-500`}
             />
           </div>
 
@@ -187,10 +201,19 @@ export default function Register() {
 
         <p className="text-xs text-gray-500 mt-5 text-center">
           By continuing, I agree to LittleHope's{' '}
-          <a href="#" className="text-blue-600 underline hover:text-blue-800 transition">Terms of Use</a>{' '}
+          <a href="#" className="text-blue-600  hover:text-blue-800 transition">Terms of Use</a>{' '}
           and{' '}
-          <a href="#" className="text-blue-600 underline hover:text-blue-800 transition">Privacy Policy</a>.
+          <a href="#" className="text-blue-600  hover:text-blue-800 transition ">Privacy Policy</a>.
         </p>
+        <p className="text-sm text-center text-gray-600 mt-4">
+  Already have an account?{' '}
+  <Link
+    to="/login"
+    className="text-blue-600 font-medium hover:underline underline"
+  >
+    Log in here
+  </Link>
+</p>
       </div>
       {/* Loading overlay */}
       {loading && (
@@ -198,10 +221,7 @@ export default function Register() {
           <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
-
-      {/* Error message */}
-      {error && <p style={{ color: 'red', position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)' }}>{error}</p>}
-        {/* Show Notification only if it's true */}
+      {/* Show Notification only if it's true */}
       {showNotification && <Notification message={message} onClose={() => setShowNotification(false)} />}
     </div>
   );

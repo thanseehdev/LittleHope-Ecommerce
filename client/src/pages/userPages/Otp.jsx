@@ -6,14 +6,34 @@ import { useNavigate } from 'react-router-dom';
 export default function EnterOtp() {
   const dispatch = useDispatch();
   const [otp, setOtp] = useState('');
+  const [error, setError] = useState('');
   const email = useSelector((state) => state.user.emailForOTP);
   const navigate = useNavigate();
 
+  const validateOTP = () => {
+    if (!otp) {
+      return 'OTP is required';
+    }
+    if (!/^\d{6}$/.test(otp)) {
+      return 'OTP must be a 6-digit number';
+    }
+    return '';
+  };
+
   const submitOTP = (e) => {
     e.preventDefault();
+    const validationError = validateOTP();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setError('');
     dispatch(verifyOTP({ email, otp })).then((resultAction) => {
       if (verifyOTP.fulfilled.match(resultAction)) {
         navigate('/login');
+      } else {
+        setError('Invalid or expired OTP. Please try again.');
       }
     });
   };
@@ -39,8 +59,13 @@ export default function EnterOtp() {
               onChange={(e) => setOtp(e.target.value)}
               maxLength={6}
               placeholder="Enter OTP"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md text-lg tracking-widest text-center focus:outline-none focus:border-green-500"
+              className={`w-full border ${
+                error ? 'border-red-500' : 'border-gray-300'
+              } px-4 py-2 rounded-md text-lg tracking-widest text-center focus:outline-none focus:border-green-500`}
             />
+            {error && (
+              <p className="text-sm text-red-600 mt-1">{error}</p>
+            )}
           </div>
 
           <button
@@ -63,4 +88,5 @@ export default function EnterOtp() {
     </div>
   );
 }
+
 

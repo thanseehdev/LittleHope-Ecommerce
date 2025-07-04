@@ -10,7 +10,7 @@ export const validateRegisterForm = (form) => {
   if (!email.trim()) {
     errors.email = 'Email is required.';
   } else if (!email.endsWith('@gmail.com')) {
-    errors.email = 'Email must be a Gmail address.';
+    errors.email = 'Email must include @gmail.com';
   }
 
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
