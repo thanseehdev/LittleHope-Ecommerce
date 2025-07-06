@@ -31,7 +31,7 @@ export default function EnterOtp() {
     setError('');
     dispatch(verifyOTP({ email, otp })).then((resultAction) => {
       if (verifyOTP.fulfilled.match(resultAction)) {
-        navigate('/login');
+        navigate('/home');
       } else {
         setError('Invalid or expired OTP. Please try again.');
       }

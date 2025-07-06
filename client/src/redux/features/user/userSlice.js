@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser,verifyOTP,login } from "./userActions";
+import { registerUser, verifyOTP, login,loadUser } from "./userActions";
 
 const initialState = {
   loading: false,
   user: null,
   emailForOTP: null,
   error: null,
+  isAuthenticated: false,
 }
 
 const userSlice = createSlice({
@@ -15,8 +16,11 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.emailForOTP = null;
+      state.isAuthenticated = false;
+      state.loading = false;
+      state.error = null;
     }
-  },
+},
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -33,32 +37,52 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(verifyOTP.pending,(state)=>{
+//---------------------------------------------------------------
+      .addCase(verifyOTP.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyOTP.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.emailForOTP = null;
+        state.error = null;
+      })
+      .addCase(verifyOTP.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+//---------------------------------------------------------------
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = true
+        state.user = action.payload.user;
+        state.error = null
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+//---------------------------------------------------------------
+      .addCase(loadUser.pending,(state)=>{
         state.loading=true;
         state.error=null;
       })
-      .addCase(verifyOTP.fulfilled,(state,action)=>{
+      .addCase(loadUser.fulfilled,(state,action)=>{
         state.loading=false;
-        state.user=action.payload.user;
-        state.emailForOTP=null;
-        state.error=null;
+        state.user=action.payload
+        state.isAuthenticated=true
       })
-      .addCase(verifyOTP.rejected,(state,action)=>{
+      .addCase(loadUser.rejected,(state,action)=>{
         state.loading=false;
-        state.error=action.payload;
-      })
-      .addCase(login.pending,(state)=>{
-        state.loading=true;
-        state.error=null
-      })
-      .addCase(login.fulfilled,(state,action)=>{
-        state.loading=false;
-        state.user=action.payload.user;
-        state.error=null
-      })
-      .addCase(login.rejected,(state,action)=>{
-        state.loading=false;
-        state.error=action.payload;
+        state.user=null;
+        state.isAuthenticated=false;
+        state.error=action.payload
       })
   }
 })

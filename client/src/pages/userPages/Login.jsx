@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/features/user/userActions";
-import { validateRegisterForm } from "../../utils/validation";
+import { validateLoginForm } from "../../utils/validateLoginForm";
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+  const navigate = useNavigate();
+  const { error, loading, isAuthenticated } = useSelector((state) => state.user)
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home'); // Already logged in? Send to home.
+    }
+  }, [isAuthenticated, navigate]);
+  
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
   const [formErrors, setFormErrors] = useState({})
-
-  const { error, loading } = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
-const handleInputChange = (field, value) => {
+  const handleInputChange = (field, value) => {
     setForm({ ...form, [field]: value });
 
     // Clear errors for the specific field
@@ -27,7 +35,7 @@ const handleInputChange = (field, value) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const errors = validateRegisterForm(form);
+    const errors = validateLoginForm(form);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
@@ -37,7 +45,7 @@ const handleInputChange = (field, value) => {
     try {
       dispatch(login(form))
     } catch (error) {
-      
+
     }
   };
 
@@ -55,7 +63,7 @@ const handleInputChange = (field, value) => {
           </p>
         </div>
 
-        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">Log In/Register</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">Log In</h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
@@ -64,7 +72,7 @@ const handleInputChange = (field, value) => {
             </label>
             {formErrors.email && (
               <div className="flex items-center">
-                <span className="ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                <span className=" w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
                   !
                 </span>
                 <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.email}</p>
@@ -76,10 +84,10 @@ const handleInputChange = (field, value) => {
               onChange={(e) => handleInputChange('email', e.target.value)}
               required
               placeholder="Enter your email address"
-               className={`w-full border ${formErrors.email ? 'border-red-500' : 'border-gray-300'
+              className={`w-full border ${formErrors.email ? 'border-red-500' : 'border-gray-300'
                 } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
             />
-            
+
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -87,10 +95,10 @@ const handleInputChange = (field, value) => {
             </label>
             {formErrors.password && (
               <div className="flex items-center">
-                <span className="ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                <span className=" w-11 lg:w-9 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
                   !
                 </span>
-                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.password}</p>
+                <p className="text-red-500 ml-4 text-sm mb-1">{formErrors.password}</p>
               </div>
             )}
             <input
@@ -99,12 +107,12 @@ const handleInputChange = (field, value) => {
               onChange={(e) => handleInputChange('password', e.target.value)}
               required
               placeholder="Enter your password"
-               className={`w-full border ${formErrors.password ? 'border-red-500' : 'border-gray-300'
+              className={`w-full border ${formErrors.password ? 'border-red-500' : 'border-gray-300'
                 } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
             />
           </div>
 
-              <button
+          <button
             type="submit"
             disabled={loading}
             className={`w-full bg-green-600 text-white font-semibold py-2 rounded-md hover:bg-green-700 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -115,9 +123,12 @@ const handleInputChange = (field, value) => {
 
         <div className="text-center mt-4 text-sm">
           New to LittleHope?{' '}
-          <a href="/register" className="text-blue-600 font-medium hover:underline underline">
-            Register Here
-          </a>
+          <Link
+            to="/register"
+            className="text-blue-600 font-medium hover:underline underline"
+          >
+            Log in here
+          </Link>
         </div>
 
         <p className="text-xs text-gray-500 text-center mt-4">

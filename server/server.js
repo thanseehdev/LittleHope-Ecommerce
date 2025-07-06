@@ -4,12 +4,15 @@ const app=express()
 require('dotenv').config();
 const {connectDB,getDB}=require('./config/db/db.connection')
 const authRoute=require('../server/routes/userRoute/authRoutes')
+const cookieParser = require('cookie-parser')
 
 
 app.use(express.json());
+app.use(cookieParser())
 
 app.use(cors({
-  origin: ' http://localhost:5173'
+  origin: ' http://localhost:5173',
+  credentials: true
 }));
 
 

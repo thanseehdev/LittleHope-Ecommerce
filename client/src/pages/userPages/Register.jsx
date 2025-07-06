@@ -105,7 +105,7 @@ export default function Register() {
             </label>
             {formErrors.name && (
               <div className="flex items-center">
-                <span className="ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                <span className=" w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
                   !
                 </span>
                 <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.name}</p>
@@ -127,7 +127,7 @@ export default function Register() {
             </label>
             {formErrors.email && (
               <div className="flex items-center">
-                <span className=" ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                <span className="  w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
                   !
                 </span>
                 <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.email}</p>
@@ -149,7 +149,7 @@ export default function Register() {
             </label>
             {formErrors.password && (
               <div className="flex items-center">
-                <span className="ml-1 w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                <span className=" w-11 lg:w-9 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
                   !
                 </span>
                 <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.password}</p>
@@ -171,7 +171,7 @@ export default function Register() {
             </label>
             {formErrors.confirmPassword && (
               <div className="flex items-center">
-                <span className="ml-1  w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
+                <span className=" w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
                   !
                 </span>
                 <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.confirmPassword}</p>
