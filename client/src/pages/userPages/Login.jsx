@@ -7,12 +7,18 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { error, loading, isAuthenticated } = useSelector((state) => state.user)
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/home'); // Already logged in? Send to home.
+  const { error, loading, isAuthenticated,user } = useSelector((state) => state.user)
+
+ useEffect(() => {
+  if (isAuthenticated && user) {
+    if (user.role === 'admin') {
+      navigate('/admin/user');
+    } else {
+      navigate('/home');
     }
-  }, [isAuthenticated, navigate]);
+  }
+}, [isAuthenticated, user, navigate]);
+
   
   const [form, setForm] = useState({
     email: "",
@@ -64,7 +70,11 @@ export default function Login() {
         </div>
 
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">Log In</h2>
-
+{error && (
+  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+    {error}
+  </div>
+)}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -19,6 +19,7 @@ import OrderPage from './pages/userPages/OrderPage'
 import OrderDetailPage from './pages/userPages/OrderDetails'
 import ContactPage from './pages/userPages/Contact'
 import AdminDashboard from './pages/adminPages/AdminDashboard'
+import AdminUsers from './pages/adminPages/Users'
 import adminOrder from './pages/adminPages/Orders'
 import { useEffect } from 'react'
 
@@ -26,10 +27,10 @@ import { useEffect } from 'react'
 
 
 function App() {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(loadUser());
-  }, []);
+  // const dispatch = useDispatch()
+  // useEffect(() => {
+  //   dispatch(loadUser());
+  // }, []);
 
   return (
     <Routes>
@@ -50,8 +51,8 @@ function App() {
       <Route path="/order/:orderId" element={<OrderDetailPage />} />
       <Route path='/contact' element={<ContactPage />} />
       <Route path='/admin/dashboard' element={<AdminDashboard />} />
+      <Route path='/admin/user' element={<AdminUsers />} />
       <Route path='/admin/orders' element={<adminOrder />} />
-
     </Routes>
 
   )

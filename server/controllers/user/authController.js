@@ -84,7 +84,6 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "user is not verified" })
         }
         const token = generateToken(user._id, user.role)
-        console.log('token...'+token);
         
         res.cookie('token', token, {
             httpOnly: true,

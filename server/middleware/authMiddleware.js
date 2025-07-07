@@ -5,7 +5,6 @@ const protect=async(req,res,next)=>{
     try {
         console.log('inside the protect')
         const token=req.cookies.token
-        console.log('token'+token)
         if(!token){
             return res.status(400).json({message:'Not authorized'})
         }

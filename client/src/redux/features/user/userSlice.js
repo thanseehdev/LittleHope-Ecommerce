@@ -44,7 +44,7 @@ const userSlice = createSlice({
       })
       .addCase(verifyOTP.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.user = action.payload
         state.isAuthenticated = true;
         state.emailForOTP = null;
         state.error = null;
@@ -61,7 +61,8 @@ const userSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true
-        state.user = action.payload.user;
+        console.log('inside login action'+action.payload)
+        state.user = action.payload
         state.error = null
       })
       .addCase(login.rejected, (state, action) => {

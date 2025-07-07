@@ -3,7 +3,8 @@ const cors = require('cors');
 const app=express()
 require('dotenv').config();
 const {connectDB,getDB}=require('./config/db/db.connection')
-const authRoute=require('../server/routes/userRoute/authRoutes')
+const userRoute=require('./routes/userRoute/userRoutes')
+const adminRoute=require('./routes/adminRoute/adminRoute')
 const cookieParser = require('cookie-parser')
 
 
@@ -26,7 +27,8 @@ async function initializeDatabase() {
 }
 
 
-app.use('/api/auth',authRoute)
+app.use('/api/auth',userRoute)
+app.use('/api/admin',adminRoute)
 
 app.listen(process.env.PORT||4000,async()=>{
     await initializeDatabase()

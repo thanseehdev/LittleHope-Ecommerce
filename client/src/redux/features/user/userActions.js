@@ -1,4 +1,4 @@
-import { createAsyncThunk, isRejectedWithValue } from '@reduxjs/toolkit'
+import { createAsyncThunk } from '@reduxjs/toolkit'
 import api from '../../../api/axios'
 
 export const registerUser=createAsyncThunk('auth/register',async(userData,{rejectWithValue})=>{
