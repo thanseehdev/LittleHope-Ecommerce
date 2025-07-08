@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminNavbar from "./common/Navbar";
+import { useDispatch, useSelector } from "react-redux";
+import { createProduct } from "../../redux/features/admin/adminProduct/adminProductAction";
 
 export default function AddProduct() {
   const [product, setProduct] = useState({
@@ -49,14 +51,28 @@ export default function AddProduct() {
     };
   }, [imagePreviews]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const dispatch = useDispatch();
+const { loading, error, product: createdProduct } = useSelector((state) => state.product);
 
-    // Filter out null images before submit
-    const imagesToSubmit = product.images.filter(Boolean);
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    console.log("Product submitted:", { ...product, images: imagesToSubmit });
-    alert("Product added successfully!");
+  const formData = new FormData();
+  formData.append("name", product.name);
+  formData.append("description", product.description);
+  formData.append("price", product.price);
+  formData.append("category", product.category);
+  formData.append("stock", product.stock);
+  formData.append("size", product.size); // Send as comma-separated string
+
+  product.images.forEach((file) => {
+    if (file) formData.append("images", file);
+  });
+
+  dispatch(createProduct(formData));
+};
+useEffect(() => {
+  if (createdProduct) {
     setProduct({
       name: "",
       description: "",
@@ -67,7 +83,10 @@ export default function AddProduct() {
       images: [null, null, null, null, null],
     });
     setImagePreviews([null, null, null, null, null]);
-  };
+  }
+}, [createdProduct]);
+
+
 
   return (
     <>
@@ -81,6 +100,11 @@ export default function AddProduct() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 text-center mb-8">
             Add Product
           </h2>
+          {loading && <p className="text-blue-500">Creating product...</p>}
+{error && <p className="text-red-500">{error}</p>}
+{createdProduct && <p className="text-green-600">Product created successfully!</p>}
+
+
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {/* Left column */}

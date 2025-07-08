@@ -20,7 +20,9 @@ import OrderDetailPage from './pages/userPages/OrderDetails'
 import ContactPage from './pages/userPages/Contact'
 import AdminDashboard from './pages/adminPages/AdminDashboard'
 import AdminUsers from './pages/adminPages/Users'
-import adminOrder from './pages/adminPages/Orders'
+import AdminProduct from './pages/adminPages/Products'
+import AdminOrder from './pages/adminPages/Orders'
+import AdminAddProduct from './components/adminCom/AddProduct'
 import { useEffect } from 'react'
 
 
@@ -52,7 +54,9 @@ function App() {
       <Route path='/contact' element={<ContactPage />} />
       <Route path='/admin/dashboard' element={<AdminDashboard />} />
       <Route path='/admin/user' element={<AdminUsers />} />
-      <Route path='/admin/orders' element={<adminOrder />} />
+      <Route path='/admin/orders' element={<AdminOrder />} />
+      <Route path='/admin/product' element={<AdminProduct />} />
+      <Route path='/admin/addProduct' element={<AdminAddProduct />} />
     </Routes>
 
   )
