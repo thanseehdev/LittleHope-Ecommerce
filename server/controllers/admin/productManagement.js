@@ -10,14 +10,16 @@ const addProduct = async (req, res) => {
             name,
             description,
             price,
+            discountPrice,
             category,
-            size: size.split(","), // convert back to array
+            size: size.split(","), // convert back to array,
+            gender,
             stock,
             images: imageUrls,
         });
         const savedProduct = await product.save();
         console.log(`---savedProduct=${savedProduct}---`);
-        
+
         res.status(200).json({ message: 'product added succesfully', savedProduct });
     } catch (error) {
         console.error(error);
@@ -25,6 +27,6 @@ const addProduct = async (req, res) => {
     }
 }
 
-module.exports={
+module.exports = {
     addProduct
 }

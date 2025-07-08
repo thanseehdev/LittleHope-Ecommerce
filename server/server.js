@@ -27,7 +27,7 @@ async function initializeDatabase() {
 }
 
 
-app.use('/api/auth',userRoute)
+app.use('/api/user',userRoute)
 app.use('/api/admin',adminRoute)
 
 app.listen(process.env.PORT||4000,async()=>{

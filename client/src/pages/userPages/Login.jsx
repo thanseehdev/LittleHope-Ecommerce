@@ -137,7 +137,7 @@ export default function Login() {
             to="/register"
             className="text-blue-600 font-medium hover:underline underline"
           >
-            Log in here
+            Register here
           </Link>
         </div>
 

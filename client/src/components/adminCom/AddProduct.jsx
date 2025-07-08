@@ -8,8 +8,10 @@ export default function AddProduct() {
     name: "",
     description: "",
     price: "",
+    discountPrice: "",
     category: "",
     size: "",
+    gender: "",
     stock: "",
     images: [null, null, null, null, null], // 5 images slots
   });
@@ -51,40 +53,44 @@ export default function AddProduct() {
     };
   }, [imagePreviews]);
 
-const dispatch = useDispatch();
-const { loading, error, product: createdProduct } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  const { loading, error, product: createdProduct } = useSelector((state) => state.product);
 
-const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const formData = new FormData();
-  formData.append("name", product.name);
-  formData.append("description", product.description);
-  formData.append("price", product.price);
-  formData.append("category", product.category);
-  formData.append("stock", product.stock);
-  formData.append("size", product.size); // Send as comma-separated string
+    const formData = new FormData();
+    formData.append("name", product.name);
+    formData.append("description", product.description);
+    formData.append("price", product.price);
+    formData.append("discountPrice", product.discountPrice)
+    formData.append("category", product.category);
+    formData.append("stock", product.stock);
+    formData.append("size", product.size); // Send as comma-separated string
+    formData.append("gender", product.gender);
 
-  product.images.forEach((file) => {
-    if (file) formData.append("images", file);
-  });
-
-  dispatch(createProduct(formData));
-};
-useEffect(() => {
-  if (createdProduct) {
-    setProduct({
-      name: "",
-      description: "",
-      price: "",
-      category: "",
-      size: "",
-      stock: "",
-      images: [null, null, null, null, null],
+    product.images.forEach((file) => {
+      if (file) formData.append("images", file);
     });
-    setImagePreviews([null, null, null, null, null]);
-  }
-}, [createdProduct]);
+
+    dispatch(createProduct(formData));
+  };
+  useEffect(() => {
+    if (createdProduct) {
+      setProduct({
+        name: "",
+        description: "",
+        price: "",
+        discountPrice: "",
+        category: "",
+        size: "",
+        gender: "",
+        stock: "",
+        images: [null, null, null, null, null],
+      });
+      setImagePreviews([null, null, null, null, null]);
+    }
+  }, [createdProduct]);
 
 
 
@@ -101,8 +107,8 @@ useEffect(() => {
             Add Product
           </h2>
           {loading && <p className="text-blue-500">Creating product...</p>}
-{error && <p className="text-red-500">{error}</p>}
-{createdProduct && <p className="text-green-600">Product created successfully!</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {createdProduct && <p className="text-green-600">Product created successfully!</p>}
 
 
 
@@ -157,6 +163,26 @@ useEffect(() => {
                     focus:outline-none focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition duration-300"
                 />
               </label>
+              <label className="block">
+                <span className="text-gray-700 font-semibold mb-1 block">
+                  Gender
+                </span>
+                <select
+                  name="gender"
+                  value={product.gender}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm
+                    focus:outline-none focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition duration-300"
+                >
+                  <option value="" disabled>
+                    Select genderCategory
+                  </option>
+                  <option>boys</option>
+                  <option>girls</option>
+                  <option>unisex</option>
+                </select>
+              </label>
             </div>
 
             {/* Right column */}
@@ -173,6 +199,23 @@ useEffect(() => {
                   min="0.01"
                   step="0.01"
                   placeholder="e.g. 29.99"
+                  required
+                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
+                    focus:outline-none focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition duration-300"
+                />
+              </label>
+              <label className="block">
+                <span className="text-gray-700 font-semibold mb-1 block">
+                  discountPrice ($)
+                </span>
+                <input
+                  type="number"
+                  name="discountPrice"
+                  value={product.discountPrice}
+                  onChange={handleChange}
+                  min="0.01"
+                  step="0.01"
+                  placeholder="e.g. 25.99"
                   required
                   className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
                     focus:outline-none focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition duration-300"
@@ -225,41 +268,41 @@ useEffect(() => {
                 </select>
               </label>
 
-            <div>
-  <span className="text-gray-700 font-semibold mb-2 block">
-    Upload up to 5 Images
-  </span>
-  <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-    {[0, 1, 2, 3, 4].map((idx) => (
-      <div key={idx} className="flex flex-col items-center">
-        <label
-          htmlFor={`file-input-${idx}`}
-          className="cursor-pointer text-white text-center font-semibold mb-2 flex items-center justify-center border-2 bg-blue-500   rounded w-30 h-10 hover:bg-blue-600"
-        >
-          <span className="text-xs">Choose Image</span>
-        </label>
-        <input
-          id={`file-input-${idx}`}
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleImageChange(e, idx)} // Pass idx to handleImageChange
-          className="opacity-0 absolute w-0 h-0"
-        />
-        {imagePreviews[idx] ? (
-          <img
-            src={imagePreviews[idx]}
-            alt={`Preview ${idx + 1}`}
-            className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-gray-300 shadow-sm"
-          />
-        ) : (
-          <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">
-            <span className="text-xs">No Image</span>
-          </div>
-        )}
-      </div>
-    ))}
-  </div>
-</div>
+              <div>
+                <span className="text-gray-700 font-semibold mb-2 block">
+                  Upload up to 5 Images
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                  {[0, 1, 2, 3, 4].map((idx) => (
+                    <div key={idx} className="flex flex-col items-center">
+                      <label
+                        htmlFor={`file-input-${idx}`}
+                        className="cursor-pointer text-white text-center font-semibold mb-2 flex items-center justify-center border-2 bg-blue-500   rounded w-30 h-10 hover:bg-blue-600"
+                      >
+                        <span className="text-xs">Choose Image</span>
+                      </label>
+                      <input
+                        id={`file-input-${idx}`}
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, idx)} // Pass idx to handleImageChange
+                        className="opacity-0 absolute w-0 h-0"
+                      />
+                      {imagePreviews[idx] ? (
+                        <img
+                          src={imagePreviews[idx]}
+                          alt={`Preview ${idx + 1}`}
+                          className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-gray-300 shadow-sm"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">
+                          <span className="text-xs">No Image</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
 
             </div>

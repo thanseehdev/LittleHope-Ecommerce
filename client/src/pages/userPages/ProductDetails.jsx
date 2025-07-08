@@ -1,12 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
-
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { productDetail } from "../../redux/features/user/product/productDetailAction";
 
 const sizes = ["28", "30", "32", "34"];
-const images = ["a", "b", "c", "d", "e"];
 
 export default function ProductDetail() {
-  const [selectedImage, setSelectedImage] = useState("a");
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const { product, loading, error } = useSelector((state) => state.productDetail);
+
+  const [selectedImage, setSelectedImage] = useState("");
+
+  useEffect(() => {
+    if (id) {
+      dispatch(productDetail(id));
+    }
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (product && product.images && product.images.length > 0) {
+      setSelectedImage(product.images[0]);
+    }
+  }, [product]);
+
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
+  if (!product) return null;
+
+  const discountPercentage = Math.round(
+    ((product.price - product.discountPrice) / product.price) * 100
+  );
 
   return (
     <>
@@ -14,60 +40,49 @@ export default function ProductDetail() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left - Image Gallery */}
-         <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4">
-  {/* Thumbnail list */}
-  <div className="flex flex-row lg:flex-col gap-2 overflow-auto max-lg:justify-center">
-    {images.map((i) => (
-      <img
-        key={i}
-        onClick={() => setSelectedImage(i)}
-        src={`/productsImg/productDetails-img/product-7${i}-img.jpg`}
-        alt={`Product thumbnail ${i}`}
-        className={`w-16 h-20 rounded border cursor-pointer ${
-          selectedImage === i ? "border-pink-400 border-1 " : ""
-        }`}
-      />
-    ))}
-  </div>
+          <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4">
+            {/* Thumbnail list */}
+            <div className="flex flex-row lg:flex-col gap-2 overflow-auto max-lg:justify-center">
+              {product.images?.map((img, idx) => (
+                <img
+                  key={idx}
+                  onClick={() => setSelectedImage(img)}
+                  src={img}
+                  alt={`Thumbnail ${idx}`}
+                  className={`w-16 h-20 rounded border cursor-pointer ${
+                    selectedImage === img ? "border-pink-400" : ""
+                  }`}
+                />
+              ))}
+            </div>
 
-  {/* Main image */}
-  <div className="flex-1">
-    <img
-      src={`/productsImg/productDetails-img/product-7${selectedImage}-img.jpg`}
-      alt="Main Product"
-      className="rounded-lg w-full object-cover"
-    />
-  </div>
-</div>
+            {/* Main image */}
+            <div className="flex-1 ">
+              <img
+  src={selectedImage}
+  alt="Main Product"
+  className="rounded-lg w-full h-[450px]  lg:h-[600px] object-cover"
+/>
 
+            </div>
+          </div>
 
           {/* Right - Product Info */}
           <div className="w-full lg:w-1/2 space-y-4">
-            <h2 className="text-2xl font-semibold">
-              Men Straight Fit Mid Rise Black Jeans
-            </h2>
-            <div className="flex items-center gap-2">
-              <span className="text-green-600 font-semibold text-lg">₹389</span>
-              <span className="line-through text-gray-500">₹1,999</span>
-              <span className="text-green-500 font-medium">80% off</span>
-            </div>
-            <p className="text-sm text-gray-600">
-              456 ratings and 17 reviews
-            </p>
+            <h2 className="text-2xl font-semibold">{product.name}</h2>
 
-            <div>
-              <p className="font-medium mb-2">Color:</p>
-              <div className="flex gap-2">
-                <img
-                  src="https://via.placeholder.com/60x80"
-                  className="w-14 h-16 border rounded cursor-pointer"
-                />
-                <img
-                  src="https://via.placeholder.com/60x80"
-                  className="w-14 h-16 border rounded cursor-pointer"
-                />
-              </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-600 font-semibold text-lg">
+                ₹{product.discountPrice}
+              </span>
+              <span className="line-through text-gray-500">₹{product.price}</span>
+              <span className="text-green-500 font-medium">{discountPercentage}% off</span>
             </div>
+
+            <p className="text-sm text-gray-600">
+              {/* You can show ratings/reviews here if available */}
+              {product.category}
+            </p>
 
             <div>
               <p className="font-medium mb-2 mt-4">Size:</p>
@@ -91,6 +106,12 @@ export default function ProductDetail() {
                 Buy Now
               </button>
             </div>
+            {product.description && (
+  <div className="mt-4 text-sm text-gray-700">
+    <p className="font-medium mb-1">Description:</p>
+    <p className="leading-relaxed">{product.description}</p>
+  </div>
+)}
 
             <div className="mt-4 text-sm text-gray-600">
               <p>Available offers:</p>
@@ -106,8 +127,8 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
-      
     </>
   );
 }
+
 

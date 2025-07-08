@@ -18,6 +18,11 @@ const productSchema = new mongoose.Schema({
     required: [true, 'Please provide a price'],
     min: 0,
   },
+  discountPrice: {
+    type: Number,
+    required: [true, 'Please provide a discountPrice'],
+    min: 0,
+  },
   stock: {
     type: Number,
     required: [true, 'Please provide stock quantity'],
@@ -32,6 +37,11 @@ const productSchema = new mongoose.Schema({
   size: {
     type: [String], // e.g., ['S', 'M', 'L', 'XL']
     default: [],
+  },
+  gender: {
+    type: String,
+    enum: ['boys', 'girls', 'unisex'],
+    required: [true, 'Please specify gender (boys, girls, or unisex)'],
   },
   images: {
     type: [String],

@@ -42,7 +42,7 @@ function App() {
       <Route path='/otp' element={<EnterOtp />} />
       <Route path='/home' element={<Home />} />
       <Route path='/allProducts' element={<ProductGrid />} />
-      <Route path='/productDetails' element={<ProductDetail />} />
+      <Route path='/productDetails/:id' element={<ProductDetail />} />
       <Route path='/cart' element={<CartPage />} />
       <Route path='/wishlist' element={<WishlistCard />} />
       <Route path='/checkoutAddress' element={<AddressPage />} />
