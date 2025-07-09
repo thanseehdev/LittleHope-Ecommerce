@@ -1,69 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../../../redux/features/user/profile/profileAction";
 
 export default function ProfileForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    profilePic: null,
-  });
+  const dispatch = useDispatch();
+  const { profileUser: user, loading, error } = useSelector((state) => state.profile);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  const getInitial = (name = "") => name?.charAt(0)?.toUpperCase() || "?";
+  const getBgColor = (name = "") => "bg-pink-600";
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setForm((prev) => ({ ...prev, profilePic: URL.createObjectURL(file) }));
-  };
+  useEffect(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Profile updated!");
+   
   };
+
+  if (loading) return <p>Loading profile...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!user) return <p>No user data available.</p>;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="flex items-center gap-4">
-        <img
-          src={form.profilePic || "https://via.placeholder.com/80"}
-          alt="Profile"
-          className="w-20 h-20 rounded-full object-cover"
-        />
-        <input type="file" onChange={handleImageChange} />
+      <div className="flex items-center gap-4 justify-center">
+        <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white text-2xl font-bold ${getBgColor(user.name)}`}>
+          {getInitial(user.name)}
+        </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium">Name</label>
         <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          className="mt-1 w-full border rounded px-3 py-2"
-          required
+          value={user.name || ""}
+          disabled
+          className="mt-1 w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium">Email</label>
         <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          className="mt-1 w-full border rounded px-3 py-2"
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium">Phone</label>
-        <input
-          name="phone"
-          value={form.phone}
-          onChange={handleChange}
-          className="mt-1 w-full border rounded px-3 py-2"
+          value={user.email || ""}
+          disabled
+          className="mt-1 w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
         />
       </div>
 
@@ -73,3 +54,6 @@ export default function ProfileForm() {
     </form>
   );
 }
+
+
+

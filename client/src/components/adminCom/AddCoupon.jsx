@@ -50,7 +50,7 @@ export default function AddCoupon() {
 
           <label className="block">
             <span className="text-gray-700 font-semibold mb-1 block">
-              Discount (%)
+              Discount (₹)
             </span>
             <input
               type="number"

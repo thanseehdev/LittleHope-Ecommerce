@@ -7,64 +7,6 @@ import { FunnelIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllProducts } from "../../../../redux/features/user/product/allProductAction";
 
-// const allProducts = [
-//   {
-//     category: "Combo Sets",
-//     name: "Men Brand Logo Printed T-shirt",
-//     price: 2108,
-//     originalPrice: 3699,
-//     discount: "43% OFF",
-//     image: "/productsImg/allProducts-img/productF-6b-img.jpg"
-//   },
-//   {
-//     category: "Casual Wear",
-//     name: "Men Cotton Polo Collar T-shirt",
-//     price: 3035,
-//     originalPrice: 4599,
-//     discount: "34% OFF",
-//     image: "/productsImg/allProducts-img/productF-7a-img.jpg"
-//   },
-//   {
-//     category: "Party Wear",
-//     name: "Solid Polo Collar T-shirt",
-//     price: 299,
-//     originalPrice: 999,
-//     discount: "70% OFF",
-//     image: "/productsImg/allProducts-img/productF-1a-img.jpg"
-//   },
-//   {
-//     category: "Casual Wear",
-//     name: "Men Solid Cotton Polo T-shirt",
-//     price: 662,
-//     originalPrice: 1699,
-//     discount: "61% OFF",
-//     image: "/productsImg/allProducts-img/productF-2a-img.jpg"
-//   },
-//   {
-//     category: "Casual Wear",
-//     name: "Men Printed Cotton T-shirt",
-//     price: 2239,
-//     originalPrice: 2799,
-//     discount: "20% OFF",
-//     image: "/productsImg/allProducts-img/productF-3a-img.jpg"
-//   },
-//    {
-//     category: "Formal Wear",
-//     name: "Men Printed Cotton T-shirt",
-//     price: 1000,
-//     originalPrice: 1600,
-//     discount: "20% OFF",
-//     image: "/productsImg/allProducts-img/productF-5b-img.jpg"
-//   },
-//   {
-//     category: "Casual Wear",
-//     name: "Men Cotton Polo Collar T-shirt",
-//     price: 5000,
-//     originalPrice: 4599,
-//     discount: "34% OFF",
-//     image: "/productsImg/allProducts-img/product-9a-img.jpg"
-//   },
-// ];
 
 const ProductGrid = () => {
 
@@ -73,6 +15,7 @@ const ProductGrid = () => {
 
 
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedGender, setSelectedGender] = useState([]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(10000);
   const [sortBy, setSortBy] = useState("");
@@ -92,7 +35,7 @@ const ProductGrid = () => {
 
   const filteredProducts = allProducts
     .filter(p =>
-      (selectedCategory.length === 0 || selectedCategory.includes(p.category)) &&
+      (selectedCategory.length === 0 || selectedCategory.includes(p.category)) &&(selectedGender.length === 0 || selectedGender.includes(p.gender))&&
       p.price >= minPrice && p.price <= maxPrice
     )
     .sort((a, b) => {
@@ -130,6 +73,8 @@ const ProductGrid = () => {
           <Sidebar
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
+            selectedGender={selectedGender}
+            setSelectedGender={setSelectedGender}
             minPrice={minPrice}
             setMinPrice={setMinPrice}
             maxPrice={maxPrice}

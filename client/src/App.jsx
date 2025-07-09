@@ -23,6 +23,7 @@ import AdminUsers from './pages/adminPages/Users'
 import AdminProduct from './pages/adminPages/Products'
 import AdminOrder from './pages/adminPages/Orders'
 import AdminAddProduct from './components/adminCom/AddProduct'
+import AdminAddCoupon from './components/adminCom/AddCoupon'
 import { useEffect } from 'react'
 
 
@@ -57,6 +58,7 @@ function App() {
       <Route path='/admin/orders' element={<AdminOrder />} />
       <Route path='/admin/product' element={<AdminProduct />} />
       <Route path='/admin/addProduct' element={<AdminAddProduct />} />
+      <Route path='/admin/addCoupon' element={<AdminAddCoupon />} />
     </Routes>
 
   )

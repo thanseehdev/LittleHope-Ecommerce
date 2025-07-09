@@ -87,7 +87,7 @@ export default function ProductDetail() {
             <div>
               <p className="font-medium mb-2 mt-4">Size:</p>
               <div className="flex gap-3 flex-wrap">
-                {sizes.map((size) => (
+                {product.size.map((size) => (
                   <button
                     key={size}
                     className="px-4 py-1 border rounded hover:bg-gray-100"

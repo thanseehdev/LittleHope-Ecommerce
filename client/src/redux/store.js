@@ -5,6 +5,7 @@ import adminProductReducer from '../redux/features/admin/adminProduct/adminProdu
 import newArrivalReducer from '../redux/features/user/product/newArrivalSlice'
 import productDetailReducer from '../redux/features/user/product/productDetailSlice'
 import allProductReducer from '../redux/features/user/product/allProductsSlice'
+import profileSlice from '../redux/features/user/profile/profileSlice'
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     product:adminProductReducer,
     newArrival:newArrivalReducer,
     productDetail:productDetailReducer,
-    allProducts:allProductReducer
+    allProducts:allProductReducer,
+    profile:profileSlice
   },
 });
