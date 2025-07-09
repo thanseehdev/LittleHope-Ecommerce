@@ -22,8 +22,21 @@ const productDetails=async(req,res)=>{
         res.status(500).json({ error:"Server Error" });
     }
 }
+const getAllProducts=async(req,res)=>{
+    console.log('inside getAllproduct controller');
+    
+    try {
+        const products=await Product.find()
+        console.log('products'+products);
+        
+        res.status(200).json(products)
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch products", error: error.message });
+    }
+}
 
 module.exports={
     getNewArrivals,
-    productDetails
+    productDetails,
+    getAllProducts
 }

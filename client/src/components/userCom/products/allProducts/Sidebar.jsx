@@ -1,11 +1,12 @@
 import React from 'react';
 
-const Sidebar = ({ selectedBrands, setSelectedBrands, minPrice, setMinPrice, maxPrice, setMaxPrice }) => {
-  const brands = ["RARE RABBIT", "Tommy Hilfiger", "Roadster", "Campus Sutra"];
+const Sidebar = ({ selectedCategory, setSelectedCategory, minPrice, setMinPrice, maxPrice, setMaxPrice }) => {
+  const category = ["Casual Wear", "Formal Wear", "Combo Sets", "Ethnic Wear","Sports Wear","Party Wear"];
+  const gender = ["Boys", "Girls", "Unisex"];
 
-  const toggleBrand = (brand) => {
-    setSelectedBrands(prev =>
-      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
+  const toggleCategory= (category) => {
+    setSelectedCategory(prev =>
+      prev.includes(category) ? prev.filter(b => b !== category) : [...prev, category]
     );
   };
 
@@ -13,16 +14,16 @@ const Sidebar = ({ selectedBrands, setSelectedBrands, minPrice, setMinPrice, max
     <div className="w-full sm:w-64 bg-white p-4 rounded shadow mb-6 sm:mb-0">
       <h3 className="font-bold mb-4">Filters</h3>
       <div>
-        <h4 className="font-medium">Brands</h4>
-        {brands.map((brand, idx) => (
+        <h4 className="font-medium">Category</h4>
+        {category.map((category, idx) => (
           <label key={idx} className="block text-sm">
             <input
               type="checkbox"
-              checked={selectedBrands.includes(brand)}
-              onChange={() => toggleBrand(brand)}
+              checked={selectedCategory.includes(category)}
+              onChange={() => toggleCategory(category)}
               className="mr-2"
             />
-            {brand}
+            {category}
           </label>
         ))}
       </div>

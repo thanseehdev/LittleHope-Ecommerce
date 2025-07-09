@@ -178,9 +178,9 @@ export default function AddProduct() {
                   <option value="" disabled>
                     Select genderCategory
                   </option>
-                  <option>boys</option>
-                  <option>girls</option>
-                  <option>unisex</option>
+                  <option>Boys</option>
+                  <option>Girls</option>
+                  <option>Unisex</option>
                 </select>
               </label>
             </div>
@@ -237,11 +237,12 @@ export default function AddProduct() {
                   <option value="" disabled>
                     Select category
                   </option>
-                  <option>Casual Dress</option>
-                  <option>Party Dress</option>
-                  <option>Summer Dress</option>
-                  <option>Winter Dress</option>
-                  <option>School Uniform</option>
+                  <option>Casual Wear</option>
+                  <option>Formal Wear</option>
+                  <option>Combo Sets</option>
+                  <option>Ethnic Wear</option>
+                  <option>Sports Wear </option>
+                  <option>Party Wear</option>
                 </select>
               </label>
 
