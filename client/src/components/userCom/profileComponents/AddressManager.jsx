@@ -1,52 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {addAddress,getAddress,deleteAddress} from '../../../redux/features/user/profile/profileAction'
 
 export default function AddressManager() {
-  const [addresses, setAddresses] = useState([
-    { id: 1, name: "John Doe", street: "123 Main St", city: "New York", zip: "10001" },
-  ]);
+  const dispatch = useDispatch();
+  const { addresses = [], loading, error } = useSelector((state) => state.profile || {});
+  
 
   const [newAddress, setNewAddress] = useState({
     name: "",
     street: "",
     city: "",
     zip: "",
+    mobile: "",
   });
+
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    dispatch(getAddress());  // Fetch addresses when the component mounts
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewAddress((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddAddress = () => {
-    if (!newAddress.name || !newAddress.street || !newAddress.city || !newAddress.zip) return;
+const handleAddAddress = async () => {
+  if (!newAddress.name || !newAddress.street || !newAddress.city || !newAddress.zip || !newAddress.mobile) {
+    alert("Please fill in all fields.");
+    return;
+  }
 
-    const newEntry = {
-      ...newAddress,
-      id: Date.now(),
-    };
-    setAddresses((prev) => [...prev, newEntry]);
-    setNewAddress({ name: "", street: "", city: "", zip: "" });
-  };
+  await dispatch(addAddress(newAddress));  // wait for add to complete
+  dispatch(getAddress());  // refetch updated address list
+  setNewAddress({ name: "", street: "", city: "", zip: "", mobile: "" });
+  setShowForm(false);
+};
 
-  const handleDelete = (id) => {
-    setAddresses((prev) => prev.filter((address) => address.id !== id));
-  };
+const handleDelete = async (id) => {
+  await dispatch(deleteAddress(id)); // wait for delete to complete
+  dispatch(getAddress());             // refetch updated address list
+};
 
   return (
     <div>
       <h2 className="text-lg font-semibold mb-4">Saved Addresses</h2>
 
-      {addresses.length === 0 ? (
+      {loading ? (
+        <p className="text-gray-600">Loading addresses...</p>
+      ) : error ? (
+        <p className="text-red-600">{error}</p>
+      ) : addresses.length === 0 ? (
         <p className="text-gray-600">No addresses added yet.</p>
       ) : (
         <ul className="space-y-4 mb-6">
           {addresses.map((address) => (
-            <li key={address.id} className="border p-4 rounded">
-              <p className="font-semibold">{address.name}</p>
-              <p>{address.street}, {address.city}, {address.zip}</p>
+            <li key={address._id} className="border p-4 rounded">
+              <p className="font-semibold">{address.fullName}</p>
+              <p>{address.street}, {address.city}, {address.zipCode}</p>
+              <p>Mobile: {address.mobileNo}</p>
               <button
                 className="text-sm text-red-500 mt-2"
-                onClick={() => handleDelete(address.id)}
+                onClick={() => handleDelete(address._id)}
               >
                 Delete
               </button>
@@ -55,46 +71,65 @@ export default function AddressManager() {
         </ul>
       )}
 
-      <div className="mt-6">
-        <h3 className="font-semibold mb-2">Add New Address</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input
-            name="name"
-            value={newAddress.name}
-            onChange={handleChange}
-            className="border p-2 rounded"
-            placeholder="Full Name"
-          />
-          <input
-            name="street"
-            value={newAddress.street}
-            onChange={handleChange}
-            className="border p-2 rounded"
-            placeholder="Street Address"
-          />
-          <input
-            name="city"
-            value={newAddress.city}
-            onChange={handleChange}
-            className="border p-2 rounded"
-            placeholder="City"
-          />
-          <input
-            name="zip"
-            value={newAddress.zip}
-            onChange={handleChange}
-            className="border p-2 rounded"
-            placeholder="ZIP Code"
-          />
+      <button
+        onClick={() => setShowForm((prev) => !prev)}
+        className="mt-4 bg-pink-600 text-white px-4 py-2 rounded"
+      >
+        {showForm ? "Cancel" : "Add New Address"}
+      </button>
+
+      {showForm && (
+        <div className="mt-6">
+          <h3 className="font-semibold mb-2">Add New Address</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input
+              name="name"
+              value={newAddress.name}
+              onChange={handleChange}
+              className="border p-2 rounded"
+              placeholder="Full Name"
+            />
+            <input
+              name="street"
+              value={newAddress.street}
+              onChange={handleChange}
+              className="border p-2 rounded"
+              placeholder="Street Address"
+            />
+            <input
+              name="city"
+              value={newAddress.city}
+              onChange={handleChange}
+              className="border p-2 rounded"
+              placeholder="City"
+            />
+            <input
+              name="zip"
+              value={newAddress.zip}
+              onChange={handleChange}
+              className="border p-2 rounded"
+              placeholder="ZIP Code"
+            />
+            <input
+              name="mobile"
+              value={newAddress.mobile}
+              onChange={handleChange}
+              className="border p-2 rounded"
+              placeholder="Mobile Number"
+            />
+          </div>
+          <button
+            onClick={handleAddAddress}
+            className="mt-4 bg-pink-600 text-white px-4 py-2 rounded"
+          >
+            Add Address
+          </button>
         </div>
-        <button
-          onClick={handleAddAddress}
-          className="mt-4 bg-pink-600 text-white px-4 py-2 rounded"
-        >
-          Add Address
-        </button>
-      </div>
+      )}
     </div>
   );
 }
+
+
+
 

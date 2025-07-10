@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getProfile,getCoupon } from "./profileAction";
+import { getProfile,getCoupon,addAddress,getAddress,deleteAddress } from "./profileAction";
 
 const initialState={
     profileUser:null,
     coupons:[],
+    addresses:[],
     loading:false,
-    error:null
+    error:null,
+    success:false
 }
 
 const profileSlice=createSlice({
@@ -42,6 +44,50 @@ const profileSlice=createSlice({
             state.loading=false;
             state.error=action.payload
         })
+
+        .addCase(addAddress.pending,(state)=>{
+            state.loading=true;
+            state.error=null
+        })
+        .addCase(addAddress.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.error=null
+        })
+        .addCase(addAddress.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload
+        })
+
+
+        .addCase(getAddress.pending,(state)=>{
+            state.loading=true;
+            state.error=null
+        })
+        .addCase(getAddress.fulfilled,(state,action)=>{
+            state.loading=false;
+            console.log('getadress'+JSON.stringify(state.addresses));
+            
+            state.addresses=action.payload.addresses || [];
+            state.error=null
+        })
+        .addCase(getAddress.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload
+        })
+
+        .addCase(deleteAddress.pending,(state)=>{
+            state.loading=true;
+            state.error=null;
+        })
+        .addCase(deleteAddress.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.addresses=state.addresses.filter(address=>address._id!==action.payload)
+        })
+        .addCase(deleteAddress.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload;
+        })
+
     }
 })
 
