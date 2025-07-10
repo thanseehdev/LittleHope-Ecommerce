@@ -1,6 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // 
 
 const AdminNavbar = () => {
+  const navigate = useNavigate(); // <-- Hook usa
+    const handleClick = () => {
+    navigate('/admin/coupon');
+  };
   return (
     <nav className="bg-[#2874F0] text-white shadow-md px-6 py-3 flex justify-between items-center ">
       {/* Logo / Brand */}
@@ -8,7 +13,7 @@ const AdminNavbar = () => {
 
       {/* Navigation Links */}
       <ul className="hidden md:flex gap-6 text-sm font-medium">
-        <li className="hover:text-yellow-400 cursor-pointer">Dashboard</li>
+        <li className="hover:text-yellow-400 cursor-pointer" onClick={handleClick}>Dashboard</li>
         <li className="hover:text-yellow-400 cursor-pointer">Users</li>
         <li className="hover:text-yellow-400 cursor-pointer">Orders</li>
         <li className="hover:text-yellow-400 cursor-pointer">Products</li>

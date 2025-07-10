@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addCoupon } from '../../redux/features/admin/adminCoupon/couponAction'  // Adjust path as needed
 import AdminNavbar from "./common/Navbar";
 
 export default function AddCoupon() {
@@ -8,16 +10,24 @@ export default function AddCoupon() {
     expiry: "",
   });
 
+  const dispatch = useDispatch();
+  const { loading, error, success } = useSelector((state) => state.coupons);
+
   const handleChange = (e) => {
     setCoupon({ ...coupon, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // For now, just log the coupon details
-    console.log("Coupon submitted:", coupon);
-    alert("Coupon added successfully!");
-    setCoupon({ code: "", discount: "", expiry: "" });
+    dispatch(addCoupon(coupon))
+      .unwrap()
+      .then(() => {
+        alert("Coupon added successfully!");
+        setCoupon({ code: "", discount: "", expiry: "" });
+      })
+      .catch((err) => {
+        alert(`Failed to add coupon: ${err}`);
+      });
   };
 
   return (
@@ -31,6 +41,12 @@ export default function AddCoupon() {
           <h2 className="text-3xl font-extrabold text-gray-900 text-center">
             Add Coupon
           </h2>
+
+          {error && (
+            <div className="text-red-500 text-sm text-center font-medium">
+              {error}
+            </div>
+          )}
 
           <label className="block">
             <span className="text-gray-700 font-semibold mb-1 block">
@@ -58,8 +74,8 @@ export default function AddCoupon() {
               value={coupon.discount}
               onChange={handleChange}
               min="1"
-              max="100"
-              placeholder="e.g. 20"
+              max="1000"
+              placeholder="e.g. 100"
               required
               className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400
               focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300"
@@ -83,14 +99,16 @@ export default function AddCoupon() {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md
             focus:outline-none focus:ring-4 focus:ring-indigo-400 transition duration-300"
           >
-            Add Coupon
+            {loading ? "Adding..." : "Add Coupon"}
           </button>
         </form>
       </div>
     </>
   );
 }
+
 

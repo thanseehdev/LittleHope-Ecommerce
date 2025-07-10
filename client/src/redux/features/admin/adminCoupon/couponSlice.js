@@ -1,48 +1,49 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getProfile,getCoupon } from "./profileAction";
+import { addCoupon,fetchCoupon } from "./couponAction";
 
 const initialState={
-    profileUser:null,
     coupons:[],
     loading:false,
-    error:null
+    error:null,
+    success:null
 }
 
-const profileSlice=createSlice({
-    name:'profile',
+const couponSlice=createSlice({
+    name:'coupons',
     initialState,
     reducers:{},
     extraReducers:(builder)=>{
         builder
-        .addCase(getProfile.pending,(state)=>{
-            state.loading=true;
-            state.error=null
-        })
-        .addCase(getProfile.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.profileUser=action.payload
-            state.error=null
-        })
-        .addCase(getProfile.rejected,(state,action)=>{
-            state.loading=false;
-            state.error=action.payload
-        })
-
-
-        .addCase(getCoupon.pending,(state)=>{
+        .addCase(addCoupon.pending,(state)=>{
             state.loading=true;
             state.error=null;
         })
-        .addCase(getCoupon.fulfilled,(state,action)=>{
+        .addCase(addCoupon.fulfilled,(state,action)=>{
             state.loading=false;
-            state.coupons=action.payload;
+            state.success=action.payload;
             state.error=null
         })
-        .addCase(getCoupon.rejected,(state,action)=>{
+        .addCase(addCoupon.rejected,(state,action)=>{
             state.loading=false;
             state.error=action.payload
         })
+
+
+        .addCase(fetchCoupon.pending,(state)=>{
+            state.loading=true;
+            state.error=null;
+        })
+        .addCase(fetchCoupon.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.coupons=action.payload;
+            state.error=null;
+        })
+        .addCase(fetchCoupon.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload
+        })
+
     }
 })
 
-export default profileSlice.reducer
+export default couponSlice.reducer

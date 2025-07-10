@@ -2,6 +2,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { loadUser } from './redux/features/user/userActions'
+import { useEffect } from 'react'
 
 import RegisterPage from './pages/userPages/Register'
 import Login from './pages/userPages/Login'
@@ -24,7 +25,7 @@ import AdminProduct from './pages/adminPages/Products'
 import AdminOrder from './pages/adminPages/Orders'
 import AdminAddProduct from './components/adminCom/AddProduct'
 import AdminAddCoupon from './components/adminCom/AddCoupon'
-import { useEffect } from 'react'
+import AdminGetCoupon from './pages/adminPages/Coupon'
 
 
 
@@ -59,6 +60,7 @@ function App() {
       <Route path='/admin/product' element={<AdminProduct />} />
       <Route path='/admin/addProduct' element={<AdminAddProduct />} />
       <Route path='/admin/addCoupon' element={<AdminAddCoupon />} />
+      <Route path='/admin/coupon' element={<AdminGetCoupon />} />
     </Routes>
 
   )

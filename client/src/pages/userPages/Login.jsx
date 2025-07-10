@@ -12,7 +12,7 @@ export default function Login() {
  useEffect(() => {
   if (isAuthenticated && user) {
     if (user.role === 'admin') {
-      navigate('/admin/addProduct');
+      navigate('/admin/dashboard');
     } else {
       navigate('/home');
     }
