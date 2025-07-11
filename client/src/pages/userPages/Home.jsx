@@ -11,17 +11,26 @@ function Home() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <CategoryScroller />
-      <img 
-  src="/comingSoon2.png" 
-  alt="" 
-  className="   lg:h-1/3 lg:w-1/2 transition-transform duration-300 ease-in-out group-hover:scale-110" 
-/>
+
+      {/* Image Row */}
+      <div className="flex flex-row w-full">
+        <img 
+          src="/comingSoon2-img.png" 
+          alt="" 
+          className="w-1/2 h-auto transition-transform duration-300 ease-in-out" 
+        />
+        <img 
+          src="/betaVersion-img.png" 
+          alt="" 
+          className="w-1/2 h-auto transition-transform duration-300 ease-in-out " 
+        />
+      </div>
 
       <NewArrivals />
       <Footer />
     </div>
   );
-
 }
 
 export default Home;
+

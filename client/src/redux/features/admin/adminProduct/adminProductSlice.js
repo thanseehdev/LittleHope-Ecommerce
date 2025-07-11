@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProduct } from "./adminProductAction"
+import { createProduct,fetchAllProducts,getEditProduct } from "./adminProductAction"
 
 const initialState = {
     loading: false,
-    product: null,
+    products: [],
+    product:null,
     error: null,
 }
 
@@ -18,12 +19,40 @@ const adminProductSlice=createSlice({
             state.error=false
         })
         .addCase(createProduct.fulfilled,(state,action)=>{
-            state.loading=true;
-            state.product=action.payload
+            state.loading=false;
+            state.products=action.payload
             state.error=null
         })
         .addCase(createProduct.rejected,(state,action)=>{
             state.loading=false,
+            state.error=action.payload
+        })
+
+        .addCase(fetchAllProducts.pending,(state)=>{
+            state.loading=true;
+            state.error=null
+        })
+        .addCase(fetchAllProducts.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.products=action.payload;
+            state.error=null
+        })
+        .addCase(fetchAllProducts.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload
+        })
+
+        .addCase(getEditProduct.pending,(state)=>{
+            state.loading=true;
+            state.error=null;
+        })
+        .addCase(getEditProduct.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.product=action.payload;
+            state.error=null
+        })
+        .addCase(getEditProduct.rejected,(state,action)=>{
+            state.loading=false;
             state.error=action.payload
         })
     }

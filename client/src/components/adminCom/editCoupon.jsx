@@ -323,6 +323,3 @@ export default function AddProduct() {
     </>
   );
 }
-
-
-

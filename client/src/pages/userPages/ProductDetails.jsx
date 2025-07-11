@@ -84,19 +84,20 @@ export default function ProductDetail() {
               {product.category}
             </p>
 
-            <div>
-              <p className="font-medium mb-2 mt-4">Size:</p>
-              <div className="flex gap-3 flex-wrap">
-                {product.size.map((size) => (
-                  <button
-                    key={size}
-                    className="px-4 py-1 border rounded hover:bg-gray-100"
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
+       <div>
+  <p className="font-medium mb-2 mt-4">Size:</p>
+  <div className="flex flex-wrap gap-3 rounded">
+    {product.size.map((size) => (
+      <button
+        key={size}
+        className="w-[30%] sm:w-auto px-4 py-1 border rounded hover:bg-gray-100"
+      >
+        {size}
+      </button>
+    ))}
+  </div>
+</div>
+
 
             <div className="flex gap-4 mt-6">
               <button className="bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600">
@@ -116,7 +117,7 @@ export default function ProductDetail() {
             <div className="mt-4 text-sm text-gray-600">
               <p>Available offers:</p>
               <ul className="list-disc pl-5 mt-2 space-y-1">
-                <li>5% cashback on Flipkart Axis Bank Credit Card</li>
+                <li>5% cashback on Axis Bank Credit Card</li>
                 <li>10% off on BOB EMI Transactions</li>
                 <li>
                   10% off up to ₹1,250 on IDFC FIRST Bank Credit EMI

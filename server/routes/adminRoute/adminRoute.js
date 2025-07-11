@@ -3,7 +3,7 @@ const router=express.Router()
 const {getAllUsers,deleteUser,blockUser}=require('../../controllers/admin/userManagement')
 const adminProtect=require('../../middleware/adminAuth')
 const protect=require('../../middleware/authMiddleware')
-const {addProduct}=require('../../controllers/admin/productManagement')
+const {addProduct,fetchAllProducts,getEditProduct}=require('../../controllers/admin/productManagement')
 const upload=require('../../middleware/upload')
 const {addCoupon,getCoupons}=require('../../controllers/admin/couponManagement')
 
@@ -16,5 +16,9 @@ router.post('/addProduct',protect,adminProtect, upload.array('images',5),addProd
 router.post('/addCoupon',protect,adminProtect,addCoupon)
 
 router.get('/getCoupon',protect,adminProtect,getCoupons)
+
+router.get('/fetchAllProducts',protect,adminProtect,fetchAllProducts)
+
+router.get('/getEditProduct/:id',protect,adminProtect,getEditProduct)
 
 module.exports=router

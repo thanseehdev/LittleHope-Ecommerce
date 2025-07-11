@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"; //
 const AdminNavbar = () => {
   const navigate = useNavigate(); // <-- Hook usa
     const handleClick = () => {
-    navigate('/admin/coupon');
+    navigate('/admin/addProduct');
   };
   return (
     <nav className="bg-[#2874F0] text-white shadow-md px-6 py-3 flex justify-between items-center ">
