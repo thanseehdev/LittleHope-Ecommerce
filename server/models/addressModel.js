@@ -6,7 +6,7 @@ const addressSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  street: {
+  landmark: {
     type: String,
     required: true,
     trim: true

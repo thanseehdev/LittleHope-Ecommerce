@@ -29,12 +29,12 @@ const getCoupons = async (req, res) => {
 }
 const addAddress = async (req, res) => {
     try {
-        const { name, street, city, zip, mobile } = req.body;
+        const { name, landmark, city, zip, mobile } = req.body;
 //console.log('req.user',req.user._id);
 
         const newAddress = new Address({
             fullName:name,
-            street,
+            landmark,
             city,
             zipCode:zip,
             mobileNo:mobile,

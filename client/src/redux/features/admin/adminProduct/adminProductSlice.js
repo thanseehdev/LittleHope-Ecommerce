@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProduct,fetchAllProducts,getEditProduct } from "./adminProductAction"
+import { createProduct,fetchAllProducts,getEditProduct,updateProduct } from "./adminProductAction"
 
 const initialState = {
     loading: false,
     products: [],
     product:null,
     error: null,
+    updateSuccess:null
 }
 
 const adminProductSlice=createSlice({
@@ -54,6 +55,20 @@ const adminProductSlice=createSlice({
         .addCase(getEditProduct.rejected,(state,action)=>{
             state.loading=false;
             state.error=action.payload
+        })
+
+        .addCase(updateProduct.pending,(state)=>{
+            state.loading=true;
+            state.error=null
+        })
+        .addCase(updateProduct.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.updateSuccess=action.payload?.message || action.error?.message || "Something went wrong";
+            state.error=null;
+        })
+        .addCase(updateProduct.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload?.message || action.error?.message || "Something went wrong";
         })
     }
 })

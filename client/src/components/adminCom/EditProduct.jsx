@@ -1,15 +1,18 @@
+
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import AdminNavbar from "./common/Navbar";
-import {getEditProduct} from "../../redux/features/admin/adminProduct/adminProductAction";
+import { useDispatch, useSelector } from "react-redux";
+import {getEditProduct,updateProduct} from "../../redux/features/admin/adminProduct/adminProductAction";
 
 export default function EditProduct() {
-  const dispatch = useDispatch();
   const { id } = useParams();
-  const { product, loading, error } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [productForm, setProductForm] = useState({
+  const { product:productDetails, loading, error, updateSuccess } = useSelector((state) => state.product);
+
+  const [product, setProduct] = useState({
     name: "",
     description: "",
     price: "",
@@ -22,48 +25,45 @@ export default function EditProduct() {
   });
 
   const [imagePreviews, setImagePreviews] = useState([null, null, null, null, null]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const availableSizes = ["2-3 y", "4-5 y", "6-7 y", "8-9 y", "10-11 y"];
 
   useEffect(() => {
-    if (id) dispatch(getEditProduct(id));
-  }, [dispatch, id]);
+    dispatch(getEditProduct(id));
+  }, [id, dispatch]);
 
   useEffect(() => {
-    if (product) {
-      setProductForm({
-        name: product.name || "",
-        description: product.description || "",
-        price: product.price || "",
-        discountPrice: product.discountPrice || "",
-        category: product.category || "",
-        size: product.size || [],
-        gender: product.gender || "",
-        stock: product.stock || "",
-        images: product.images || [null, null, null, null, null],
+    if (productDetails && productDetails._id === id) {
+      const updatedImages = [null, null, null, null, null];
+      const previews = [null, null, null, null, null];
+
+      productDetails.images?.forEach((img, i) => {
+        previews[i] = img
       });
 
-      setImagePreviews(
-        (product.images || []).map((img) =>
-          typeof img === "string"
-            ? img
-            : img
-            ? URL.createObjectURL(img)
-            : null
-        )
-      );
+      setProduct({
+        name: productDetails.name || "",
+        description: productDetails.description || "",
+        price: productDetails.price || "",
+        discountPrice: productDetails.discountPrice || "",
+        category: productDetails.category || "",
+        size: productDetails.size || [],
+        gender: productDetails.gender || "",
+        stock: productDetails.stock || "",
+        images: updatedImages,
+      });
+
+      setImagePreviews(previews);
     }
-  }, [product]);
+  }, [productDetails, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProductForm((prev) => ({ ...prev, [name]: value }));
+    setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e, index) => {
     const file = e.target.files[0] || null;
-    setProductForm((prev) => {
+
+    setProduct((prev) => {
       const newImages = [...prev.images];
       newImages[index] = file;
       return { ...prev, images: newImages };
@@ -81,33 +81,42 @@ export default function EditProduct() {
     });
   };
 
-  useEffect(() => {
-    return () => {
-      imagePreviews.forEach((url) => {
-        if (url && typeof url === "string" && url.startsWith("blob:")) {
-          URL.revokeObjectURL(url);
-        }
-      });
-    };
-  }, [imagePreviews]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const updatedImages = productForm.images.filter(Boolean); // Remove empty/null images
-    const productData = {
-      ...productForm,
-      images: updatedImages,
-    };
-
-    //await dispatch(updateProduct({ id, productData }));
-
-    setIsSubmitting(false);
+  const handleSizeChange = (e) => {
+    const { value, checked } = e.target;
+    setProduct((prev) => {
+      const updatedSizes = checked
+        ? [...prev.size, value]
+        : prev.size.filter((s) => s !== value);
+      return { ...prev, size: updatedSizes };
+    });
   };
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    formData.append("name", product.name);
+    formData.append("description", product.description);
+    formData.append("price", product.price);
+    formData.append("discountPrice", product.discountPrice);
+    formData.append("category", product.category);
+    formData.append("stock", product.stock);
+    formData.append("gender", product.gender);
+    product.size.forEach((size) => formData.append("size[]", size));
+
+    product.images.forEach((file) => {
+      if (file) formData.append("images", file);
+    });
+
+    dispatch(updateProduct({ id: productDetails._id, formData }));
+
+  };
+
+  useEffect(() => {
+    if (updateSuccess) {
+      navigate("/admin/product");
+    }
+  }, [updateSuccess, navigate]);
 
   return (
     <>
@@ -121,19 +130,21 @@ export default function EditProduct() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 text-center mb-8">
             Edit Product
           </h2>
+          {loading && <p className="text-blue-500">Loading...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {updateSuccess && <p className="text-green-600">Product updated successfully!</p>}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {/* Left Column */}
             <div className="space-y-6">
               <label className="block">
                 <span className="text-gray-700 font-semibold mb-1 block">Product Name</span>
                 <input
                   type="text"
                   name="name"
-                  value={productForm.name}
+                  value={product.name}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm"
+                  className="input"
                 />
               </label>
 
@@ -141,24 +152,24 @@ export default function EditProduct() {
                 <span className="text-gray-700 font-semibold mb-1 block">Description</span>
                 <textarea
                   name="description"
-                  value={productForm.description}
+                  value={product.description}
                   onChange={handleChange}
-                  rows="6"
                   required
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm resize-none"
+                  rows="6"
+                  className="input"
                 />
               </label>
 
               <label className="block">
-                <span className="text-gray-700 font-semibold mb-1 block">Stock Quantity</span>
+                <span className="text-gray-700 font-semibold mb-1 block">Stock</span>
                 <input
                   type="number"
                   name="stock"
-                  value={productForm.stock}
+                  value={product.stock}
                   onChange={handleChange}
                   min="0"
                   required
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm"
+                  className="input"
                 />
               </label>
 
@@ -166,12 +177,12 @@ export default function EditProduct() {
                 <span className="text-gray-700 font-semibold mb-1 block">Gender</span>
                 <select
                   name="gender"
-                  value={productForm.gender}
+                  value={product.gender}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm"
+                  className="input"
                 >
-                  <option value="" disabled>Select gender category</option>
+                  <option value="">Select</option>
                   <option>Boys</option>
                   <option>Girls</option>
                   <option>Unisex</option>
@@ -179,19 +190,17 @@ export default function EditProduct() {
               </label>
             </div>
 
-            {/* Right Column */}
             <div className="space-y-6">
               <label className="block">
                 <span className="text-gray-700 font-semibold mb-1 block">Price ($)</span>
                 <input
                   type="number"
                   name="price"
-                  value={productForm.price}
+                  value={product.price}
                   onChange={handleChange}
-                  min="0.01"
                   step="0.01"
                   required
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm"
+                  className="input"
                 />
               </label>
 
@@ -200,12 +209,11 @@ export default function EditProduct() {
                 <input
                   type="number"
                   name="discountPrice"
-                  value={productForm.discountPrice}
+                  value={product.discountPrice}
                   onChange={handleChange}
-                  min="0.01"
                   step="0.01"
                   required
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm"
+                  className="input"
                 />
               </label>
 
@@ -213,37 +221,30 @@ export default function EditProduct() {
                 <span className="text-gray-700 font-semibold mb-1 block">Category</span>
                 <select
                   name="category"
-                  value={productForm.category}
+                  value={product.category}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm"
+                  className="input"
                 >
-                  <option value="" disabled>Select category</option>
-                  <option>Casual Dress</option>
-                  <option>Party Dress</option>
-                  <option>Summer Dress</option>
-                  <option>Winter Dress</option>
-                  <option>School Uniform</option>
+                  <option value="">Select</option>
+                  <option>Casual Wear</option>
+                  <option>Formal Wear</option>
+                  <option>Combo Sets</option>
+                  <option>Ethnic Wear</option>
+                  <option>Sports Wear</option>
+                  <option>Party Wear</option>
                 </select>
               </label>
 
               <fieldset className="space-y-2">
                 <legend className="text-gray-700 font-semibold mb-1">Size</legend>
-                {availableSizes.map((sizeOption) => (
+                {["2-3 y", "4-5 y", "6-7 y", "8-9 y", "10-11 y"].map((sizeOption) => (
                   <label key={sizeOption} className="block">
                     <input
                       type="checkbox"
                       value={sizeOption}
-                      checked={productForm.size.includes(sizeOption)}
-                      onChange={(e) => {
-                        const { checked, value } = e.target;
-                        setProductForm((prev) => {
-                          const updatedSizes = checked
-                            ? [...prev.size, value]
-                            : prev.size.filter((s) => s !== value);
-                          return { ...prev, size: updatedSizes };
-                        });
-                      }}
+                      checked={product.size.includes(sizeOption)}
+                      onChange={handleSizeChange}
                       className="mr-2"
                     />
                     {sizeOption}
@@ -251,20 +252,21 @@ export default function EditProduct() {
                 ))}
               </fieldset>
 
-              {/* Image Uploads */}
               <div>
-                <span className="text-gray-700 font-semibold mb-2 block">Upload up to 5 Images</span>
+                <span className="text-gray-700 font-semibold mb-2 block">
+                  Images (replace only if needed)
+                </span>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
                   {[0, 1, 2, 3, 4].map((idx) => (
                     <div key={idx} className="flex flex-col items-center">
                       <label
-                        htmlFor={`file-input-${idx}`}
+                        htmlFor={`edit-file-${idx}`}
                         className="cursor-pointer text-white text-center font-semibold mb-2 flex items-center justify-center border-2 bg-blue-500 rounded w-30 h-10 hover:bg-blue-600"
                       >
                         <span className="text-xs">Choose Image</span>
                       </label>
                       <input
-                        id={`file-input-${idx}`}
+                        id={`edit-file-${idx}`}
                         type="file"
                         accept="image/*"
                         onChange={(e) => handleImageChange(e, idx)}
@@ -290,15 +292,13 @@ export default function EditProduct() {
 
           <button
             type="submit"
-            className="mt-8 w-full py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md"
-            disabled={isSubmitting}
+            className="mt-8 w-full py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-4 focus:ring-purple-400 transition duration-300"
           >
-            {isSubmitting ? "Updating..." : "Update Product"}
+            Update Product
           </button>
         </form>
       </div>
     </>
   );
 }
-
 

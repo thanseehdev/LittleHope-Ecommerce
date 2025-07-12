@@ -3,14 +3,15 @@ import Navbar from "../../components/userCom/common/Navbar";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { productDetail } from "../../redux/features/user/product/productDetailAction";
+import { addToCart } from "../../redux/features/user/cart/cartAction";
 
-const sizes = ["28", "30", "32", "34"];
 
 export default function ProductDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
-
+  const [selectedSize,setSelectedSize]=useState("")
   const { product, loading, error } = useSelector((state) => state.productDetail);
+   const cartState = useSelector((state) => state.cart);
 
   const [selectedImage, setSelectedImage] = useState("");
 
@@ -33,6 +34,9 @@ export default function ProductDetail() {
   const discountPercentage = Math.round(
     ((product.price - product.discountPrice) / product.price) * 100
   );
+   const handleAddToCart = () => {
+    dispatch(addToCart({ productId:product._id, quantity: 1 ,size:selectedSize}));
+  };
 
   return (
     <>
@@ -58,11 +62,12 @@ export default function ProductDetail() {
 
             {/* Main image */}
             <div className="flex-1 ">
-              <img
-  src={selectedImage}
+ <img
+  src={selectedImage || "/comingSoon2.png"}
   alt="Main Product"
-  className="rounded-lg w-full h-[450px]  lg:h-[600px] object-cover"
+  className="rounded-lg w-full h-[450px] lg:h-[600px] object-cover"
 />
+
 
             </div>
           </div>
@@ -87,22 +92,35 @@ export default function ProductDetail() {
        <div>
   <p className="font-medium mb-2 mt-4">Size:</p>
   <div className="flex flex-wrap gap-3 rounded">
-    {product.size.map((size) => (
-      <button
-        key={size}
-        className="w-[30%] sm:w-auto px-4 py-1 border rounded hover:bg-gray-100"
-      >
-        {size}
-      </button>
-    ))}
+  {product.size.map((size) => (
+  <button
+    key={size}
+    onClick={() => setSelectedSize(size)}
+    className={`w-[30%] sm:w-auto px-4 py-1 border rounded hover:bg-gray-100 ${
+      selectedSize === size ? "bg-gray-200 border-black" : ""
+    }`}
+  >
+    {size}
+  </button>
+))}
+
   </div>
 </div>
 
 
             <div className="flex gap-4 mt-6">
-              <button className="bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600">
-                Add to Cart
-              </button>
+          <button
+  onClick={handleAddToCart}
+  disabled={!selectedSize || cartState.status === "loading"}
+  className={`px-6 py-2 rounded text-white ${
+    !selectedSize || cartState.status === "loading"
+      ? "bg-orange-300 cursor-not-allowed"
+      : "bg-orange-500 hover:bg-orange-600"
+  }`}
+>
+  {cartState.status === "loading" ? "Adding..." : "Add to Cart"}
+</button>
+
               <button className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600">
                 Buy Now
               </button>

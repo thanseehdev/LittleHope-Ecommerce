@@ -4,6 +4,7 @@ const router=express.Router()
 const protect=require('../../middleware/authMiddleware')
 const {getNewArrivals, productDetails,getAllProducts }=require('../../controllers/user/productController')
 const {getProfile,getCoupons,addAddress,getAddress,deleteAddress}=require('../../controllers/user/profileController')
+const {addToCart,getCartItems}=require('../../controllers/user/cartController')
 
 router.post('/register',register)
 router.post('/verify-otp',verifyOTP)
@@ -25,5 +26,9 @@ router.post('/addAddress',protect,addAddress)
 router.get('/getAddress',protect,getAddress)
 
 router.delete('/deleteAddress/:id',protect,deleteAddress)
+
+router.post('/addToCart',protect,addToCart)
+
+router.get('/getCartItems',protect,getCartItems)
 
 module.exports = router;

@@ -40,3 +40,17 @@ export const getEditProduct=createAsyncThunk('admin/getEditProduct',async(pId,{r
         )
     }
 })
+
+export const updateProduct=createAsyncThunk('admin/updateProduct',async({id,formData},{rejectWithValue})=>{
+    try {
+        console.log('inside updateProduct',id);
+        const config = {
+            headers: { "Content-Type": "multipart/form-data" },
+        }
+        const res=await api.put(`/admin/updateProduct/${id}`,formData,config)
+        return res.data
+        
+    } catch (error) {
+        return rejectWithValue({ message: "Update failed due to X reason" });
+    }
+})

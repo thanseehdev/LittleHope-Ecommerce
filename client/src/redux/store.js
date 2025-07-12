@@ -7,6 +7,7 @@ import productDetailReducer from '../redux/features/user/product/productDetailSl
 import allProductReducer from '../redux/features/user/product/allProductsSlice'
 import profileReducer from '../redux/features/user/profile/profileSlice'
 import couponReducer from '../redux/features/admin/adminCoupon/couponSlice'
+import cartReducer from '../redux/features/user/cart/cartSlice'
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     productDetail:productDetailReducer,
     allProducts:allProductReducer,
     profile:profileReducer,
-    coupons:couponReducer
+    coupons:couponReducer,
+    cart:cartReducer
   },
 });

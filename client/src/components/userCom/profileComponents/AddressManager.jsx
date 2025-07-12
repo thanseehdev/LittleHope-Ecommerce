@@ -9,7 +9,7 @@ export default function AddressManager() {
 
   const [newAddress, setNewAddress] = useState({
     name: "",
-    street: "",
+    landmark: "",
     city: "",
     zip: "",
     mobile: "",
@@ -27,14 +27,14 @@ export default function AddressManager() {
   };
 
 const handleAddAddress = async () => {
-  if (!newAddress.name || !newAddress.street || !newAddress.city || !newAddress.zip || !newAddress.mobile) {
+  if (!newAddress.name || !newAddress.landmark || !newAddress.city || !newAddress.zip || !newAddress.mobile) {
     alert("Please fill in all fields.");
     return;
   }
 
   await dispatch(addAddress(newAddress));  // wait for add to complete
   dispatch(getAddress());  // refetch updated address list
-  setNewAddress({ name: "", street: "", city: "", zip: "", mobile: "" });
+  setNewAddress({ name: "", landmark: "", city: "", zip: "", mobile: "" });
   setShowForm(false);
 };
 
@@ -58,7 +58,7 @@ const handleDelete = async (id) => {
           {addresses.map((address) => (
             <li key={address._id} className="border p-4 rounded">
               <p className="font-semibold">{address.fullName}</p>
-              <p>{address.street}, {address.city}, {address.zipCode}</p>
+              <p>{address.landmark}, {address.city}, {address.zipCode}</p>
               <p>Mobile: {address.mobileNo}</p>
               <button
                 className="text-sm text-red-500 mt-2"
@@ -90,11 +90,11 @@ const handleDelete = async (id) => {
               placeholder="Full Name"
             />
             <input
-              name="street"
-              value={newAddress.street}
+              name="landmark"
+              value={newAddress.landmark}
               onChange={handleChange}
               className="border p-2 rounded"
-              placeholder="Street Address"
+              placeholder="Landmark Address"
             />
             <input
               name="city"

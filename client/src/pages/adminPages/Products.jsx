@@ -13,7 +13,7 @@ dispatch(fetchAllProducts())
 },[dispatch])
   const handleEditClick = (id) => {
     navigate(`/admin/editProduct/${id}`)
-  };
+  }
   const handleAddProduct=()=>{
     navigate('/admin/addProduct')
   }
