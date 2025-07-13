@@ -65,7 +65,7 @@ const profileSlice=createSlice({
         })
         .addCase(getAddress.fulfilled,(state,action)=>{
             state.loading=false;
-            console.log('getadress'+JSON.stringify(state.addresses));
+          
             
             state.addresses=action.payload.addresses || [];
             state.error=null
