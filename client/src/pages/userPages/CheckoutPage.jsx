@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../components/userCom/common/Navbar";
-import AddressCard from "../../components/userCom/address/AddressCard";
 import AddAddressModal from "../../components/userCom/address/AddAddressModal";
 import { getAddress, getCoupon } from "../../redux/features/user/profile/profileAction";
 import { getCartItems } from "../../redux/features/user/cart/cartAction";
 import { TagIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from "react-router-dom";
+import { postOrder } from "../../redux/features/user/order/orderAction";
 import {
     FaCreditCard,
     FaWallet,
@@ -25,21 +26,14 @@ const paymentOptions = [
 
 export default function CheckoutPage() {
     const dispatch = useDispatch();
-
-    const { addresses: rawAddresses } = useSelector((state) => state.profile);
+    const navigate = useNavigate()
+    const { addresses = [] } = useSelector((state) => state.profile);
     const { items } = useSelector((state) => state.cart);
     const { coupons } = useSelector((state) => state.profile);
-
-    // Normalize addresses to ensure consistent 'id' field
-    const addresses = (rawAddresses || []).map(addr => ({
-        ...addr,
-        id: addr.id || addr._id,
-    }));
 
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [selectedPayment, setSelectedPayment] = useState("cod");
-    const [showAllAddresses, setShowAllAddresses] = useState(false);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
 
     useEffect(() => {
@@ -50,20 +44,14 @@ export default function CheckoutPage() {
 
     useEffect(() => {
         if (addresses.length > 0) {
-            setSelectedAddressId(addresses[0].id);
+            setSelectedAddressId(addresses[0]._id);
         } else {
             setSelectedAddressId(null);
         }
     }, [addresses]);
 
     const handleSelectAddress = (id) => setSelectedAddressId(id);
-    const handleEditAddress = (id) => alert("Edit address " + id);
-    const handleRemoveAddress = (id) => alert("Remove address " + id);
-
-    const handleSaveAddress = (newAddress) => {
-        alert("Address saved locally. Backend integration required.");
-    };
-
+    const handleSaveAddress = (newAddress) => alert("Address saved locally. Backend integration required.");
     const handleApplyCoupon = (e) => {
         const couponId = e.target.value;
         const selected = coupons.find((c) => c._id === couponId);
@@ -94,85 +82,95 @@ export default function CheckoutPage() {
     const couponDiscount = selectedCoupon?.discount || 0;
     const totalAfterCoupon = totalAmount - couponDiscount;
 
+    const handlePlaceOrder = () => {
+        if (!selectedAddressId) {
+            alert("Please select an address.");
+            return;
+        }
+
+        if (!selectedPayment) {
+            alert("Please select a payment method.");
+            return;
+        }
+
+        const orderData = {
+            address: selectedAddressId,
+            paymentMethod: selectedPayment,
+            coupon: selectedCoupon?._id || null,
+            items: items.map((item) => ({
+                productId: item.productId._id,
+                quantity: item.quantity,
+                size: item.size,
+                priceAtPurchase: item.productId.price,
+                discountPriceAtPurchase: item.productId.discountPrice || item.productId.price,
+            })),
+            pricingSummary: {
+                totalMRP: cartSummary.totalMRP,
+                totalDiscount: cartSummary.totalDiscount,
+                platformFee,
+                couponDiscount,
+                finalAmount: totalAfterCoupon,
+            },
+        };
+
+        dispatch(postOrder(orderData, navigate));
+    };
+
+
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-                <div className="max-w-6xl mx-auto bg-white p-4 md:p-8 rounded shadow-md space-y-8">
-                    <div className="flex flex-col lg:flex-row gap-8">
-                        {/* LEFT: Address Section */}
-                        <div className="w-full lg:w-1/2 space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h2 className="text-xl font-semibold text-gray-800">Select Delivery Address</h2>
-                                <button
-                                    onClick={() => setShowAddModal(true)}
-                                    className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded text-sm font-medium transition"
-                                >
-                                    <FaPlus className="inline mr-1" /> Add
-                                </button>
-                            </div>
+            <div className="min-h-screen bg-gray-100 px-4 py-6 md:px-8">
+                <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-10">
 
-                            {addresses.length > 0 ? (
-                                <>
-                                    <div>
-                                        <h3 className="text-sm font-medium mb-2 text-gray-500">DEFAULT ADDRESS</h3>
-                                        <AddressCard
-                                            address={addresses[0]}
-                                            isSelected={selectedAddressId === addresses[0].id}
-                                            onSelect={() => handleSelectAddress(addresses[0].id)}
-                                            onEdit={() => handleEditAddress(addresses[0].id)}
-                                            onRemove={() => handleRemoveAddress(addresses[0].id)}
-                                        />
-                                    </div>
-
-                                    {showAllAddresses && addresses.length > 1 && (
-                                        <div>
-                                            <h3 className="text-sm font-medium mb-2 text-gray-500 mt-4">OTHER ADDRESSES</h3>
-                                            {addresses.slice(1).map((address) => (
-                                                <AddressCard
-                                                    key={address.id}
-                                                    address={address}
-                                                    isSelected={selectedAddressId === address.id}
-                                                    onSelect={() => handleSelectAddress(address.id)}
-                                                    onEdit={() => handleEditAddress(address.id)}
-                                                    onRemove={() => handleRemoveAddress(address.id)}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {!showAllAddresses && addresses.length > 1 && (
-                                        <button
-                                            onClick={() => setShowAllAddresses(true)}
-                                            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800 px-4 py-2 rounded text-sm font-medium transition"
+                        {/* LEFT: Address Selection */}
+                        <div className="space-y-6">
+                            <div>
+                                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Select Delivery Address</h2>
+                                <div className="space-y-4">
+                                    {addresses.map((address) => (
+                                        <div
+                                            key={address._id}
+                                            onClick={() => handleSelectAddress(address._id)}
+                                            className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${selectedAddressId === address._id
+                                                    ? "border-pink-500 bg-pink-50"
+                                                    : "border-gray-200 hover:shadow-sm"
+                                                }`}
                                         >
-                                            Show More
-                                        </button>
-                                    )}
-                                </>
-                            ) : (
-                                <p className="text-gray-600">No addresses available.</p>
-                            )}
+                                            <div className="flex justify-between items-center">
+                                                <div className="text-sm font-medium text-gray-700">
+                                                    {address.fullName} - {address.city.toUpperCase()}
+                                                </div>
+                                            </div>
+                                            <div className="text-sm mt-1 text-gray-600">{address.landmark}</div>
+                                            <div className="text-sm mt-1">Mobile: <span className="font-semibold">{address.mobileNo}</span></div>
+                                            <div className="text-sm">Pin Code: <span className="font-semibold">{address.zipCode}</span></div>
+                                            {address.cod && <div className="text-xs text-green-600 mt-1">✓ Pay on Delivery available</div>}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
 
-                        {/* RIGHT: Payment and Price Section */}
-                        <div className="w-full lg:w-1/2 space-y-6">
-                            {/* Payment */}
+                        {/* RIGHT: Payment and Price Summary */}
+                        <div className="space-y-6">
+                            {/* Payment Options */}
                             <div>
-                                <h2 className="text-xl font-semibold text-gray-800 mb-4">Choose Payment Mode</h2>
+                                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Choose Payment Method</h2>
                                 <div className="space-y-3">
                                     {paymentOptions.map((option) => (
                                         <div
                                             key={option.value}
                                             onClick={() => setSelectedPayment(option.value)}
-                                            className={`flex items-center justify-between p-4 border rounded-lg shadow-sm cursor-pointer transition ${selectedPayment === option.value
-                                                ? "border-pink-500 bg-pink-50"
-                                                : "border-gray-200 bg-white hover:bg-gray-50"
+                                            className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition ${selectedPayment === option.value
+                                                    ? "border-pink-500 bg-pink-50"
+                                                    : "border-gray-200 hover:bg-gray-50"
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
                                                 {option.icon}
-                                                <span className="text-sm font-medium">{option.label}</span>
+                                                <span className="text-sm font-medium text-gray-700">{option.label}</span>
                                             </div>
                                             <input
                                                 type="radio"
@@ -186,70 +184,60 @@ export default function CheckoutPage() {
                             </div>
 
                             {/* Price Summary */}
-                            <div className="border rounded-xl bg-gray-50 p-4">
-                                <h2 className="text-lg font-semibold text-gray-800 mb-4">
-                                    Price Details ({items?.length || 0} Items)
-                                </h2>
-                                <div className="text-sm space-y-2">
-                                    <div className="flex justify-between">
-                                        <span>Total MRP</span>
-                                        <span>₹{cartSummary.totalMRP}</span>
-                                    </div>
-                                    <div className="flex justify-between text-green-600">
-                                        <span>Discount on MRP</span>
-                                        <span>- ₹{cartSummary.totalDiscount}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>
-                                            Platform Fee <span className="text-pink-600 cursor-pointer">Know More</span>
-                                        </span>
+                            <div className="bg-gray-50 p-4 rounded-lg border">
+                                <h2 className="text-lg font-semibold text-gray-800 mb-4">Price Summary ({items?.length || 0} Items)</h2>
+                                <div className="text-sm space-y-2 text-gray-700">
+                                    <div className="flex justify-between"><span>Total MRP</span><span>₹{cartSummary.totalMRP}</span></div>
+                                    <div className="flex justify-between text-green-600"><span>Discount</span><span>- ₹{cartSummary.totalDiscount}</span></div>
+                                    <div className="flex justify-between text-gray-500">
+                                        <span>Platform Fee <span className="text-pink-600 cursor-pointer">Know more</span></span>
                                         <span>₹{platformFee}</span>
                                     </div>
                                     {selectedCoupon && (
                                         <div className="flex justify-between text-blue-600">
-                                            <span>Coupon Applied ({selectedCoupon.code})</span>
+                                            <span>Coupon ({selectedCoupon.code})</span>
                                             <span>- ₹{selectedCoupon.discount}</span>
                                         </div>
                                     )}
-                                </div>
-                                <hr className="my-3" />
-                                <div className="flex justify-between font-semibold text-base">
-                                    <span>Total Amount</span>
-                                    <span>₹{totalAfterCoupon}</span>
+                                    <hr className="my-3" />
+                                    <div className="flex justify-between font-semibold text-gray-800 text-base">
+                                        <span>Total Amount</span>
+                                        <span>₹{totalAfterCoupon}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Coupon Dropdown + Place Order */}
-                    <div className="flex items-center justify-between border-t pt-6 mt-4 text-sm">
-                        <div className="flex items-center space-x-2">
+                    {/* Bottom Section */}
+                    <div className="border-t p-6 flex flex-col md:flex-row md:justify-between items-center gap-4 bg-gray-50">
+                        <div className="flex items-center gap-3 text-sm text-gray-700">
                             <TagIcon className="h-5 w-5 text-indigo-600" />
-                            <span className="font-medium text-gray-700">Apply Coupon:</span>
+                            <span>Apply Coupon:</span>
+                            {coupons.length > 0 ? (
+                                <select
+                                    onChange={handleApplyCoupon}
+                                    value={selectedCoupon?._id || ""}
+                                    className="border px-3 py-1.5 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                >
+                                    <option value="">-- Select Coupon --</option>
+                                    {coupons.map((coupon) => (
+                                        <option key={coupon._id} value={coupon._id}>
+                                            {coupon.code}
+                                        </option>
+                                    ))}
+                                </select>
+                            ) : (
+                                <span className="text-gray-400 italic">No coupons available</span>
+                            )}
                         </div>
-
-                        {coupons.length > 0 ? (
-                            <select
-                                onChange={handleApplyCoupon}
-                                value={selectedCoupon?._id || ""}
-                                className="border focus:border-pink-500 px-3 py-1.5 rounded-md shadow-sm text-sm text-blue-900 text-center"
-                            >
-                                <option value="">-- Select Coupon --</option>
-                                {coupons.map((coupon) => (
-                                    <option key={coupon._id} value={coupon._id}>
-                                        {coupon.code}
-                                    </option>
-                                ))}
-                            </select>
-                        ) : (
-                            <span className="text-gray-400 italic">No coupons available</span>
-                        )}
-                    </div>
-
-                    <div className="flex justify-end">
-                        <button className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded text-sm font-semibold transition">
+                        <button
+                            className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-3 rounded transition"
+                            onClick={handlePlaceOrder}
+                        >
                             PLACE ORDER
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -262,6 +250,8 @@ export default function CheckoutPage() {
         </>
     );
 }
+
+
 
 
 

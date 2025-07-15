@@ -53,14 +53,14 @@ const ProductGrid = () => {
           <div className="absolute top-0 left-0 right-0 flex justify-between">
             <button
               onClick={() => setIsFilterOpen((prev) => !prev)}
-              className="w-full sm:w-1/2 bg-gray-500 text-white p-2 border rounded-s shadow-lg hover:bg-pink-400 flex items-center justify-center gap-2"
+              className="w-full sm:w-1/2 bg-gray-500 text-white p-2 border rounded-s shadow-lg hover:bg-pink-500 flex items-center justify-center gap-2"
             >
               <FunnelIcon className="w-5 h-5" />
               {isFilterOpen ? "Hide Filters" : "Filters"}
             </button>
             <button
               onClick={() => setIsSortOpen((prev) => !prev)}
-              className="w-full sm:w-1/3 bg-gray-500 text-white border p-2 rounded-e shadow-lg hover:bg-pink-400 flex items-center justify-center gap-2"
+              className="w-full sm:w-1/3 bg-gray-500 text-white border p-2 rounded-e shadow-lg hover:bg-pink-500 flex items-center justify-center gap-2"
             >
               <ChevronUpDownIcon className="w-5 h-5" />
               {isSortOpen ? "Hide Sort" : "Sort"}

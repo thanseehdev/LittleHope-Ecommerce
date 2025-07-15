@@ -3,9 +3,8 @@ import React from "react";
 export default function AddressCard({ address, isSelected, onSelect, onEdit, onRemove }) {
   return (
     <div
-      className={`border rounded-lg p-4 mb-4 ${isSelected ? "border-pink-500" : "border-gray-300"
-        } transition-all cursor-pointer`}
-      onClick={() => onSelect()} // onSelect now called with no args, bound in parent
+      className={`border rounded-lg p-4 mb-4 ${isSelected ? "border-pink-500" : "border-gray-300"} transition-all cursor-pointer`}
+      onClick={() => onSelect(address.id)} // Pass address ID to the parent
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -13,9 +12,9 @@ export default function AddressCard({ address, isSelected, onSelect, onEdit, onR
             type="radio"
             name="selectedAddress"
             checked={isSelected}
-            onChange={() => onSelect()} // onSelect called without args
+            onChange={() => {}}
             className="accent-pink-500"
-            onClick={e => e.stopPropagation()} // prevent parent click triggering twice
+            onClick={(e) => e.stopPropagation()} // Prevent the div click from triggering
           />
           <div className="font-semibold">{address.fullName}</div>
           <span className="text-xs bg-gray-200 px-2 py-0.5 rounded-full">
@@ -35,7 +34,7 @@ export default function AddressCard({ address, isSelected, onSelect, onEdit, onR
       )}
       <div className="mt-3 flex gap-3">
         <button
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             onEdit(address.id);
           }}
@@ -44,7 +43,7 @@ export default function AddressCard({ address, isSelected, onSelect, onEdit, onR
           EDIT
         </button>
         <button
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             onRemove(address.id);
           }}

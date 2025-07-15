@@ -5,6 +5,7 @@ const protect=require('../../middleware/authMiddleware')
 const {getNewArrivals, productDetails,getAllProducts }=require('../../controllers/user/productController')
 const {getProfile,getCoupons,addAddress,getAddress,deleteAddress}=require('../../controllers/user/profileController')
 const {addToCart,getCartItems,updateQuantity}=require('../../controllers/user/cartController')
+const {createOrder,getUserOrders,getSingleOrder} =require('../../controllers/user/orderController')
 
 router.post('/register',register)
 router.post('/verify-otp',verifyOTP)
@@ -32,5 +33,11 @@ router.post('/addToCart',protect,addToCart)
 router.get('/getCartItems',protect,getCartItems)
 
 router.put('/updateItemQuantity',protect,updateQuantity)
+
+router.post('/createOrder',protect,createOrder)
+
+router.get('/getOrders',protect,getUserOrders)
+
+router.get('/orderDetails/:id',protect,getSingleOrder)
 
 module.exports = router;

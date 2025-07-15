@@ -116,7 +116,7 @@ const Navbar = () => {
           }`}
       >
         <div className="flex items-center justify-between p-4 border-b">
-          <div className="text-xl font-semibold text-pink-400">LittleHope</div>
+          <div className="text-xl font-semibold text-pink-500">LittleHope</div>
           <FaTimes
             className="text-gray-600 cursor-pointer"
             onClick={() => setIsDrawerOpen(false)}
@@ -127,7 +127,7 @@ const Navbar = () => {
             <input
               type="text"
               placeholder="Search"
-              className="w-full border border-pink-300 rounded-md py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full border  rounded-md py-2 pl-10 pr-4 text-sm border-gray-300  focus:outline-none focus:border-pink-500"
             />
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           </div>
