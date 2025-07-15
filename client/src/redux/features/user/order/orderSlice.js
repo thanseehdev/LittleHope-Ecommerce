@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { postOrder,getOrders,getOrderDetails } from "./orderAction";
+import { postOrder,getOrders,getOrderDetails,cancellOrder } from "./orderAction";
 
 
 const initialState={
@@ -60,6 +60,20 @@ const orderSlice=createSlice({
         .addCase(getOrderDetails.rejected,(state,action)=>{
             state.loading=false;
             state.error=action.payload||'failed to fetch order details'
+        })
+
+
+        .addCase(cancellOrder.pending,(state)=>{
+            state.loading=true;
+            state.error=null
+        })
+        .addCase(cancellOrder.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.success=action.payload||'order cancell success'
+        })
+        .addCase(cancellOrder.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload||'cancel order failed'
         })
     }
 })

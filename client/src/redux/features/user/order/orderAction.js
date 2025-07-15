@@ -33,3 +33,13 @@ export const getOrderDetails=createAsyncThunk('user/getOrderDetails',async(order
         return rejectWithValue(error.response?.data?.message || "Failed to get order details");
     }
 })
+
+export const cancellOrder=createAsyncThunk('user/cancellOrder',async(orderId,{rejectWithValue})=>{
+    try {
+        console.log('inside cancellOrder action')
+        const res=await api.put(`/user/cancellOrder/${orderId}`)
+        return res.data
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Failed to cancell order");
+    }
+})

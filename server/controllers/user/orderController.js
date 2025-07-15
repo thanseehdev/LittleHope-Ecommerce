@@ -50,9 +50,9 @@ const getSingleOrder = async (req, res) => {
             .populate('user', 'name email')
             .populate('address')
             .populate({
-    path: "items.productId",
-    select: "name images"
-  })
+                path: "items.productId",
+                select: "name images"
+            })
             .populate('coupon', 'code discount');
 
         if (!order) {
@@ -66,10 +66,34 @@ const getSingleOrder = async (req, res) => {
     }
 }
 
+const cancellOrder = async (req, res) => {
+    const orderId  = req.params.id
+    try {
+        const order = await Order.findById(orderId);
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        if (order.status !== "pending") {
+            return res.status(400).json({ message: "Order cannot be canceled, it is not in the 'pending' status" });
+        }
+
+        order.status = "cancelled";
+        await order.save();
+
+        res.status(200).json({ message: "Order canceled successfully"});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
 
 
 module.exports = {
     createOrder,
     getUserOrders,
-    getSingleOrder
+    getSingleOrder,
+    cancellOrder
 }
