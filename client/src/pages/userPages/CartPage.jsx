@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartItems, updateQuantity } from "../../redux/features/user/cart/cartAction";
+import { getCartItems, updateQuantity,removeFromCart } from "../../redux/features/user/cart/cartAction";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export default function CartPage() {
     discount: Math.round(
       ((item.productId.price - item.productId.discountPrice) /
         item.productId.price) *
-        100
+      100
     ),
     size: item.size,
     qty: item.quantity,
@@ -34,8 +34,8 @@ export default function CartPage() {
   const platformFee = 20;
   const totalAmount = totalPrice + platformFee;
 
-  const handleQtyChange = async (id, newQty) => {
-    const item = items.find((i) => i.productId._id === id);
+  const handleQtyChange = async (id, newQty,size) => {
+    const item = items.find((i) => i.productId._id === id&&i.size===size);
     if (item) {
       await dispatch(
         updateQuantity({
@@ -49,7 +49,9 @@ export default function CartPage() {
   };
 
   const handleRemove = async (id, size) => {
+    
     await dispatch(removeFromCart({ productId: id, size }));
+    dispatch(getCartItems());
   };
 
   return (
@@ -58,7 +60,7 @@ export default function CartPage() {
       <div className="bg-gray-100 min-h-screen py-6 px-4 md:px-8">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-2">
             <h2 className="text-xl font-semibold text-gray-800">
               My Cart{" "}
               <span className="text-gray-500 text-sm">
@@ -73,43 +75,40 @@ export default function CartPage() {
             ) : (
               cartItems.map((item) => (
                 <div
-                  key={item.id}
-                  className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row gap-4"
-                >
+    key={`${item.id}-${item.size}`}
+    className="bg-white p-4 rounded-lg shadow flex flex-row items-start gap-4 relative"
+  >
+                  <button
+                    className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-lg font-bold"
+                    onClick={() => handleRemove(item.id, item.size)}
+                  >
+                    ✕
+                  </button>
+
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-[150px] h-[150px] rounded-md object-cover"
+                    className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] object-cover rounded"
                   />
 
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div className="flex justify-between">
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          {item.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">{item.subtitle}</p>
-                      </div>
-                      <button
-                        className="text-red-500 text-sm hover:underline"
-                        onClick={() => handleRemove(item.id, item.size)}
-                      >
-                        Remove
-                      </button>
-                    </div>
+                  <div className="flex-1 flex flex-col justify-between gap-2">
+                    <h3 className="text-base font-semibold text-gray-800">{item.title}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2">{item.subtitle}</p>
 
-                    <div className="mt-3 text-sm text-gray-700">
-                      <span className="mr-4">
-                        Size: <strong>{item.size}</strong>
-                      </span>
-                      <label>
-                        Qty:{" "}
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 mt-2">
+                      <div className="flex items-center text-sm gap-1">
+                        <span className="font-medium text-gray-700">Size:</span>
+                        <span className="border border-gray-300 px-2 py-0.5 rounded-md bg-gray-50">
+                          {item.size}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-sm gap-1">
+                        <span className="font-medium text-gray-700">Qty:</span>
                         <select
                           value={item.qty}
-                          onChange={(e) =>
-                            handleQtyChange(item.id, e.target.value)
-                          }
-                          className="ml-1 border rounded px-2 py-1 bg-white"
+                          onChange={(e) => handleQtyChange(item.id, e.target.value,item.size)}
+                          className="border rounded  bg-white text-sm"
                         >
                           {[1, 2, 3, 4, 5].map((qty) => (
                             <option key={qty} value={qty}>
@@ -117,27 +116,31 @@ export default function CartPage() {
                             </option>
                           ))}
                         </select>
-                      </label>
+                      </div>
+
+
                     </div>
 
-                    <div className="mt-3 flex items-center space-x-2">
-                      <span className="text-lg font-semibold text-gray-800">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-lg font-bold text-gray-800">
                         ₹{item.price * item.qty}
                       </span>
-                      <span className="text-sm text-gray-500 line-through">
+                      <span className="line-through text-gray-500">
                         ₹{item.originalPrice * item.qty}
                       </span>
-                      <span className="text-sm text-green-600 font-medium">
+                      <span className=" text-xs text-orange-600 font-semibold bg-orange-100 px-2 py-0.5 rounded-md">
                         {item.discount}% OFF
                       </span>
                     </div>
 
-                    <p className="text-xs text-gray-500 mt-1">
-                      7 days return available
-                    </p>
+                    <div className="text-xs text-gray-500">14 days return available</div>
+                    <div className="text-xs text-green-600 font-medium">
+                      Delivery by <span className="font-semibold">21 Jul - 23 Jul</span>
+                    </div>
                   </div>
                 </div>
               ))
+
             )}
           </div>
 
@@ -166,7 +169,7 @@ export default function CartPage() {
               </div>
             </div>
             <button className="mt-6 w-full bg-pink-600 hover:bg-pink-700 transition text-white py-2 rounded-md font-semibold">
-              PLACE ORDER
+              CHECKOUT
             </button>
           </div>
         </div>

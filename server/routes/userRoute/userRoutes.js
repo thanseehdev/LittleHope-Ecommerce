@@ -4,8 +4,9 @@ const router=express.Router()
 const protect=require('../../middleware/authMiddleware')
 const {getNewArrivals, productDetails,getAllProducts }=require('../../controllers/user/productController')
 const {getProfile,getCoupons,addAddress,getAddress,deleteAddress}=require('../../controllers/user/profileController')
-const {addToCart,getCartItems,updateQuantity}=require('../../controllers/user/cartController')
+const {addToCart,getCartItems,updateQuantity,removeFromCart}=require('../../controllers/user/cartController')
 const {createOrder,getUserOrders,getSingleOrder,cancellOrder} =require('../../controllers/user/orderController')
+const {addToWishlist,removeFromWish,getWishItem} =require('../../controllers/user/wishlistController')
 
 router.post('/register',register)
 router.post('/verify-otp',verifyOTP)
@@ -41,5 +42,13 @@ router.get('/getOrders',protect,getUserOrders)
 router.get('/orderDetails/:id',protect,getSingleOrder)
 
 router.put('/cancellOrder/:id',protect,cancellOrder)
+
+router.post('/addToWishlist/:id',protect,addToWishlist)
+
+router.delete('/removeWishItem/:productId',protect,removeFromWish)
+
+router.get('/getWishItem',protect,getWishItem)
+
+router.delete('/removeFromCart',protect,removeFromCart)
 
 module.exports = router;

@@ -1,77 +1,144 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
-
-const initialWishlistItems = [
-  {
-    id: 1,
-    title: "Blackberrys",
-    price: 1871,
-    originalPrice: 2599,
-    discount: 28,
-    image: "/productsImg/allProducts-img/productF-7a-img.jpg",
-  },
-  {
-    id: 2,
-    title: "Roadster",
-    price: 599,
-    originalPrice: 1499,
-    discount: 60,
-    image: "/productsImg/allProducts-img/productF-1a-img.jpg",
-  },
-];
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import { getWishItem, removeWishItem } from "../../redux/features/user/wishlist/wishlistAction";
+import { addToCart } from "../../redux/features/user/cart/cartAction";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function WishlistCard() {
-  const [wishlistItems, setWishlistItems] = useState(initialWishlistItems);
+  const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState("All");
+  const [showSizeModal, setShowSizeModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
 
-  const removeItem = (id) => {
-    setWishlistItems(wishlistItems.filter(item => item.id !== id));
+  const { items, error, loading } = useSelector((state) => state.wishlist);
+
+  useEffect(() => {
+    dispatch(getWishItem());
+  }, [dispatch]);
+
+  const handleRemove = async (ProductId) => {
+    await dispatch(removeWishItem(ProductId));
+    dispatch(getWishItem());
+  };
+  const handleMoveToBag = (product) => {
+    setSelectedProduct(product);
+    setShowSizeModal(true);
+  };
+  const handleAddToBag = (productId, size) => {
+    console.log("Add to bag:", productId, "Size:", size)
+    dispatch(addToCart({ productId: productId, quantity: 1, size: size }));
+    setShowSizeModal(false)
+    setSelectedSize(null)
   };
 
-  const moveToBag = (item) => {
-    console.log(`Moved ${item.title} to bag!`); // Here, you'd add it to the cart in a real app
-  };
+
 
   return (
     <>
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <h1 className="text-lg font-semibold mb-4">My Wishlist ({wishlistItems.length} items)</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-3">
+      <div className="bg-white min-h-screen px-4 pt-4 md:px-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Wishlist</h2>
+          <span className="text-gray-500 text-sm">{items?.length || 0} items</span>
+        </div>
 
-          {wishlistItems.map((item) => (
-            <div key={item.id} className="border rounded-md shadow-sm p-4 w-full max-w-xs">
-              <div className="relative">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-64 object-cover rounded-lg mb-4"
-                />
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 rounded-full w-7 h-7 flex items-center justify-center text-gray-600 text-sm"
-                >
-                  ✕
+        {/* Tabs */}
+        <div className="flex gap-2 mb-4">
+          <button className="bg-gray-100 text-sm px-4 py-2 rounded-full font-medium">
+            Collections
+          </button>
+          {["All", "Trousers", "Jackets"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-full text-sm border ${activeTab === tab ? "border-pink-500 text-pink-500" : "text-gray-600"
+                }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Loading / Error */}
+        {loading && <p>Loading wishlist...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
+
+        {/* Wishlist Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {items?.map((item) => {
+            const product = item.product;
+            return (
+              <div key={item._id} className="bg-white shadow rounded-lg p-3 relative">
+                <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
+
+                  <XMarkIcon onClick={() => handleRemove(product._id)} className="h-4 w-4 text-gray-500" />
+
                 </button>
-              </div>
-              <div className="mt-2">
-                <p className="font-medium text-sm">{item.title}</p>
-                <div className="text-sm mt-1">
-                  <span className="font-bold text-black">₹{item.price}</span>{" "}
-                  <span className="line-through text-gray-500 text-xs">₹{item.originalPrice}</span>{" "}
-                  <span className="text-red-500 text-xs">({item.discount}% OFF)</span>
+                <img
+                  src={product?.images?.[0] || "/default-product.jpg"}
+                  alt={product?.name || "Product"}
+                  className="w-full h-40 lg:h-[250px] lg:w-[250px] rounded-md object-cover"
+                />
+                <div className="mt-2">
+                  <h3 className="font-semibold text-md mt-1">{product?.name}</h3>
+                  <div className="text-sm text-gray-700 mt-1">
+                    <span className="font-bold text-black">₹{product?.discountPrice || product?.price}</span>{" "}
+                    {product?.discountPrice && product?.price && (
+                      <span className="line-through text-gray-400">₹{product.price}</span>
+                    )}
+                    <span className="text-green-600 text-xs ml-1">
+                      {Math.round(((product.price - product.discountPrice) / product.price) * 100)}%OFF
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => handleMoveToBag(product)}
+                    className="mt-2 w-full bg-pink-600 hover:bg-pink-700 text-white text-sm py-2 rounded"
+                  >
+                    MOVE TO BAG
+                  </button>
+
                 </div>
+              </div>
+            );
+          })}
+          {showSizeModal && selectedProduct && (
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-end md:items-center justify-center px-4">
+              <div className="bg-white w-full md:w-[400px] rounded-t-lg md:rounded-lg p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Select Size</h3>
+                  <button onClick={() => setShowSizeModal(false)} className="text-gray-500">&times;</button>
+                </div>
+
+                <div className="flex  gap-1 justify-center mb-6">
+                  {selectedProduct.size.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setSelectedSize(s)}
+                      className={`border rounded  text-center text-sm font-medium h-8 w-20
+                     ${selectedSize === s ? "bg-pink-600 text-white" : "bg-gray-200 text-black"}`}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
+
                 <button
-                  onClick={() => moveToBag(item)}
-                  className="text-pink-600 font-semibold text-sm mt-2"
+                  onClick={() => handleAddToBag(selectedProduct._id,selectedSize)}
+                  className="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded"
                 >
-                  MOVE TO BAG
+                  DONE
                 </button>
               </div>
             </div>
-          ))}
+          )}
+
+
         </div>
       </div>
     </>
   );
 }
+
+
 

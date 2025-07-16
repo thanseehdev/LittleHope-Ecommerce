@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addToCart,getCartItems,updateQuantity } from "./cartAction";
+import { addToCart,getCartItems,updateQuantity ,removeFromCart} from "./cartAction";
 
 const initialState={
     items:[],
@@ -54,6 +54,20 @@ const cartSlice=createSlice({
             state.error=null
         })
         .addCase(updateQuantity.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload||'something went wrong'
+        })
+
+
+        .addCase(removeFromCart.pending,(state)=>{
+            state.loading=true;
+            state.error=null
+        })
+        .addCase(removeFromCart.fulfilled,(state)=>{
+            state.loading=false;
+            state.error=null
+        })
+        .addCase(removeFromCart.rejected,(state,action)=>{
             state.loading=false;
             state.error=action.payload||'something went wrong'
         })
