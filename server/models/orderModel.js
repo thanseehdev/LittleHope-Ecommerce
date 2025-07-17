@@ -7,10 +7,33 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    address: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Address",
-      required: true,
+    addressInfo: {
+      fullName: {
+        type: String,
+        required: true,
+        trim: true
+      },
+      landmark: {
+        type: String,
+        required: true,
+        trim: true
+      },
+      city: {
+        type: String,
+        required: true,
+        trim: true
+      },
+      zipCode: {
+        type: String,
+        required: true,
+        match: /^[1-9][0-9]{5}$/, // Regex for Indian PIN code (6 digits)
+        trim: true
+      },
+      mobileNo: {
+        type: String,
+        required: true,
+        trim: true
+      }
     },
     items: [
       {

@@ -1,3 +1,8 @@
+
+
+
+
+
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCoupon } from "../../../redux/features/user/profile/profileAction";
@@ -13,7 +18,7 @@ export default function Coupons() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">🎉 Available Coupons</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">🎉 My Coupons</h2>
 
       {loading && (
         <div className="text-gray-600 animate-pulse">Loading coupons...</div>
@@ -26,30 +31,43 @@ export default function Coupons() {
         </div>
       )}
 
-      <div className="grid gap-4">
+      <div className="space-y-4">
         {coupons.length > 0 ? (
-          coupons.map((coupon) => (
+          coupons.map((coupon, index) => (
             <div
               key={coupon._id}
-              className="border border-yellow-300 bg-yellow-50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+              className={`flex items-center rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow ${
+                index % 2 === 0 ? "bg-blue-50" : "bg-yellow-50"
+              }`}
             >
-              <div className="flex items-center mb-2">
-                <FiGift className="text-yellow-600 mr-2 text-xl" />
-                <span className="text-lg font-semibold text-gray-800">
-                  ₹{coupon.discount} OFF
-                </span>
+              {/* Left Icon Area */}
+              <div
+                className={`w-1/3 flex items-center justify-center py-6 ${
+                  index % 2 === 0 ? "bg-blue-100" : "bg-yellow-100"
+                }`}
+              >
+                <FiGift
+                  className={`text-4xl ${
+                    index % 2 === 0 ? "text-blue-600" : "text-yellow-600"
+                  }`}
+                />
               </div>
 
-              <p className="text-sm text-gray-700 mb-1">
+              {/* Text Content */}
+              <div className="w-2/3 p-4">
+                <p className="text-sm text-gray-700 mb-1">
                 Use code: <span className="font-mono font-bold text-blue-700">{coupon.code}</span>
               </p>
-
-              <p className="text-xs text-gray-600">
+                 <span className="text-lg font-semibold text-gray-800">
+                  ₹{coupon.discount} OFF
+                </span>
+                 <p className="text-xs text-gray-600">
                 Expires on{" "}
                 <span className="font-medium">
                   {new Date(coupon.expiry).toLocaleDateString()}
                 </span>
               </p>
+              </div>
             </div>
           ))
         ) : (
@@ -61,5 +79,3 @@ export default function Coupons() {
     </div>
   );
 }
-
-

@@ -12,24 +12,55 @@ import {
   FaPhone,
   FaInfoCircle,
   FaComments,
-  FaTag  
+  FaTag
 } from "react-icons/fa";
 
+// ✅ Add this BEFORE the Navbar component
+const DrawerItem = ({ icon, label, onClick }) => (
+  <div
+    className="flex items-center space-x-3 py-2 px-2 rounded-md cursor-pointer hover:bg-gray-100 hover:text-pink-600 transition"
+    onClick={onClick}
+  >
+    <div className="text-pinl-500">{icon}</div>
+    <div>{label}</div>
+  </div>
+);
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false); // New state for dropdown visibility
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/profile');
+    navigate('/test');
   };
 
   return (
     <>
-      <nav className="w-full shadow-sm border-b border-gray-200 bg-white sticky top-0 z-50">
+      <nav className="w-full  border-b  sticky top-0 z-50  bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-[1300px] mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo */}
-          <img src="/LittleHope-Logo-Img.png" alt="Logo" className="h-10 w-auto" />
+          <img src="/LittleHope-Logo-Img.png" alt="Logo" className="h-10 w-auto hidden lg:block" />
+         {/* Mobile Search Box with Logo inside (visible only on small screens) */}
+<div className="w-full block lg:hidden  mr-5">
+  <div className="relative flex items-center border border-gray-300 rounded-md bg-white">
+    {/* Logo inside input box */}
+    <div className="pl-2">
+      <img src="/LittleHope-Logo-Img.png" alt="Logo" className="h-6 w-auto" />
+    </div>
+    
+ 
+    
+<input
+  type="text"
+  placeholder='Search "Products"'
+  className="flex-1 py-2 px-2 text-[16px] focus:outline-none"
+/>
+
+
+    <FaSearch className="text-gray-500 mr-2 hover:text-pink-500 text-sm" />
+  </div>
+</div>
+
 
           {/* Desktop Search */}
           <div className="flex-1 mx-6 hidden lg:block">
@@ -111,48 +142,65 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Drawer */}
+      {/* Mobile Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md z-50 transform transition-transform duration-300 ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 h-full w-72 bg-white shadow-lg z-50 transform transition-transform duration-300 ${isDrawerOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         <div className="flex items-center justify-between p-4 border-b">
-          <div className="text-xl font-semibold text-pink-500">LittleHope</div>
+          <img src="/LittleHope-Logo-Img.png" alt="Logo" className="h-8" />
           <FaTimes
             className="text-gray-600 cursor-pointer"
             onClick={() => setIsDrawerOpen(false)}
           />
         </div>
-        <div className="p-4 space-y-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full border  rounded-md py-2 pl-10 pr-4 text-sm border-gray-300  focus:outline-none focus:border-pink-500"
-            />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+
+
+
+        {/* Drawer Items */}
+        <div className="px-4 text-sm">
+          {/* Section: Account */}
+
+          <div className="py-2 text-xs text-gray-400 uppercase tracking-wide mt-2">Account</div>
+          <div className="space-y-3">
+            <DrawerItem icon={<FaRegUser />} label="Profile" />
+            <DrawerItem icon={<FaHeart />} label="Wishlist" />
+            <DrawerItem icon={<FaShoppingBag />} label="Bag" />
           </div>
-          <div className="flex items-center  rounded py-1 space-x-2 cursor-pointer hover:text-pink-600">
-            <FaRegUser />
-            <span>Profile</span>
+
+          {/* Divider */}
+          <div className="my-4 border-t" />
+
+          {/* Section: Orders & Coupons */}
+          <div className="py-2 text-xs text-gray-400 uppercase tracking-wide">Orders</div>
+          <div className="space-y-3">
+            <DrawerItem icon={<FaBox />} label="My Orders" />
+            <DrawerItem icon={<FaTag />} label="Coupons" />
           </div>
-          <div className="flex items-center  rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
-            <FaHeart />
-            <span>Wishlist</span>
+
+          {/* Divider */}
+          <div className="my-4 border-t" />
+
+          {/* Section: Help & Settings */}
+          <div className="py-2 text-xs text-gray-400 uppercase tracking-wide">Support</div>
+          <div className="space-y-3">
+            <DrawerItem icon={<FaComments />} label="Contact Us" onClick={handleClick} />
+            <DrawerItem icon={<FaInfoCircle />} label="About" />
+            <DrawerItem icon={<FaPhone />} label="Help Center" />
           </div>
-          <div className="flex items-center  rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
-            <FaBox />
-            <span>Orders</span>
-          </div>
-          <div onClick={handleClick} className="flex items-center  rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
-            <span> <FaComments /></span>
-            <span>Contact</span>
-          </div>
-          <div className="flex items-center rounded space-x-2 py-1 cursor-pointer hover:text-pink-600">
-            <FaInfoCircle />
-            <span>Logout</span>
-          </div>
+
+          {/* Divider */}
+          <div className="my-4 border-t" />
+
+          {/* Logout */}
+          <div className="border border-pink-500 font-bold text-pink-500">
+  <DrawerItem icon={<FaInfoCircle />} label="LOG OUT" />
+</div>
         </div>
+        <p className="text-xs font-normal  pl-5 mt-5">Beta Version 1.03.44</p>
       </div>
+      
+
 
       {/* Backdrop when drawer is open */}
       {isDrawerOpen && (

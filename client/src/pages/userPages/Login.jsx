@@ -7,19 +7,19 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { error, loading, isAuthenticated,user } = useSelector((state) => state.user)
+  const { error, loading, isAuthenticated, user } = useSelector((state) => state.user)
 
- useEffect(() => {
-  if (isAuthenticated && user) {
-    if (user.role === 'admin') {
-      navigate('/admin/dashboard');
-    } else {
-      navigate('/home');
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/home');
+      }
     }
-  }
-}, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
-  
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -56,8 +56,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-white shadow-md  p-6 sm:p-10">
+    <div className="min-h-screen flex bg-gradient-to-br from-pink-50 to-white items-center justify-center bg-gray-50 px-4 py-10">
+      <div className="w-full max-w-xl bg-white shadow-md  overflow-hidden p-6 sm:p-10">
         {/* Banner */}
         <div className="bg-orange-100 rounded-lg p-4 sm:p-6 mb-6 text-center">
           <h3 className="text-xl font-bold text-orange-500">Extra 5% OFF*</h3>
@@ -70,11 +70,11 @@ export default function Login() {
         </div>
 
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6">Log In</h2>
-{error && (
-  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
-    {error}
-  </div>
-)}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -120,6 +120,13 @@ export default function Login() {
               className={`w-full border ${formErrors.password ? 'border-red-500' : 'border-gray-300'
                 } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
             />
+
+            <div className="text-right text-sm mt-1">
+              <Link to="/forgot-password" className="text-blue-600 hover:underline">
+                Forgot Password?
+              </Link>
+            </div>
+
           </div>
 
           <button

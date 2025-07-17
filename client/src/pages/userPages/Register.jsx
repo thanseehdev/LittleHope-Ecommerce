@@ -71,7 +71,7 @@ export default function Register() {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+    <div className="min-h-screen flex bg-gradient-to-br from-pink-50 to-white items-center justify-center bg-gray-50 px-4 py-10">
       <div className="w-full max-w-xl bg-white shadow-md  overflow-hidden p-6 sm:p-10">
 
         {/* Top right image inside form */}

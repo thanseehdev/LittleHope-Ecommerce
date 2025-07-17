@@ -109,14 +109,14 @@ export default function OrderDetailPage() {
             <h3 className="text-lg font-semibold mb-3">Delivery Address</h3>
             <div className="bg-gray-100 p-4 rounded shadow-sm">
               <p className="font-semibold text-base mb-1">
-                {order.address?.fullName}{" "}
+                {order.addressInfo?.fullName}{" "}
                 <span className=" font-normal  ml-3">
-                  {order.address?.mobileNo}
+                  {order.addressInfo?.mobileNo}
                 </span>
               </p>
               <p className="text-sm text-gray-700 leading-relaxed">
-                {order.address?.landmark}, {order.address?.city},{" "}
-                {order.address?.state} - {order.address?.zipCode}
+                {order.addressInfo?.landmark}, {order.addressInfo?.city},{" "}
+                {order.addressInfo?.state} - {order.addressInfo?.zipCode}
               </p>
             </div>
           </div>

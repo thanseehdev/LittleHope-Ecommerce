@@ -26,7 +26,7 @@ const paymentOptions = [
 
 export default function CheckoutPage() {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { addresses = [] } = useSelector((state) => state.profile);
     const { items } = useSelector((state) => state.cart);
     const { coupons } = useSelector((state) => state.profile);
@@ -51,7 +51,11 @@ export default function CheckoutPage() {
     }, [addresses]);
 
     const handleSelectAddress = (id) => setSelectedAddressId(id);
-    const handleSaveAddress = (newAddress) => alert("Address saved locally. Backend integration required.");
+
+    const handleSaveAddress = (newAddress) => {
+        alert("Address saved locally. Backend integration required.");
+    };
+
     const handleApplyCoupon = (e) => {
         const couponId = e.target.value;
         const selected = coupons.find((c) => c._id === couponId);
@@ -93,8 +97,20 @@ export default function CheckoutPage() {
             return;
         }
 
+        const selectedAddress = addresses.find(addr => addr._id === selectedAddressId);
+        if (!selectedAddress) {
+            alert("Selected address not found.");
+            return;
+        }
+
         const orderData = {
-            address: selectedAddressId,
+            addressInfo: {
+                fullName: selectedAddress.fullName,
+                landmark: selectedAddress.landmark,
+                city: selectedAddress.city,
+                zipCode: selectedAddress.zipCode,
+                mobileNo: selectedAddress.mobileNo,
+            },
             paymentMethod: selectedPayment,
             coupon: selectedCoupon?._id || null,
             items: items.map((item) => ({
@@ -116,7 +132,6 @@ export default function CheckoutPage() {
         dispatch(postOrder(orderData, navigate));
     };
 
-
     return (
         <>
             <Navbar />
@@ -124,7 +139,7 @@ export default function CheckoutPage() {
                 <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-10">
 
-                        {/* LEFT: Address Selection */}
+                        {/* Address Selection */}
                         <div className="space-y-6">
                             <div>
                                 <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Select Delivery Address</h2>
@@ -153,9 +168,8 @@ export default function CheckoutPage() {
                             </div>
                         </div>
 
-                        {/* RIGHT: Payment and Price Summary */}
+                        {/* Payment & Summary */}
                         <div className="space-y-6">
-                            {/* Payment Options */}
                             <div>
                                 <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Choose Payment Method</h2>
                                 <div className="space-y-3">
@@ -183,7 +197,6 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
 
-                            {/* Price Summary */}
                             <div className="bg-gray-50 p-4 rounded-lg border">
                                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Price Summary ({items?.length || 0} Items)</h2>
                                 <div className="text-sm space-y-2 text-gray-700">
@@ -237,7 +250,6 @@ export default function CheckoutPage() {
                         >
                             PLACE ORDER
                         </button>
-
                     </div>
                 </div>
             </div>
@@ -250,6 +262,7 @@ export default function CheckoutPage() {
         </>
     );
 }
+
 
 
 
