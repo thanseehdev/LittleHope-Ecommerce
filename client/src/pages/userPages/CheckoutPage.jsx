@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../components/userCom/common/Navbar";
 import AddAddressModal from "../../components/userCom/address/AddAddressModal";
-import { getAddress, getCoupon } from "../../redux/features/user/profile/profileAction";
+import { getAddress, getCoupon,addAddress } from "../../redux/features/user/profile/profileAction";
 import { getCartItems } from "../../redux/features/user/cart/cartAction";
 import { TagIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,6 @@ import {
     FaMoneyBillAlt,
     FaUniversity,
     FaMobileAlt,
-    FaPlus,
 } from "react-icons/fa";
 
 const paymentOptions = [
@@ -27,9 +26,8 @@ const paymentOptions = [
 export default function CheckoutPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { addresses = [] } = useSelector((state) => state.profile);
+    const { addresses = [], coupons = [] } = useSelector((state) => state.profile);
     const { items } = useSelector((state) => state.cart);
-    const { coupons } = useSelector((state) => state.profile);
 
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -52,8 +50,11 @@ export default function CheckoutPage() {
 
     const handleSelectAddress = (id) => setSelectedAddressId(id);
 
-    const handleSaveAddress = (newAddress) => {
-        alert("Address saved locally. Backend integration required.");
+    const handleSaveAddress = async(formData) => {
+        console.log('data', formData);
+        await dispatch(addAddress(formData))
+        dispatch(getAddress())
+        setShowAddModal(false);
     };
 
     const handleApplyCoupon = (e) => {
@@ -136,39 +137,50 @@ export default function CheckoutPage() {
         <>
             <Navbar />
             <div className="min-h-screen bg-gray-100 px-4 py-6 md:px-8">
-                <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="max-w-6xl  mx-auto bg-white  shadow-lg overflow-hidden">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-10">
-
-                        {/* Address Selection */}
+                        {/* Address Section */}
                         <div className="space-y-6">
                             <div>
                                 <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Select Delivery Address</h2>
-                                <div className="space-y-4">
-                                    {addresses.map((address) => (
-                                        <div
-                                            key={address._id}
-                                            onClick={() => handleSelectAddress(address._id)}
-                                            className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${selectedAddressId === address._id
+                                {addresses.length === 0 ? (
+                                    <div className="text-center py-6">
+                                        <p className="text-gray-600 mb-4">No addresses found.</p>
+                                        <button
+                                            className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 transition"
+                                            onClick={() => setShowAddModal(true)}
+                                        >
+                                            + Add New Address
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {addresses.map((address) => (
+                                            <div
+                                                key={address._id}
+                                                onClick={() => handleSelectAddress(address._id)}
+                                                className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${selectedAddressId === address._id
                                                     ? "border-pink-500 bg-pink-50"
                                                     : "border-gray-200 hover:shadow-sm"
-                                                }`}
-                                        >
-                                            <div className="flex justify-between items-center">
-                                                <div className="text-sm font-medium text-gray-700">
-                                                    {address.fullName} - {address.city.toUpperCase()}
+                                                    }`}
+                                            >
+                                                <div className="flex justify-between items-center">
+                                                    <div className="text-sm font-medium text-gray-700">
+                                                        {address.fullName} - {address.city.toUpperCase()}
+                                                    </div>
                                                 </div>
+                                                <div className="text-sm mt-1 text-gray-600">{address.landmark}</div>
+                                                <div className="text-sm mt-1">Mobile: <span className="font-semibold">{address.mobileNo}</span></div>
+                                                <div className="text-sm">Pin Code: <span className="font-semibold">{address.zipCode}</span></div>
+                                                {address.cod && <div className="text-xs text-green-600 mt-1">✓ Pay on Delivery available</div>}
                                             </div>
-                                            <div className="text-sm mt-1 text-gray-600">{address.landmark}</div>
-                                            <div className="text-sm mt-1">Mobile: <span className="font-semibold">{address.mobileNo}</span></div>
-                                            <div className="text-sm">Pin Code: <span className="font-semibold">{address.zipCode}</span></div>
-                                            {address.cod && <div className="text-xs text-green-600 mt-1">✓ Pay on Delivery available</div>}
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
-                        {/* Payment & Summary */}
+                        {/* Payment & Price Summary */}
                         <div className="space-y-6">
                             <div>
                                 <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Choose Payment Method</h2>
@@ -178,8 +190,8 @@ export default function CheckoutPage() {
                                             key={option.value}
                                             onClick={() => setSelectedPayment(option.value)}
                                             className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition ${selectedPayment === option.value
-                                                    ? "border-pink-500 bg-pink-50"
-                                                    : "border-gray-200 hover:bg-gray-50"
+                                                ? "border-pink-500 bg-pink-50"
+                                                : "border-gray-200 hover:bg-gray-50"
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
@@ -203,7 +215,7 @@ export default function CheckoutPage() {
                                     <div className="flex justify-between"><span>Total MRP</span><span>₹{cartSummary.totalMRP}</span></div>
                                     <div className="flex justify-between text-green-600"><span>Discount</span><span>- ₹{cartSummary.totalDiscount}</span></div>
                                     <div className="flex justify-between text-gray-500">
-                                        <span>Platform Fee <span className="text-pink-600 cursor-pointer">Know more</span></span>
+                                        <span>Platform Fee</span>
                                         <span>₹{platformFee}</span>
                                     </div>
                                     {selectedCoupon && (
@@ -222,7 +234,7 @@ export default function CheckoutPage() {
                         </div>
                     </div>
 
-                    {/* Bottom Section */}
+                    {/* Footer */}
                     <div className="border-t p-6 flex flex-col md:flex-row md:justify-between items-center gap-4 bg-gray-50">
                         <div className="flex items-center gap-3 text-sm text-gray-700">
                             <TagIcon className="h-5 w-5 text-indigo-600" />
@@ -254,6 +266,7 @@ export default function CheckoutPage() {
                 </div>
             </div>
 
+            {/* Add Address Modal */}
             <AddAddressModal
                 isOpen={showAddModal}
                 onClose={() => setShowAddModal(false)}
@@ -262,6 +275,7 @@ export default function CheckoutPage() {
         </>
     );
 }
+
 
 
 

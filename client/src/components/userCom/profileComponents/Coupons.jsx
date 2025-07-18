@@ -31,12 +31,12 @@ export default function Coupons() {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {coupons.length > 0 ? (
           coupons.map((coupon, index) => (
             <div
               key={coupon._id}
-              className={`flex items-center rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow ${
+              className={`flex items-center  overflow-hidden shadow-sm hover:shadow-md transition-shadow ${
                 index % 2 === 0 ? "bg-blue-50" : "bg-yellow-50"
               }`}
             >

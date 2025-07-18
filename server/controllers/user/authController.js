@@ -84,7 +84,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "user is not verified" })
         }
         const token = generateToken(user._id, user.role)
-        
+
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -118,9 +118,73 @@ const me = async (req, res) => {
     });
 }
 
+const FPEmailOtp = async (req, res) => {
+    console.log('inside getFPEmailOtp');
+
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+    return res.status(400).json({ message: 'Please register' });
+}
+
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(`otp is ${otp}`);
+
+        user.otp = otp;
+        user.otpExpires = Date.now() + 10 * 60 * 1000;
+
+        await user.save();
+
+        await sendOTPEmail(email, otp);
+        res.status(201).json({ message: 'OTP sent to your email' });
+
+    } catch (error) {
+        console.error('forgot password email otp error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+const verifyFPOTP = async (req, res) => {
+    const { email, otp } = req.body
+    console.log('inside FP verify otp');
+    try {
+        const user = await User.findOne({ email })
+        if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
+            return res.status(400).json({ message: "Invalid or expired OTP" })
+        }
+        console.log('otp entered successfull')
+        user.otp = undefined
+        user.otpExpires = undefined;
+        await user.save()
+        res.status(201).json({ message: 'OTP verified successfully' });
+    } catch (error) {
+
+    }
+}
+
+const conFirmForgetPassword = async (req, res) => {
+    const { email, password } = req.body
+    console.log('inside conFirmForgerPassword');
+
+    try {
+        const user = await User.findOne({ email });
+        const newPassword = await bcrypt.hash(password, 10)
+        user.password=newPassword
+        await user.save()
+        res.status(200).json({message:'new password created successfull, please login'})
+    } catch (error) {
+
+    }
+}
+
 module.exports = {
     register,
     verifyOTP,
     login,
-    me
+    me,
+    FPEmailOtp,
+    verifyFPOTP,
+    conFirmForgetPassword
 }

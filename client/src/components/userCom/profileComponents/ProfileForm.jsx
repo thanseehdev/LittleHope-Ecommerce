@@ -1,43 +1,57 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "../../../redux/features/user/profile/profileAction";
-import { FiZap } from "react-icons/fi";
 
 export default function ProfileForm() {
   const dispatch = useDispatch();
   const { profileUser: user, loading, error } = useSelector((state) => state.profile);
 
+  const getInitial = (name = "") => name?.charAt(0)?.toUpperCase() || "?";
+  const getBgColor = (name = "") => "bg-pink-600";
+
   useEffect(() => {
     dispatch(getProfile());
   }, [dispatch]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+   
+  };
 
   if (loading) return <p>Loading profile...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!user) return <p>No user data available.</p>;
 
   return (
-    <div className="bg-blue-50 rounded-xl p-6 max-w-md mx-auto shadow-sm border border-gray-200">
-      
-      {/* Welcome Note */}
-      <div className="mb-4">
-        <h1 className="text-lg font-semibold text-gray-800">
-          Welcome, {user.name?.split(" ")[0] || "User"} 👋
-        </h1>
-        <p className="text-sm text-gray-500">We're glad to see you back!</p>
-      </div>
-
-      {/* User Info Row */}
-      <div className="flex justify-between items-center mb-4">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800">{user.name}</h2>
-          <p className="text-sm text-gray-600">{user.email}</p>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="flex items-center gap-4 justify-center">
+        <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white text-2xl font-bold ${getBgColor(user.name)}`}>
+          {getInitial(user.name)}
         </div>
-       
       </div>
 
-      {/* Explore Link */}
-      
-    </div>
+      <div>
+        <label className="block text-sm font-medium">Name</label>
+        <input
+          value={user.name || ""}
+          disabled
+          className="mt-1 w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Email</label>
+        <input
+          value={user.email || ""}
+          disabled
+          className="mt-1 w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
+        />
+      </div>
+
+      <button type="submit" className="bg-pink-600 text-white px-4 py-2 rounded">
+        Update Profile
+      </button>
+    </form>
   );
 }
 

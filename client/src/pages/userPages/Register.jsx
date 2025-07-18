@@ -77,9 +77,9 @@ export default function Register() {
         {/* Top right image inside form */}
         <div className="flex justify-end">
           <img
-            src="/littleHope-logo3.png"
+            src="/LittleHope-Official-Logo2.png"
             alt="Logo"
-            className="w-16 h-16 object-contain sm:w-20 sm:h-20"
+            className="w-16 h-16 object-contain sm:w-20 sm:h-20 bg-pink-50 rounded-full"
           />
         </div>
         {/* Heading */}

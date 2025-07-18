@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 export default function AddAddressModal({ isOpen, onClose, onSave }) {
     const [formData, setFormData] = useState({
-        fullName: "",
+        name: "",
         landmark: "",
         city: "",
-        zipCode: "",
-        mobileNo: ""
+        zip: "",
+        mobile: ""
     });
 
     const handleChange = (e) => {
@@ -30,9 +30,9 @@ export default function AddAddressModal({ isOpen, onClose, onSave }) {
                 </h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Input
-                        name="fullName"
+                        name="name"
                         placeholder="Full Name"
-                        value={formData.fullName}
+                        value={formData.name}
                         onChange={handleChange}
                     />
                     <Input
@@ -48,16 +48,16 @@ export default function AddAddressModal({ isOpen, onClose, onSave }) {
                         onChange={handleChange}
                     />
                     <Input
-                        name="zipCode"
+                        name="zip"
                         placeholder="Zip Code"
-                        value={formData.zipCode}
+                        value={formData.zip}
                         onChange={handleChange}
                         pattern="[1-9][0-9]{5}"
                     />
                     <Input
-                        name="mobileNo"
+                        name="mobile"
                         placeholder="Mobile Number"
-                        value={formData.mobileNo}
+                        value={formData.mobile}
                         onChange={handleChange}
                     />
                     <div className="flex justify-end gap-2 pt-2">

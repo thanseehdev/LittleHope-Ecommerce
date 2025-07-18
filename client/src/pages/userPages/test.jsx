@@ -25,15 +25,15 @@ const AccountPage = () => {
       <div className="min-h-screen bg-white font-sans">
         <div className="max-w-6xl mx-auto px-4 py-6">
           {/* Title */}
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">My Account</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">My Account</h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Panel - Profile & Actions */}
             <div className="space-y-6">
               {/* Profile Card */}
-              <div className="bg-gray-100 shadow p-6 flex flex-col sm:flex-row sm:items-center gap-4 ">
+              <div className="bg-gray-100  p-6 flex flex-col sm:flex-row sm:items-center gap-4 ">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-blue-300 text-white flex items-center justify-center rounded-full text-2xl font-bold">
+                  <div className="w-16 h-16 bg-pink-500 text-white flex items-center justify-center rounded-full text-2xl font-bold">
                     T
                   </div>
                 </div>
@@ -65,7 +65,7 @@ const AccountPage = () => {
 
               {/* Logout */}
               <div className="text-center">
-                <button className="w-full py-2  text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-200 transition">
+                <button className="w-full py-2 mt-5  text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-200 transition">
                   LOG OUT
                 </button>
               </div>

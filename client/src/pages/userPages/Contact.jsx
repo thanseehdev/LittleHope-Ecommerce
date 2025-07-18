@@ -13,7 +13,7 @@ export default function ContactPage() {
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-50 flex flex-col items-center px-4 py-10">
-        <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-2xl shadow-md p-6 sm:p-10">
+        <div className="w-full max-w-4xl bg-white border border-gray-200  shadow-md p-6 sm:p-10">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Contact Us</h1>
           <p className="text-center text-sm text-gray-500 mb-8">
             Reach out to us through any of the platforms below.

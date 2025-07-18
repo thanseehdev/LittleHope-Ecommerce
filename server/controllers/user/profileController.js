@@ -31,7 +31,6 @@ const addAddress = async (req, res) => {
     try {
         const { name, landmark, city, zip, mobile } = req.body;
 //console.log('req.user',req.user._id);
-
         const newAddress = new Address({
             fullName:name,
             landmark,

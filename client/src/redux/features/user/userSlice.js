@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, verifyOTP, login,loadUser } from "./userActions";
+import { registerUser, verifyOTP, login,loadUser,FPEmailOtp,verifyFPOTP,conFirmForgetPassword } from "./userActions";
 
 const initialState = {
   loading: false,
@@ -7,6 +7,8 @@ const initialState = {
   emailForOTP: null,
   error: null,
   isAuthenticated: false,
+  success:false,
+  message:null
 }
 
 const userSlice = createSlice({
@@ -83,6 +85,50 @@ const userSlice = createSlice({
         state.loading=false;
         state.user=null;
         state.isAuthenticated=false;
+        state.error=action.payload
+      })
+
+      .addCase(FPEmailOtp.pending,(state)=>{
+        state.loading=true;
+        state.error=false;
+      })
+      .addCase(FPEmailOtp.fulfilled,(state,action)=>{
+        state.loading=false;
+        state.message=action.payload
+        state.success=true
+      })
+      .addCase(FPEmailOtp.rejected,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload
+      })
+
+
+      .addCase(verifyFPOTP.pending,(state)=>{
+        state.loading=true;
+        state.error=false;
+      })
+      .addCase(verifyFPOTP.fulfilled,(state,action)=>{
+        state.loading=false;
+        state.message=action.payload
+        state.success=true
+      })
+      .addCase(verifyFPOTP.rejected,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload
+      })
+
+
+      .addCase(conFirmForgetPassword.pending,(state)=>{
+        state.loading=true;
+        state.error=false;
+      })
+      .addCase(conFirmForgetPassword.fulfilled,(state,action)=>{
+        state.loading=false;
+        state.message=action.payload
+        state.success=true
+      })
+      .addCase(conFirmForgetPassword.rejected,(state,action)=>{
+        state.loading=false;
         state.error=action.payload
       })
   }

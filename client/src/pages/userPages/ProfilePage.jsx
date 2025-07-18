@@ -14,7 +14,7 @@ export default function ProfilePage() {
     <Navbar/>
     <div className="min-h-screen p-4 md:p-8 bg-gray-100">
       <div className="max-w-4xl mx-auto bg-white rounded shadow p-4 md:p-8">
-        <h1 className="text-xl font-bold mb-4">My Account</h1>
+        <h1 className="text-xl font-bold mb-4">Account</h1>
 
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 border-b pb-2">
