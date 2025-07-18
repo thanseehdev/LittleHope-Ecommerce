@@ -10,6 +10,7 @@ import couponReducer from '../redux/features/admin/adminCoupon/couponSlice'
 import cartReducer from '../redux/features/user/cart/cartSlice'
 import orderReducer from '../redux/features/user/order/orderSlice'
 import wishlistReducer from '../redux/features/user/wishlist/wishlistSlice'
+import adminOrderReducer from '../redux/features/admin/adminOrder/adminOrderSlice'
 
 
 export const store = configureStore({
@@ -24,6 +25,7 @@ export const store = configureStore({
     coupons:couponReducer,
     cart:cartReducer,
     order:orderReducer,
-    wishlist:wishlistReducer
+    wishlist:wishlistReducer,
+    adminOrder:adminOrderReducer
   },
 });

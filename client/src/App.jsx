@@ -30,6 +30,7 @@ import AdminGetEditProduct from './components/adminCom/EditProduct'
 import Test from './pages/userPages/test'
 import AddAdress from './components/userCom/address/AddAddressModal'
 import ForgetPassword from './pages/userPages/forgetPassword'
+import AdminOrderDetails from './pages/adminPages/AdminOrderDetails'
 
 
 
@@ -68,6 +69,7 @@ function App() {
       <Route path='/test' element={<Test />} />
       <Route path='/addAddress' element={<AddAdress />} />
       <Route path='/forgotPassword' element={<ForgetPassword />} />
+      <Route path='/admin/adminOrderDetails/:id' element={<AdminOrderDetails />} />
 
     </Routes>
 
