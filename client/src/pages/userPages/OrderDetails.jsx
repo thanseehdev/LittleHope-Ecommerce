@@ -131,10 +131,10 @@ export default function OrderDetailPage() {
     </div>
   </div>
 ) : order.status === "delivered" ? (
-  <div className="flex items-center bg-green-500 text-white px-6 py-4 rounded-md shadow mt-6">
+  <div className="flex items-center bg-green-500 text-white px-6 py-4  shadow mt-6">
     <CheckCircleIcon className="w-6 h-6 mr-3" />
     <div>
-      <p className="font-semibold text-lg">Delivered</p>
+    
       <p className="text-sm">Your order was delivered successfully.</p>
     </div>
   </div>

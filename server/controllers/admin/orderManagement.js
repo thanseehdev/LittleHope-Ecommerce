@@ -35,8 +35,24 @@ const getOrderDetails = async (req, res) => {
     }
 };
 
+const updateOrderStatus=async(req,res)=>{
+    console.log('inside updateOrderStatus');
+    
+    const {orderId,Ostatus}=req.body
+    try {
+        const order=await Order.findById(orderId)
+        order.status=Ostatus
+        await order.save()
+        res.status(200).json({message:'order status changed'})
+    } catch (error) {
+        console.error("update Order status failed:", error);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
+
 
 module.exports={
     getAllOrder,
-    getOrderDetails
+    getOrderDetails,
+    updateOrderStatus
 }

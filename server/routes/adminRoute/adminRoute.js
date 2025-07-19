@@ -6,7 +6,8 @@ const protect=require('../../middleware/authMiddleware')
 const {addProduct,fetchAllProducts,getEditProduct,updateProduct}=require('../../controllers/admin/productManagement')
 const upload=require('../../middleware/upload')
 const {addCoupon,getCoupons}=require('../../controllers/admin/couponManagement')
-const {getAllOrder,getOrderDetails} =require('../../controllers/admin/orderManagement')
+const {getAllOrder,getOrderDetails,updateOrderStatus} =require('../../controllers/admin/orderManagement')
+const {getDashData} =require('../../controllers/admin/dashboardManagement')
 
 router.get('/getUsers',protect,adminProtect,getAllUsers)
 router.delete('/user/:id',protect,adminProtect,deleteUser)
@@ -27,5 +28,9 @@ router.put('/updateProduct/:id',protect,adminProtect, upload.array('images'),upd
 router.get('/getAllOrders',protect,adminProtect,getAllOrder)
 
 router.get('/getOrderDetails/:id',protect,adminProtect,getOrderDetails)
+
+router.put('/updateOrderStatus',protect,adminProtect,updateOrderStatus)
+
+router.get('/getDashData',protect,adminProtect,getDashData)
 
 module.exports=router

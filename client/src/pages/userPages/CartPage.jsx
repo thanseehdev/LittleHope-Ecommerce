@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartItems, updateQuantity,removeFromCart } from "../../redux/features/user/cart/cartAction";
+import { getCartItems, updateQuantity, removeFromCart } from "../../redux/features/user/cart/cartAction";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -34,8 +34,8 @@ export default function CartPage() {
   const platformFee = 20;
   const totalAmount = totalPrice + platformFee;
 
-  const handleQtyChange = async (id, newQty,size) => {
-    const item = items.find((i) => i.productId._id === id&&i.size===size);
+  const handleQtyChange = async (id, newQty, size) => {
+    const item = items.find((i) => i.productId._id === id && i.size === size);
     if (item) {
       await dispatch(
         updateQuantity({
@@ -49,7 +49,7 @@ export default function CartPage() {
   };
 
   const handleRemove = async (id, size) => {
-    
+
     await dispatch(removeFromCart({ productId: id, size }));
     dispatch(getCartItems());
   };
@@ -71,13 +71,20 @@ export default function CartPage() {
             {loading ? (
               <p className="text-gray-600">Loading...</p>
             ) : cartItems.length === 0 ? (
-              <p className="text-gray-600">Your cart is empty</p>
+              <div className="flex flex-col items-center justify-center  ">
+                <img
+                  src="/emptyCartTSP.png"
+                  alt="Empty Cart"
+                  className=" object-contain lg:h-[500px]"
+                />
+
+              </div>
             ) : (
               cartItems.map((item) => (
                 <div
-    key={`${item.id}-${item.size}`}
-    className="bg-white p-4 rounded-lg shadow flex flex-row items-start gap-4 relative"
-  >
+                  key={`${item.id}-${item.size}`}
+                  className="bg-white p-4 rounded-lg shadow flex flex-row items-start gap-4 relative"
+                >
                   <button
                     className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-lg font-bold"
                     onClick={() => handleRemove(item.id, item.size)}
@@ -107,7 +114,7 @@ export default function CartPage() {
                         <span className="font-medium text-gray-700">Qty:</span>
                         <select
                           value={item.qty}
-                          onChange={(e) => handleQtyChange(item.id, e.target.value,item.size)}
+                          onChange={(e) => handleQtyChange(item.id, e.target.value, item.size)}
                           className="border rounded  bg-white text-sm"
                         >
                           {[1, 2, 3, 4, 5].map((qty) => (
@@ -168,9 +175,17 @@ export default function CartPage() {
                 <span>₹{totalAmount}</span>
               </div>
             </div>
-            <button className="mt-6 w-full bg-pink-600 hover:bg-pink-700 transition text-white py-2 rounded-md font-semibold">
-              CHECKOUT
-            </button>
+            <button
+  disabled={cartItems.length === 0}
+  className={`mt-6 w-full py-2 rounded-md font-semibold text-white transition
+    ${cartItems.length === 0
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-pink-600 hover:bg-pink-700"
+    }`}
+>
+  CHECKOUT
+</button>
+
           </div>
         </div>
       </div>

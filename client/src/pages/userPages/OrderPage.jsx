@@ -46,6 +46,10 @@ export default function OrdersPage() {
               <div className="text-sm mt-2 md:mt-0 text-right">
                 <p>{order.items.length} Item(s)</p>
                 <p className="font-semibold">₹{order.pricingSummary?.finalAmount}</p>
+                 <button
+className="mt-2 text-blue-600 text-xs underline">
+        Details
+      </button>
               </div>
             </div>
           ))}

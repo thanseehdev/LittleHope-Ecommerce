@@ -6,6 +6,9 @@ import { productDetail } from "../../redux/features/user/product/productDetailAc
 import { addToCart } from "../../redux/features/user/cart/cartAction";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { addToWishlist } from "../../redux/features/user/wishlist/wishlistAction";
+import { Link } from "react-router-dom";
+import { clearMessage } from "../../redux/features/user/cart/cartSlice";
+import { XMarkIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -15,7 +18,7 @@ export default function ProductDetail() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
 
-  const { product, loading, error } = useSelector((state) => state.productDetail);
+  const { product, similarProducts = [], loading, error, message } = useSelector((state) => state.productDetail);
   const cartState = useSelector((state) => state.cart);
 
   useEffect(() => {
@@ -29,6 +32,14 @@ export default function ProductDetail() {
       setSelectedImage(product.images[0]);
     }
   }, [product]);
+
+  useEffect(() => {
+    if (cartState.message || cartState.error) {
+      const timer = setTimeout(() => dispatch(clearMessage()), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [cartState.message, cartState.error, dispatch]);
+
 
   const handleAddToCart = () => {
     dispatch(addToCart({ productId: product._id, quantity: 1, size: selectedSize }));
@@ -50,6 +61,47 @@ export default function ProductDetail() {
   return (
     <>
       <Navbar />
+
+
+
+{(cartState.message || cartState.error) && (
+ <div
+  className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-64 lg:w-full max-w-sm px-5 py-4 rounded-lg shadow-lg border 
+    ${cartState.error ? "bg-pink-50 border-pink-300 text-pink-800" : "bg-white border-pink-300 text-pink-800"}
+  `}
+  role="alert"
+>
+  <div className="flex items-start gap-3">
+    {/* Icon */}
+    <div className="">
+      {cartState.error ? (
+        <ExclamationCircleIcon className="h-6 w-6 text-pink-500" />
+      ) : (
+        <CheckCircleIcon className="h-6 w-6 text-pink-500" />
+      )}
+    </div>
+
+    {/* Message */}
+    <div className="flex-1 text-sm sm:text-base font-medium">
+      {cartState.message || cartState.error}
+    </div>
+
+    {/* Close Button */}
+    <button
+      onClick={() => dispatch(clearMessage())}
+      className="text-gray-400 hover:text-gray-600 transition"
+      aria-label="Close"
+    >
+      <XMarkIcon className="h-5 w-5" />
+    </button>
+  </div>
+</div>
+
+)}
+
+
+
+
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Left: Image Gallery */}
@@ -62,9 +114,8 @@ export default function ProductDetail() {
                   onClick={() => setSelectedImage(img)}
                   src={img}
                   alt={`Thumbnail ${idx}`}
-                  className={`w-16 h-20 rounded border cursor-pointer object-cover ${
-                    selectedImage === img ? "border-pink-400" : "border-gray-300"
-                  }`}
+                  className={`w-16 h-20 rounded border cursor-pointer object-cover ${selectedImage === img ? "border-pink-400" : "border-gray-300"
+                    }`}
                 />
               ))}
             </div>
@@ -109,11 +160,10 @@ export default function ProductDetail() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`min-w-[60px] text-sm sm:text-base px-4 py-2 border rounded-md transition ${
-                      selectedSize === size
-                        ? "bg-gray-200  border-gray"
-                        : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                    }`}
+                    className={`min-w-[60px] text-sm sm:text-base px-4 py-2 border rounded-md transition ${selectedSize === size
+                      ? "bg-gray-200  border-gray"
+                      : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                      }`}
                   >
                     {size}
                   </button>
@@ -126,11 +176,10 @@ export default function ProductDetail() {
               <button
                 onClick={handleAddToCart}
                 disabled={!selectedSize || cartState.status === "loading"}
-                className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${
-                  !selectedSize || cartState.status === "loading"
-                    ? "bg-orange-300 cursor-not-allowed"
-                    : "bg-orange-500 hover:bg-orange-600"
-                }`}
+                className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize || cartState.status === "loading"
+                  ? "bg-orange-300 cursor-not-allowed"
+                  : "bg-orange-500 hover:bg-orange-600"
+                  }`}
               >
                 {cartState.status === "loading" ? "Adding..." : "Add to Cart"}
               </button>
@@ -160,6 +209,38 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+        {/* Similar Products Section */}
+        {similarProducts.length > 0 && (
+          <div className="mt-10">
+            <h3 className="text-xl font-semibold mb-4">Explore more like this</h3>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+              {similarProducts.map((item) => {
+                const discount = Math.round(((item.price - item.discountPrice) / item.price) * 100);
+                return (
+                  <div key={item._id} className="border rounded-lg overflow-hidden hover:shadow-md transition">
+                    <Link to={`/productDetails/${item._id}`}>
+                      <img
+                        src={item.images?.[0] || "/placeholder.jpg"}
+                        alt={item.name}
+                        className="w-full lg:object-fill lg:w-1/2  h-44"
+                      />
+                      <div className="p-2">
+                        <h4 className="text-sm line-clamp-2">{item.name}</h4>
+                        <div className="flex items-center gap-1 ">
+                          <span className="text-green-600 font-semibold">₹{item.discountPrice}</span>
+                          <span className="line-through text-sm text-gray-500">₹{item.price}</span>
+                          <span className="text-green-500 text-sm">{discount}% off</span>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+
+                );
+              })}
+            </div>
+          </div>
+        )}
+
       </div>
     </>
   );

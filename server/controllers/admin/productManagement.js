@@ -1,30 +1,65 @@
 const Product = require('../../models/productModel')
 
 const addProduct = async (req, res) => {
-    try {
-        console.log('inside addProduct')
-        const { name, description, price,discountPrice, category, size,gender, stock } = req.body;
-        const imageUrls = req.files.map(file => file.path)
-        const product = new Product({
-            name,
-            description,
-            price,
-            discountPrice,
-            category,
-            size,
-            gender,
-            stock,
-            images: imageUrls,
-        });
-        const savedProduct = await product.save();
-        console.log(`---savedProduct=${savedProduct}---`);
+  try {
+    console.log('Inside addProduct');
 
-        res.status(200).json({ message: 'product added succesfully', savedProduct });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error"});
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      category,
+      gender,
+      sizeAndStock: rawSizeAndStock, // <-- Make sure 'sizeAndStock' is sent from frontend
+    } = req.body;
+
+    let sizeAndStock;
+
+    try {
+      // Parse sizeAndStock based on format
+      if (Array.isArray(rawSizeAndStock)) {
+        sizeAndStock = rawSizeAndStock.map(item =>
+          typeof item === 'string' ? JSON.parse(item) : item
+        );
+      } else if (typeof rawSizeAndStock === 'string') {
+        sizeAndStock = [JSON.parse(rawSizeAndStock)];
+      } else if (typeof rawSizeAndStock === 'object') {
+        sizeAndStock = [rawSizeAndStock];
+      } else {
+        throw new Error('Invalid format');
+      }
+    } catch (err) {
+      console.log('parse error: ' + err);
+      return res.status(400).json({ message: "Invalid sizeAndStock format" });
     }
-}
+
+    // Handle images
+    const imageUrls = req.files.map(file => file.path);
+
+    // Create product
+    const product = new Product({
+      name,
+      description,
+      price,
+      discountPrice,
+      category,
+      gender,
+      sizeAndStock,
+      images: imageUrls,
+    });
+
+    const savedProduct = await product.save();
+    console.log(`---savedProduct=${savedProduct}---`);
+
+    res.status(200).json({ message: 'Product added successfully', savedProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+
 
 const fetchAllProducts=async(req,res)=>{
     try {
@@ -55,39 +90,39 @@ const getEditProduct=async(req,res)=>{
     }
 }
 const updateProduct = async (req, res) => {
-    try {
-        console.log('inside updateProduct');
+  try {
+    const { name, description, price, discountPrice, category, gender } = req.body;
+    let sizeAndStock = [];
 
-        const { name, description, price, discountPrice, category, size, gender, stock } = req.body;
-        const productId = req.params.id;
-
-        const product = await Product.findById(productId);
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-
-        // Update fields
-        product.name = name || product.name;
-        product.description = description || product.description;
-        product.price = price || product.price;
-        product.discountPrice = discountPrice || product.discountPrice;
-        product.category = category || product.category;
-        product.size = size || product.size;
-        product.gender = gender || product.gender;
-        product.stock = stock || product.stock;
-
-        // If new images are uploaded, replace existing ones
-        const imageUrls = req.files.map(file => file.path)
-        product.images=imageUrls
-        await product.save();
-
-        res.status(200).json({ message: "Product updated successfully"});
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server Error" });
+    if (req.body.sizeAndStock) {
+      sizeAndStock = JSON.parse(req.body.sizeAndStock);
     }
+
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    product.name = name || product.name;
+    product.description = description || product.description;
+    product.price = price || product.price;
+    product.discountPrice = discountPrice || product.discountPrice;
+    product.category = category || product.category;
+    product.gender = gender || product.gender;
+    product.sizeAndStock = sizeAndStock.length ? sizeAndStock : product.sizeAndStock;
+
+    if (req.files && req.files.length > 0) {
+      product.images = req.files.map(file => file.path);
+    }
+
+    await product.save();
+
+    res.status(200).json({ message: "Product updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
+
 
 module.exports = {
     addProduct,

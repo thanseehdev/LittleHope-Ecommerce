@@ -4,6 +4,7 @@ import { productDetail } from "./productDetailAction";
 const initialState={
     loading:false,
     product:null,
+    similarProducts:[],
     error:null
 }
 
@@ -19,7 +20,8 @@ const productDetailSlice=createSlice({
         })
         .addCase(productDetail.fulfilled,(state,action)=>{
             state.loading=false;
-            state.product=action.payload;
+            state.product=action.payload.product
+            state.similarProducts=action.payload.similarProducts
             state.error=null
         })
         .addCase(productDetail.rejected,(state,action)=>{

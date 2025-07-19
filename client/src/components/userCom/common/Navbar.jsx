@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getCartItems } from "../../../redux/features/user/cart/cartAction";
+
 import {
   FaSearch,
   FaRegUser,
@@ -25,6 +30,13 @@ const DrawerItem = ({ icon, label, onClick }) => (
 );
 
 const Navbar = () => {
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const dispatch = useDispatch();
+
+  console.log('cart count:', cartCount);
+
+
   // Removed isDrawerOpen state because drawer is removed
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -32,6 +44,13 @@ const Navbar = () => {
   const handleClick = () => {
     navigate('/test');
   };
+
+useEffect(() => {
+  if (cartItems.length === 0) {
+    dispatch(getCartItems());
+  }
+}, [dispatch, cartItems.length]);
+
 
   return (
     <>
@@ -84,10 +103,15 @@ const Navbar = () => {
 
               </div>
 
-              <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
+              <div className="relative flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
                 <AiOutlineShoppingCart size={23} />
-
+                {cartCount > 0 && (
+                  <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                    {cartCount}
+                  </span>
+                )}
               </div>
+
               <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
                 <FaRegUser size={18} />
 
@@ -102,7 +126,7 @@ const Navbar = () => {
                 onMouseEnter={() => setIsProfileDropdownOpen(true)}
                 onMouseLeave={() => setIsProfileDropdownOpen(false)}
               >
-                <FaUser size={18} className="hover:text-pink-600"/>
+                <FaUser size={18} className="hover:text-pink-600" />
                 <span className="mt-1">Profile</span>
 
                 {isProfileDropdownOpen && (
@@ -134,10 +158,18 @@ const Navbar = () => {
                 <FaHeart size={18} />
                 <span className="mt-1">Wishlist</span>
               </div>
-              <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
-                <FaShoppingBag size={18} />
-                <span className="mt-1">Bag</span>
-              </div>
+            <div className="relative cursor-pointer transition hover:text-pink-600">
+  <FaShoppingBag size={18} />
+  <span className="text-sm mt-1">Bag</span>
+  {cartCount > 0 && (
+    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+      {cartCount}
+    </span>
+  )}
+</div>
+
+
+
             </div>
           </div>
         </div>

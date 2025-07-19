@@ -5,13 +5,20 @@ const initialState={
     items:[],
     status:null,
     loading:null,
-    error:null
+    error:null,
+    message: null,
 }
 
 const cartSlice=createSlice({
     name:'cart',
     initialState,
-    reducers:{},
+
+    reducers: {
+    clearMessage(state) {
+      state.message = null;  // Action to clear message after showing
+    }
+  },
+
     extraReducers:(builder)=>{
         builder
         .addCase(addToCart.pending,(state)=>{
@@ -19,10 +26,11 @@ const cartSlice=createSlice({
             state.loading=true;
             state.error=null
         })
-        .addCase(addToCart.fulfilled,(state)=>{
+        .addCase(addToCart.fulfilled,(state,action)=>{
             state.status = "succeeded";
             state.loading=false;
             state.error=null
+            state.message = action.payload.message
         })
         .addCase(addToCart.rejected,(state,action)=>{
             state.status = "failed";
@@ -75,4 +83,5 @@ const cartSlice=createSlice({
     }
 })
 
+export const { clearMessage } = cartSlice.actions;
 export default cartSlice.reducer

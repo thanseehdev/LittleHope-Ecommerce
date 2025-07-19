@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminNavbar from "../../components/adminCom/common/Navbar";
-import {  getAllOrders} from "../../redux/features/admin/adminOrder/adminOrderAction"
+import {
+  getAllOrders,
+  updateOrderStatus,
+} from "../../redux/features/admin/adminOrder/adminOrderAction";
 import { useNavigate } from "react-router-dom";
-
 
 const statusColors = {
   pending: "bg-purple-100 text-purple-800",
@@ -13,13 +15,7 @@ const statusColors = {
   cancelled: "bg-red-100 text-red-800",
 };
 
-const allStatuses = [
-  "pending",
-  "confirmed",
-  "shipped",
-  "delivered",
-  "cancelled",
-];
+const allStatuses = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
 export default function AdminOrderPage() {
   const navigate = useNavigate();
@@ -31,18 +27,27 @@ export default function AdminOrderPage() {
     dispatch(getAllOrders());
   }, [dispatch]);
 
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      await dispatch(updateOrderStatus({ orderId, Ostatus: newStatus })).unwrap();
+      dispatch(getAllOrders());
+    } catch (err) {
+      console.error("Status update failed:", err);
+    }
+  };
+
   return (
     <>
       <AdminNavbar />
       <div className="p-4 max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Orders</h1>
 
-        {loading}
-        {error }
+        {loading && <p>Loading orders...</p>}
+        {error && <p className="text-red-500">{error}</p>}
 
         {!loading && !error && (
           <>
-            {/* Large screen table */}
+            {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <table className="min-w-full border border-gray-200 rounded-md shadow-sm">
                 <thead className="bg-gray-50">
@@ -63,24 +68,36 @@ export default function AdminOrderPage() {
                     >
                       <td className="p-3">{order._id}</td>
                       <td className="p-3">{order.addressInfo.fullName}</td>
-                      <td className="p-3">{new Date(order.placedAt).toLocaleDateString()}</td>
                       <td className="p-3">
-                        <span
-                          className={`px-2 py-1 rounded-full text-sm font-semibold ${statusColors[order.status]}`}
+                        {new Date(order.placedAt).toLocaleDateString()}
+                      </td>
+                      <td className="p-3">
+                        <select
+                          value={order.status}
+                          onChange={(e) =>
+                            handleStatusChange(order._id, e.target.value)
+                          }
+                          className={`px-2 py-1 rounded text-sm font-semibold ${statusColors[order.status]}`}
                         >
-                          {order.status}
-                        </span>
+                          {allStatuses.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td className="p-3 text-right">
                         ₹{order.pricingSummary.finalAmount.toFixed(2)}
                       </td>
                       <td className="p-3 text-center">
                         <button
-  className="text-blue-600 hover:underline focus:outline-none"
-  onClick={() => navigate(`/admin/adminOrderDetails/${order._id}`)}
->
-  View
-</button>
+                          className="text-blue-600 hover:underline focus:outline-none"
+                          onClick={() =>
+                            navigate(`/admin/adminOrderDetails/${order._id}`)
+                          }
+                        >
+                          View
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -88,7 +105,7 @@ export default function AdminOrderPage() {
               </table>
             </div>
 
-            {/* Small screen cards */}
+            {/* Mobile View */}
             <div className="md:hidden space-y-4">
               {orders.map((order) => (
                 <div
@@ -99,11 +116,19 @@ export default function AdminOrderPage() {
                     <h2 className="font-semibold text-lg">
                       Order #{order._id}
                     </h2>
-                    <span
-                      className={`px-2 py-1 rounded-full text-sm font-semibold ${statusColors[order.status]}`}
+                    <select
+                      value={order.status}
+                      onChange={(e) =>
+                        handleStatusChange(order._id, e.target.value)
+                      }
+                      className={`px-2 py-1 rounded text-sm font-semibold ${statusColors[order.status]}`}
                     >
-                      {order.status}
-                    </span>
+                      {allStatuses.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <p>
                     <span className="font-semibold">Customer: </span>
@@ -118,7 +143,9 @@ export default function AdminOrderPage() {
                     ₹{order.pricingSummary.finalAmount.toFixed(2)}
                   </p>
                   <button
-                    onClick={() => alert(`Viewing order ${order._id}`)}
+                    onClick={() =>
+                      navigate(`/admin/adminOrderDetails/${order._id}`)
+                    }
                     className="mt-3 text-blue-600 hover:underline focus:outline-none"
                   >
                     View Details
@@ -132,5 +159,6 @@ export default function AdminOrderPage() {
     </>
   );
 }
+
 
 

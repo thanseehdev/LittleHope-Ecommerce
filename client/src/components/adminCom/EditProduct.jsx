@@ -1,16 +1,22 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminNavbar from "./common/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import {getEditProduct,updateProduct} from "../../redux/features/admin/adminProduct/adminProductAction";
+import { getEditProduct, updateProduct } from "../../redux/features/admin/adminProduct/adminProductAction";
+
+const sizeOptions = ["2-3 y", "4-5 y", "6-7 y", "8-9 y", "10-11 y"];
 
 export default function EditProduct() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { product:productDetails, loading, error, updateSuccess } = useSelector((state) => state.product);
+  const { product: productDetails, loading, error, updateSuccess } = useSelector((state) => state.product);
+
+  // Initialize sizeAndStock as array of {size, stock} objects
+  const [sizeAndStock, setSizeAndStock] = useState(
+    sizeOptions.map((size) => ({ size, stock: 0 }))
+  );
 
   const [product, setProduct] = useState({
     name: "",
@@ -18,9 +24,7 @@ export default function EditProduct() {
     price: "",
     discountPrice: "",
     category: "",
-    size: [],
     gender: "",
-    stock: "",
     images: [null, null, null, null, null],
   });
 
@@ -32,11 +36,18 @@ export default function EditProduct() {
 
   useEffect(() => {
     if (productDetails && productDetails._id === id) {
-      const updatedImages = [null, null, null, null, null];
-      const previews = [null, null, null, null, null];
+      // Map productDetails.sizeAndStock to match local state format, fill in defaults if missing
+      const updatedSizeAndStock = sizeOptions.map((size) => {
+        const found = productDetails.sizeAndStock?.find((item) => item.size === size);
+        return {
+          size,
+          stock: found ? found.stock : 0,
+        };
+      });
 
+      const previews = [null, null, null, null, null];
       productDetails.images?.forEach((img, i) => {
-        previews[i] = img
+        previews[i] = img;
       });
 
       setProduct({
@@ -45,12 +56,11 @@ export default function EditProduct() {
         price: productDetails.price || "",
         discountPrice: productDetails.discountPrice || "",
         category: productDetails.category || "",
-        size: productDetails.size || [],
         gender: productDetails.gender || "",
-        stock: productDetails.stock || "",
-        images: updatedImages,
+        images: [null, null, null, null, null], // files input cleared initially
       });
 
+      setSizeAndStock(updatedSizeAndStock);
       setImagePreviews(previews);
     }
   }, [productDetails, id]);
@@ -58,6 +68,29 @@ export default function EditProduct() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle stock change for a specific size
+  const handleStockChange = (index, value) => {
+    const val = Math.max(0, parseInt(value) || 0);
+    setSizeAndStock((prev) => {
+      const updated = [...prev];
+      updated[index].stock = val;
+      return updated;
+    });
+  };
+
+  // Handle checkbox toggle for size (if unchecked, stock reset to 0)
+  const handleSizeToggle = (index, checked) => {
+    setSizeAndStock((prev) => {
+      const updated = [...prev];
+      if (!checked) {
+        updated[index].stock = 0; // reset stock if unchecked
+      } else if (updated[index].stock === 0) {
+        updated[index].stock = 1; // default stock if checked with 0 stock
+      }
+      return updated;
+    });
   };
 
   const handleImageChange = (e, index) => {
@@ -81,36 +114,31 @@ export default function EditProduct() {
     });
   };
 
-  const handleSizeChange = (e) => {
-    const { value, checked } = e.target;
-    setProduct((prev) => {
-      const updatedSizes = checked
-        ? [...prev.size, value]
-        : prev.size.filter((s) => s !== value);
-      return { ...prev, size: updatedSizes };
-    });
-  };
+ const handleSubmit = (e) => {
+  e.preventDefault();
+  const formData = new FormData();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
+  formData.append("name", product.name);
+  formData.append("description", product.description);
+  formData.append("price", product.price);
+  formData.append("discountPrice", product.discountPrice);
+  formData.append("category", product.category);
+  formData.append("gender", product.gender);
 
-    formData.append("name", product.name);
-    formData.append("description", product.description);
-    formData.append("price", product.price);
-    formData.append("discountPrice", product.discountPrice);
-    formData.append("category", product.category);
-    formData.append("stock", product.stock);
-    formData.append("gender", product.gender);
-    product.size.forEach((size) => formData.append("size[]", size));
+  // Append sizeAndStock as JSON string
+  formData.append("sizeAndStock", JSON.stringify(sizeAndStock));
 
-    product.images.forEach((file) => {
-      if (file) formData.append("images", file);
-    });
+  // Append only new image files (non-null)
+  product.images.forEach((file) => {
+    if (file) {
+      formData.append("images", file);
+    }
+  });
 
-    dispatch(updateProduct({ id: productDetails._id, formData }));
+  dispatch(updateProduct({ id: productDetails._id, formData }));
+};
 
-  };
+
 
   useEffect(() => {
     if (updateSuccess) {
@@ -156,19 +184,6 @@ export default function EditProduct() {
                   onChange={handleChange}
                   required
                   rows="6"
-                  className="input"
-                />
-              </label>
-
-              <label className="block">
-                <span className="text-gray-700 font-semibold mb-1 block">Stock</span>
-                <input
-                  type="number"
-                  name="stock"
-                  value={product.stock}
-                  onChange={handleChange}
-                  min="0"
-                  required
                   className="input"
                 />
               </label>
@@ -236,19 +251,27 @@ export default function EditProduct() {
                 </select>
               </label>
 
+              {/* Size & Stock inputs */}
               <fieldset className="space-y-2">
-                <legend className="text-gray-700 font-semibold mb-1">Size</legend>
-                {["2-3 y", "4-5 y", "6-7 y", "8-9 y", "10-11 y"].map((sizeOption) => (
-                  <label key={sizeOption} className="block">
+                <legend className="text-gray-700 font-semibold mb-1">Size & Stock</legend>
+                {sizeAndStock.map(({ size, stock }, idx) => (
+                  <div key={size} className="flex items-center space-x-4">
                     <input
                       type="checkbox"
-                      value={sizeOption}
-                      checked={product.size.includes(sizeOption)}
-                      onChange={handleSizeChange}
+                      checked={stock > 0}
+                      onChange={(e) => handleSizeToggle(idx, e.target.checked)}
                       className="mr-2"
                     />
-                    {sizeOption}
-                  </label>
+                    <span className="w-24">{size}</span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={stock}
+                      onChange={(e) => handleStockChange(idx, e.target.value)}
+                      disabled={stock === 0}
+                      className="input w-20"
+                    />
+                  </div>
                 ))}
               </fieldset>
 
@@ -301,4 +324,5 @@ export default function EditProduct() {
     </>
   );
 }
+
 

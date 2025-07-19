@@ -1,5 +1,17 @@
-// models/Product.js
 const mongoose = require('mongoose');
+
+const sizeAndStockSchema = new mongoose.Schema({
+  size: {
+    type: String,
+    required: [true, 'Please provide a size'],
+    trim: true,
+  },
+  stock: {
+    type: Number,
+    required: [true, 'Please provide stock for the size'],
+    min: 0,
+  }
+}, { _id: false }); // prevents auto-generating _id for each subdoc
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -23,38 +35,47 @@ const productSchema = new mongoose.Schema({
     required: [true, 'Please provide a discountPrice'],
     min: 0,
   },
-  stock: {
-    type: Number,
-    required: [true, 'Please provide stock quantity'],
-    min: 0,
-    default: 0,
-  },
   category: {
     type: String,
     required: [true, 'Please provide a product category'],
     trim: true,
   },
-  size: {
-    type: [String], // e.g., ['S', 'M', 'L', 'XL']
-    default: [],
-  },
   gender: {
     type: String,
     enum: ['Boys', 'Girls', 'Unisex'],
-    required: [true, 'Please specify gender (boys, girls, or unisex)'],
+    required: [true, 'Please specify gender (Boys, Girls, or Unisex)'],
+  },
+  sizeAndStock: {
+    type: [sizeAndStockSchema],
+    required: [true, 'Please provide sizes and their stock quantities'],
+    validate: [arrayLimit, 'Size variants exceed the limit of 20'],
+    default: [],
   },
   images: {
     type: [String],
-    validate: [arrayLimit, '{PATH} exceeds the limit of 5'],
+    validate: [imageLimit, '{PATH} exceeds the limit of 5'],
     default: [],
   },
 }, {
   timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
 });
 
-// Helper function to limit images to 5
+// Virtual field for total stock
+productSchema.virtual('totalStock').get(function () {
+  return this.sizeAndStock.reduce((total, item) => total + item.stock, 0);
+});
+
+// Validation: max 20 size variants
 function arrayLimit(val) {
+  return val.length <= 20;
+}
+
+// Validation: max 5 images
+function imageLimit(val) {
   return val.length <= 5;
 }
 
 module.exports = mongoose.model('Product', productSchema);
+

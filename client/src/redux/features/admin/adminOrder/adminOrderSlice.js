@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getOrderDetails,getAllOrders } from "./adminOrderAction";
+import { getOrderDetails,getAllOrders,updateOrderStatus } from "./adminOrderAction";
 
 
 const initialState={
@@ -7,7 +7,8 @@ const initialState={
     orderDetail: null,
     error:null,
     loading:false,
-    success:null
+    success:null,
+    message:null,
 }
 
 const orderSlice=createSlice({
@@ -41,6 +42,21 @@ const orderSlice=createSlice({
             state.error=null
         })
         .addCase(getOrderDetails.rejected,(state,action)=>{
+            state.loading=false;
+            state.error=action.payload||'fetching admin side order details failed'
+        })
+
+
+        .addCase(updateOrderStatus.pending,(state)=>{
+            state.loading=true;
+            state.error=null;
+        })
+        .addCase(updateOrderStatus.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.message=action.payload.message
+            state.error=null
+        })
+        .addCase(updateOrderStatus.rejected,(state,action)=>{
             state.loading=false;
             state.error=action.payload||'fetching admin side order details failed'
         })
