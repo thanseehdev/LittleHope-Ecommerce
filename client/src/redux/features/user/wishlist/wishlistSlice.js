@@ -6,13 +6,18 @@ const initialState = {
     loading: false,
     error: null,
     success: '',
+    message:null
 
 }
 
 const wishlistSlice = createSlice({
     name: 'wishlist',
     initialState,
-    reducers: {},
+      reducers: {
+    clearMessage(state) {
+      state.message = null;  // Action to clear message after showing
+    }
+  },
     extraReducers: (builder) => {
         builder
             .addCase(addToWishlist.pending, (state) => {
@@ -21,6 +26,7 @@ const wishlistSlice = createSlice({
             })
             .addCase(addToWishlist.fulfilled, (state, action) => {
                 state.loading = false;
+                state.message=action.payload.message
                 state.success = action.payload || 'item added to wishlist'
             })
             .addCase(addToWishlist.rejected, (state, action) => {
@@ -61,5 +67,5 @@ const wishlistSlice = createSlice({
     }
 })
 
-
+export const { clearMessage } = wishlistSlice.actions;
 export default wishlistSlice.reducer

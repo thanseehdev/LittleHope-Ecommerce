@@ -125,8 +125,8 @@ const FPEmailOtp = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-    return res.status(400).json({ message: 'Please register' });
-}
+            return res.status(400).json({ message: 'Please register' });
+        }
 
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -171,11 +171,28 @@ const conFirmForgetPassword = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         const newPassword = await bcrypt.hash(password, 10)
-        user.password=newPassword
+        user.password = newPassword
         await user.save()
-        res.status(200).json({message:'new password created successfull, please login'})
+        res.status(200).json({ message: 'new password created successfull, please login' })
     } catch (error) {
 
+    }
+}
+
+const logout = async (req, res) => {
+    console.log('inside logout controleer');
+    
+    try {
+        res.cookie('token', '', {
+            httpOnly: true,
+            expires: new Date(0),
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+        });
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.error('logout error:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 }
 
@@ -186,5 +203,6 @@ module.exports = {
     me,
     FPEmailOtp,
     verifyFPOTP,
-    conFirmForgetPassword
+    conFirmForgetPassword,
+    logout
 }

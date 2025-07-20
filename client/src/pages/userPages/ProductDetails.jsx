@@ -1,58 +1,106 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { productDetail } from "../../redux/features/user/product/productDetailAction";
 import { addToCart } from "../../redux/features/user/cart/cartAction";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { addToWishlist } from "../../redux/features/user/wishlist/wishlistAction";
+import {
+  addToWishlist,
+  getWishItem,
+} from "../../redux/features/user/wishlist/wishlistAction";
 import { Link } from "react-router-dom";
-import { clearMessage } from "../../redux/features/user/cart/cartSlice";
-import { XMarkIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
+import {
+  clearMessage as clearCartMessage,
+} from "../../redux/features/user/cart/cartSlice";
+import {
+  clearMessage as clearWishlistMessage,
+} from "../../redux/features/user/wishlist/wishlistSlice";
+import {
+  XMarkIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/solid";
 
 export default function ProductDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [selectedSize, setSelectedSize] = useState("");
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
+  const [showComingSoonMessage, setShowComingSoonMessage] = useState(false);
 
-  const { product, similarProducts = [], loading, error, message } = useSelector((state) => state.productDetail);
+  const { product, similarProducts = [], loading, error } = useSelector(
+    (state) => state.productDetail
+  );
+  const wishState = useSelector((state) => state.wishlist);
   const cartState = useSelector((state) => state.cart);
 
   useEffect(() => {
     if (id) {
       dispatch(productDetail(id));
+      dispatch(getWishItem());
     }
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (product && product.images && product.images.length > 0) {
+    if (product?.images?.length > 0) {
       setSelectedImage(product.images[0]);
     }
   }, [product]);
 
   useEffect(() => {
+    if (wishState.items && product?._id) {
+      const found = wishState.items.some(
+        (item) =>
+          item.product === product._id || item.product?._id === product._id
+      );
+      setIsWishlisted(found);
+    }
+  }, [wishState.items, product]);
+
+  useEffect(() => {
     if (cartState.message || cartState.error) {
-      const timer = setTimeout(() => dispatch(clearMessage()), 3000);
+      const timer = setTimeout(() => dispatch(clearCartMessage()), 3000);
       return () => clearTimeout(timer);
     }
   }, [cartState.message, cartState.error, dispatch]);
 
+  useEffect(() => {
+    if (wishState.message || wishState.error) {
+      const timer = setTimeout(() => dispatch(clearWishlistMessage()), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [wishState.message, wishState.error, dispatch]);
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ productId: product._id, quantity: 1, size: selectedSize }));
+    dispatch(
+      addToCart({ productId: product._id, quantity: 1, size: selectedSize })
+    );
   };
 
+const handleBuyNow = () => {
+    if (selectedSize) {
+      setShowComingSoonMessage(true);
+
+      // Optional: Hide the message after a few seconds
+      setTimeout(() => {
+        setShowComingSoonMessage(false);
+      }, 4000);
+    }
+  };
+
+
   const handleWishlistToggle = () => {
-    setIsWishlisted((prev) => !prev);
     dispatch(addToWishlist({ ProductId: id }));
+    setIsWishlisted(true);
   };
 
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
-  if (!product) return null;
+  if (!product) return <div className="text-center py-10 text-gray-500">Product not found.</div>;
 
   const discountPercentage = Math.round(
     ((product.price - product.discountPrice) / product.price) * 100
@@ -62,65 +110,58 @@ export default function ProductDetail() {
     <>
       <Navbar />
 
+      {(cartState.message ||
+        cartState.error ||
+        wishState.message ||
+        wishState.error) && (
+        <div
+          className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
+          flex items-center justify-between left-1/2 -translate-x-1/2
+          bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
+          role="alert"
+        >
+          <span className="flex items-center gap-2">
+            {(cartState.error || wishState.error) ? (
+              <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
+            ) : (
+              <CheckCircleIcon className="h-5 w-5 text-pink-500" />
+            )}
+            {cartState.message || cartState.error || wishState.message || wishState.error}
+          </span>
 
-
-{(cartState.message || cartState.error) && (
- <div
-  className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-64 lg:w-full max-w-sm px-5 py-4 rounded-lg shadow-lg border 
-    ${cartState.error ? "bg-pink-50 border-pink-300 text-pink-800" : "bg-white border-pink-300 text-pink-800"}
-  `}
-  role="alert"
->
-  <div className="flex items-start gap-3">
-    {/* Icon */}
-    <div className="">
-      {cartState.error ? (
-        <ExclamationCircleIcon className="h-6 w-6 text-pink-500" />
-      ) : (
-        <CheckCircleIcon className="h-6 w-6 text-pink-500" />
+          <button
+            onClick={() => {
+              dispatch(clearCartMessage());
+              dispatch(clearWishlistMessage());
+            }}
+            className="text-pink-500 hover:text-pink-400 transition ml-2"
+            aria-label="Close alert"
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+        </div>
       )}
-    </div>
-
-    {/* Message */}
-    <div className="flex-1 text-sm sm:text-base font-medium">
-      {cartState.message || cartState.error}
-    </div>
-
-    {/* Close Button */}
-    <button
-      onClick={() => dispatch(clearMessage())}
-      className="text-gray-400 hover:text-gray-600 transition"
-      aria-label="Close"
-    >
-      <XMarkIcon className="h-5 w-5" />
-    </button>
-  </div>
-</div>
-
-)}
-
-
-
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Left: Image Gallery */}
           <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:sticky lg:top-24">
-            {/* Thumbnails */}
             <div className="flex flex-row lg:flex-col gap-2 overflow-auto max-lg:justify-center">
               {product.images?.map((img, idx) => (
                 <img
                   key={idx}
                   onClick={() => setSelectedImage(img)}
                   src={img}
-                  alt={`Thumbnail ${idx}`}
-                  className={`w-16 h-20 rounded border cursor-pointer object-cover ${selectedImage === img ? "border-pink-400" : "border-gray-300"
-                    }`}
+                  alt={`Product thumbnail ${idx + 1}`}
+                  className={`w-16 h-20 rounded border cursor-pointer object-cover ${
+                    selectedImage === img
+                      ? "border-pink-400"
+                      : "border-gray-300"
+                  }`}
                 />
               ))}
             </div>
 
-            {/* Main Image */}
             <div className="relative flex-1">
               <img
                 src={selectedImage || "/comingSoon2.png"}
@@ -129,6 +170,7 @@ export default function ProductDetail() {
               />
               <button
                 onClick={handleWishlistToggle}
+                aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
                 className="absolute top-4 right-4 bg-white rounded-full p-3 shadow-md hover:bg-pink-100 transition"
               >
                 {isWishlisted ? (
@@ -141,13 +183,17 @@ export default function ProductDetail() {
           </div>
 
           {/* Right: Product Info */}
-          <div className="w-full lg:w-1/2 ">
+          <div className="w-full lg:w-1/2">
             <h2 className="text-2xl font-semibold">{product.name}</h2>
 
             <div className="flex items-center gap-3">
-              <span className="text-green-600 font-semibold text-xl">₹{product.discountPrice}</span>
+              <span className="text-green-600 font-semibold text-xl">
+                ₹{product.discountPrice}
+              </span>
               <span className="line-through text-gray-500">₹{product.price}</span>
-              <span className="text-green-500 font-medium">{discountPercentage}% off</span>
+              <span className="text-green-500 font-medium">
+                {discountPercentage}% off
+              </span>
             </div>
 
             <p className="text-sm text-gray-600">{product.category}</p>
@@ -160,33 +206,76 @@ export default function ProductDetail() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`min-w-[60px] text-sm sm:text-base px-4 py-2 border rounded-md transition ${selectedSize === size
-                      ? "bg-gray-200  border-gray"
-                      : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                      }`}
+                    className={`min-w-[60px] text-sm sm:text-base px-4 py-2 border rounded-md transition ${
+                      selectedSize === size
+                        ? "bg-gray-200 border-gray"
+                        : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                    }`}
                   >
                     {size}
                   </button>
                 ))}
               </div>
+              {!selectedSize && (
+                <p className="text-sm text-red-500 mt-1">Please select a size.</p>
+              )}
             </div>
+            {showComingSoonMessage && (
+  <div className="mt-6 p-5 border-l-4 border-blue-500 bg-blue-50 rounded-md shadow-sm relative">
+    <div className="absolute inset-0 pointer-events-none rounded-md" />
+    <div className="relative z-10">
+      <h3 className="text-base font-semibold text-blue-700 flex items-center mb-1">
+         <svg
+          className="w-5 h-5 mr-2 text-blue-600"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12" y2="8" />
+        </svg>
+        Coming Soon
+      </h3>
+      <p className="text-sm text-blue-800">
+        This feature is currently <span className="font-medium text-blue-700">under development</span>. In the meantime, please use the <span className="italic underline font-bold text-blue-800">Add to Cart</span> option.
+      </p>
+    </div>
+  </div>
+)}
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mt-5">
               <button
                 onClick={handleAddToCart}
                 disabled={!selectedSize || cartState.status === "loading"}
-                className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize || cartState.status === "loading"
-                  ? "bg-orange-300 cursor-not-allowed"
-                  : "bg-orange-500 hover:bg-orange-600"
-                  }`}
+                className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${
+                  !selectedSize || cartState.status === "loading"
+                    ? "bg-orange-300 cursor-not-allowed"
+                    : "bg-orange-500 hover:bg-orange-600"
+                }`}
               >
                 {cartState.status === "loading" ? "Adding..." : "Add to Cart"}
               </button>
 
-              <button className="flex-1 bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 font-medium">
-                Buy Now
-              </button>
+
+
+               <button
+        onClick={handleBuyNow}
+        disabled={!selectedSize}
+        className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${
+          !selectedSize
+            ? 'bg-red-300 cursor-not-allowed'
+            : 'bg-red-500 hover:bg-red-600'
+        }`}
+      >
+        Buy Now
+      </button>
+
             </div>
 
             {/* Description */}
@@ -209,42 +298,55 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+
         {/* Similar Products Section */}
         {similarProducts.length > 0 && (
           <div className="mt-10">
-            <h3 className="text-xl font-semibold mb-4">Explore more like this</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Explore more like this
+            </h3>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
               {similarProducts.map((item) => {
-                const discount = Math.round(((item.price - item.discountPrice) / item.price) * 100);
+                const discount = Math.round(
+                  ((item.price - item.discountPrice) / item.price) * 100
+                );
                 return (
-                  <div key={item._id} className="border rounded-lg overflow-hidden hover:shadow-md transition">
+                  <div
+                    key={item._id}
+                    className="border rounded-lg overflow-hidden hover:shadow-md transition"
+                  >
                     <Link to={`/productDetails/${item._id}`}>
                       <img
                         src={item.images?.[0] || "/placeholder.jpg"}
                         alt={item.name}
-                        className="w-full lg:object-fill lg:w-1/2  h-44"
+                        className="w-full lg:object-fill lg:w-1/2 h-44"
                       />
                       <div className="p-2">
                         <h4 className="text-sm line-clamp-2">{item.name}</h4>
-                        <div className="flex items-center gap-1 ">
-                          <span className="text-green-600 font-semibold">₹{item.discountPrice}</span>
-                          <span className="line-through text-sm text-gray-500">₹{item.price}</span>
-                          <span className="text-green-500 text-sm">{discount}% off</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-green-600 font-semibold">
+                            ₹{item.discountPrice}
+                          </span>
+                          <span className="line-through text-sm text-gray-500">
+                            ₹{item.price}
+                          </span>
+                          <span className="text-green-500 text-sm">
+                            {discount}% off
+                          </span>
                         </div>
                       </div>
                     </Link>
                   </div>
-
                 );
               })}
             </div>
           </div>
         )}
-
       </div>
     </>
   );
 }
+
 
 
 

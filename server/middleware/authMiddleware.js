@@ -6,7 +6,7 @@ const protect=async(req,res,next)=>{
         console.log('inside the protect')
         const token=req.cookies.token
         if(!token){
-            return res.status(400).json({message:'Not authorized'})
+            return res.status(400).json({message:'please login'})
         }
         const decoded=jwt.verify(token,process.env.JWT_SECRET)
         const user = await User.findById(decoded.id).select('-password')

@@ -68,3 +68,12 @@ export const conFirmForgetPassword=createAsyncThunk('user/conFirmForgetPassword'
         return rejectWithValue(error.response?.data?.message||'verifyFPOTP action failed')
     }
 })
+
+export const logoutUser=createAsyncThunk('user/logoutUser',async(_,{rejectWithValue})=>{
+    try {
+        const res=await api.get('/user/logout')
+        return res.data
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message||'logout failed')
+    }
+})

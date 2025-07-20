@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getCartItems } from "../../../redux/features/user/cart/cartAction";
+import { Link } from 'react-router-dom';
 
 import {
   FaSearch,
@@ -45,11 +46,11 @@ const Navbar = () => {
     navigate('/test');
   };
 
-useEffect(() => {
-  if (cartItems.length === 0) {
-    dispatch(getCartItems());
-  }
-}, [dispatch, cartItems.length]);
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      dispatch(getCartItems());
+    }
+  }, [dispatch, cartItems.length]);
 
 
   return (
@@ -99,22 +100,25 @@ useEffect(() => {
             <div className="md:hidden flex items-center space-x-3">
 
               <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
-                <MdFavoriteBorder size={21} />
-
+                <Link to="/wishlist" title="wishlist">
+                  <MdFavoriteBorder size={21} />
+                </Link>
               </div>
 
               <div className="relative flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
-                <AiOutlineShoppingCart size={23} />
-                {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                    {cartCount}
-                  </span>
-                )}
+                <Link to="/cart" title="Cart">
+                  <AiOutlineShoppingCart size={23} />
+                  {cartCount > 0 && (
+                    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
               </div>
-
               <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
-                <FaRegUser size={18} />
-
+                <Link to="/account" title="account">
+                  <FaRegUser size={18} />
+                </Link>
               </div>
             </div>
 
@@ -131,45 +135,53 @@ useEffect(() => {
 
                 {isProfileDropdownOpen && (
                   <div className="absolute top-10 left-0 bg-white shadow rounded-md w-62 h-50 py-2 text-gray-700">
-                    <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                      <FaUser size={18} />
-                      <span>Account</span>
-                    </div>
-                    <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                      <FaBox size={18} />
-                      <span>Orders</span>
-                    </div>
-                    <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                      <FaTag size={18} />
-                      <span>Coupons</span>
-                    </div>
-                    <div
-                      onClick={handleClick}
-                      className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600"
-                    >
-                      <FaComments size={18} />
-                      <span>Contact</span>
-                    </div>
+                    <Link to="/account" title="account">
+                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
+
+                        <FaUser size={18} />
+                        <span>Account</span>
+                      </div>
+                    </Link>
+                    <Link to="/order" title="order">
+                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
+                        <FaBox size={18} />
+                        <span>Orders</span>
+                      </div>
+                    </Link>
+                    <Link to="/profile" title="profile">
+                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
+                        <FaTag size={18} />
+                        <span>Coupons</span>
+                      </div>
+                    </Link>
+                    <Link to="/contact" title="profile">
+                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
+                        <FaComments size={18} />
+                        <span>Contact</span>
+                      </div>
+                    </Link>
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
-                <FaHeart size={18} />
-                <span className="mt-1">Wishlist</span>
-              </div>
-            <div className="relative cursor-pointer transition hover:text-pink-600">
-  <FaShoppingBag size={18} />
-  <span className="text-sm mt-1">Bag</span>
-  {cartCount > 0 && (
-    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-      {cartCount}
-    </span>
-  )}
-</div>
+              <Link to="/wishlist" title="profile">
+                <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
+                  <FaHeart size={18} />
+                  <span className="mt-1">Wishlist</span>
+                </div>
+              </Link>
 
-
-
+              <Link to="/cart" title="profile">
+                <div className="relative cursor-pointer transition hover:text-pink-600">
+                  <FaShoppingBag size={18} />
+                  <span className="text-sm mt-1">Bag</span>
+                  {cartCount > 0 && (
+                    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
+              </Link>
             </div>
           </div>
         </div>

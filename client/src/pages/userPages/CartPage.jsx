@@ -2,9 +2,12 @@ import React, { useEffect } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartItems, updateQuantity, removeFromCart } from "../../redux/features/user/cart/cartAction";
+import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
+  const navigate=useNavigate()
   const dispatch = useDispatch();
+const [checkoutLoading, setCheckoutLoading] = React.useState(false);
 
   const { items = [], loading, error } = useSelector((state) => state.cart);
 
@@ -53,6 +56,14 @@ export default function CartPage() {
     await dispatch(removeFromCart({ productId: id, size }));
     dispatch(getCartItems());
   };
+
+  const handleCheckout = async () => {
+  setCheckoutLoading(true);
+  setTimeout(() => {
+    navigate("/checkoutPayment");
+  }, 2500); // simulate loading
+};
+
 
   return (
     <>
@@ -175,16 +186,22 @@ export default function CartPage() {
                 <span>₹{totalAmount}</span>
               </div>
             </div>
-            <button
-  disabled={cartItems.length === 0}
-  className={`mt-6 w-full py-2 rounded-md font-semibold text-white transition
-    ${cartItems.length === 0
-      ? "bg-gray-400 cursor-not-allowed"
-      : "bg-pink-600 hover:bg-pink-700"
-    }`}
+   <button
+  onClick={handleCheckout}
+  disabled={cartItems.length === 0 || checkoutLoading}
+  className={`mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden
+    ${cartItems.length === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-pink-600 hover:bg-pink-700"}`}
 >
-  CHECKOUT
+  <span className="relative z-10">
+    {checkoutLoading ? "Processing..." : "CHECKOUT"}
+  </span>
+
+  {checkoutLoading && (
+    <span className="absolute left-0 top-0 h-full bg-pink-700 animate-progress w-full z-0"></span>
+  )}
 </button>
+
+
 
           </div>
         </div>

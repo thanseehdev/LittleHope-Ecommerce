@@ -26,7 +26,7 @@ const addToWishlist = async (req, res) => {
       await wishlist.save();
     }
 
-    res.status(200).json({ success: true, message: 'Added to wishlist', wishlist });
+    res.status(200).json({ success: true, message: 'Added to wishlist'});
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: 'Server Error', error: error.message });

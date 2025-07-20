@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, verifyOTP, login,loadUser,FPEmailOtp,verifyFPOTP,conFirmForgetPassword } from "./userActions";
+import { registerUser, verifyOTP, login,loadUser,FPEmailOtp,verifyFPOTP,conFirmForgetPassword,logoutUser } from "./userActions";
 
 const initialState = {
-  loading: false,
+  loading: true,
   user: null,
   emailForOTP: null,
   error: null,
@@ -63,7 +63,6 @@ const userSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true
-        console.log('inside login action'+action.payload)
         state.user = action.payload
         state.error = null
       })
@@ -131,8 +130,23 @@ const userSlice = createSlice({
         state.loading=false;
         state.error=action.payload
       })
+
+
+      .addCase(logoutUser.pending,(state)=>{
+        state.loading=true;
+        state.error=null
+      })
+      .addCase(logoutUser.fulfilled,(state,action)=>{
+        state.loading=false;
+        state.message=action.payload.message;
+        state.error=null
+      })
+      .addCase(logoutUser.rejected,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload.message
+      })
   }
 })
 
-export const { logout } = userSlice.actions;
+export const {logout}=userSlice.actions
 export default userSlice.reducer;

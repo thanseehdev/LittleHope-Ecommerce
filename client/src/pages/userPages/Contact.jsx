@@ -6,6 +6,7 @@ import {
   FaFacebook,
   FaTwitter,
 } from "react-icons/fa";
+import { SiTelegram, SiGmail } from "react-icons/si";  // Added SiTelegram and SiGmail icons
 import Navbar from "../../components/userCom/common/Navbar";
 
 export default function ContactPage() {
@@ -24,17 +25,12 @@ export default function ContactPage() {
             <ContactCard
               icon={<FaWhatsapp className="text-green-500 w-5 h-5" />}
               label="Chat on WhatsApp"
-              href="https://wa.me/919999999999"
+              href="https://wa.me/8086154280"
             />
             <ContactCard
-              icon={<FaPhone className="text-blue-500 w-5 h-5" />}
-              label="Call Us"
-              href="tel:+919999999999"
-            />
-            <ContactCard
-              icon={<FaEnvelope className="text-yellow-500 w-5 h-5" />}
-              label="Email Support"
-              href="mailto:support@littlehope.com"
+              icon={<FaFacebook className="text-blue-600 w-5 h-5" />}
+              label="Facebook"
+              href="https://facebook.com/littlehope"
             />
             <ContactCard
               icon={<FaInstagram className="text-pink-500 w-5 h-5" />}
@@ -42,9 +38,14 @@ export default function ContactPage() {
               href="https://www.instagram.com/little_hop_e?igsh=MXY2ZWViem42aDdtMQ=="
             />
             <ContactCard
-              icon={<FaFacebook className="text-blue-600 w-5 h-5" />}
-              label="Facebook"
-              href="https://facebook.com/littlehope"
+              icon={<SiGmail className="text-red-600 w-5 h-5" />}  // Gmail icon
+              label="Gmail Support"
+              href="mailto:support@littlehope.com"
+            />
+            <ContactCard
+              icon={<SiTelegram className="text-blue-400 w-5 h-5" />}  // Telegram icon
+              label="Telegram"
+              href="https://t.me/littlehope"  // Replace with your actual Telegram link
             />
             <ContactCard
               icon={<FaTwitter className="text-sky-500 w-5 h-5" />}
@@ -76,6 +77,7 @@ function ContactCard({ icon, label, href }) {
     </a>
   );
 }
+
 
 
 

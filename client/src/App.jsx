@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { loadUser } from './redux/features/user/userActions'
 import { useEffect } from 'react'
+import PrivateRoute from './utils/privateRoute'
 
 import RegisterPage from './pages/userPages/Register'
 import Login from './pages/userPages/Login'
@@ -27,18 +28,19 @@ import AdminAddProduct from './components/adminCom/AddProduct'
 import AdminAddCoupon from './components/adminCom/AddCoupon'
 import AdminGetCoupon from './pages/adminPages/Coupon'
 import AdminGetEditProduct from './components/adminCom/EditProduct'
-import Test from './pages/userPages/test'
+import AccountPage from './pages/userPages/AccountCenter'
 import AddAdress from './components/userCom/address/AddAddressModal'
 import ForgetPassword from './pages/userPages/forgetPassword'
 import AdminOrderDetails from './pages/adminPages/AdminOrderDetails'
+import ComingSoon from './pages/userPages/ComingSoon'
 
 
 
 function App() {
-  // const dispatch = useDispatch()
-  // useEffect(() => {
-  //   dispatch(loadUser());
-  // }, []);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(loadUser());
+  }, []);
 
   return (
     <Routes>
@@ -49,15 +51,21 @@ function App() {
       <Route path='/home' element={<Home />} />
       <Route path='/allProducts' element={<ProductGrid />} />
       <Route path='/productDetails/:id' element={<ProductDetail />} />
-      <Route path='/cart' element={<CartPage />} />
-      <Route path='/wishlist' element={<WishlistCard />} />
-      <Route path='/checkoutAddress' element={<AddressPage />} />
-      <Route path='/checkoutPayment' element={<CheckoutPayment />} />
-      <Route path='/profile' element={<ProfilePage />} />
-      <Route path='/orderSuccess' element={<OrderSuccess />} />
-      <Route path='/order' element={<OrderPage />} />
-      <Route path="/order/:orderId" element={<OrderDetailPage />} />
+      <Route path='/cart' element={<PrivateRoute><CartPage /></PrivateRoute>} />
+      <Route path='/wishlist' element={<PrivateRoute><WishlistCard /></PrivateRoute>} />
+      <Route path='/checkoutPayment' element={<PrivateRoute><CheckoutPayment/></PrivateRoute>} />
+      <Route path='/profile' element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+      <Route path='/orderSuccess' element={<PrivateRoute><OrderSuccess /></PrivateRoute>} />
+      <Route path='/order' element={<PrivateRoute><OrderPage /></PrivateRoute>} />
+      <Route path="/order/:orderId" element={<PrivateRoute><OrderDetailPage /></PrivateRoute>} />
       <Route path='/contact' element={<ContactPage />} />
+      <Route path='/account'  element={<PrivateRoute><AccountPage /></PrivateRoute>}/>
+      <Route path='/addAddress' element={<PrivateRoute><AddAdress /></PrivateRoute>} />
+      <Route path='/forgotPassword' element={<ForgetPassword />} />
+       <Route path='/comingSoon' element={<ComingSoon />} />
+
+
+
       <Route path='/admin/dashboard' element={<AdminDashboard />} />
       <Route path='/admin/user' element={<AdminUsers />} />
       <Route path='/admin/orders' element={<AdminOrder />} />
@@ -66,9 +74,6 @@ function App() {
       <Route path='/admin/addCoupon' element={<AdminAddCoupon />} />
       <Route path='/admin/coupon' element={<AdminGetCoupon />} />
       <Route path='/admin/editProduct/:id' element={<AdminGetEditProduct />} />
-      <Route path='/test' element={<Test />} />
-      <Route path='/addAddress' element={<AddAdress />} />
-      <Route path='/forgotPassword' element={<ForgetPassword />} />
       <Route path='/admin/adminOrderDetails/:id' element={<AdminOrderDetails />} />
 
     </Routes>
