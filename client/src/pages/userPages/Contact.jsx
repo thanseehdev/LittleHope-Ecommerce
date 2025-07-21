@@ -13,15 +13,15 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center px-4 py-10">
-        <div className="w-full max-w-4xl bg-white border border-gray-200  shadow-md p-6 sm:p-10">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center px-1 py-7">
+        <div className="w-full max-w-4xl  p-6 sm:p-10">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Contact Us</h1>
           <p className="text-center text-sm text-gray-500 mb-8">
             Reach out to us through any of the platforms below.
           </p>
 
           {/* Responsive Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <ContactCard
               icon={<FaWhatsapp className="text-green-500 w-5 h-5" />}
               label="Chat on WhatsApp"

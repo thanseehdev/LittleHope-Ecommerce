@@ -7,13 +7,6 @@ import { FunnelIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllProducts } from "../../../../redux/features/user/product/allProductAction";
 
-// Spinner shown only on mobile during filter/sort
-const Spinner = () => (
-  <div className="flex justify-center items-center h-64">
-    <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
-  </div>
-);
-
 const ProductGrid = () => {
   const dispatch = useDispatch();
   const { items: allProducts, loading, error } = useSelector(
@@ -29,40 +22,10 @@ const ProductGrid = () => {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isFiltering, setIsFiltering] = useState(false);
-
-  // Track screen width to show spinner on small screens only
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
-
-  // Update screen width on resize
-  useEffect(() => {
-    const handleResize = () => setScreenWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Trigger spinner only on small screens when filter/sort changes
-  useEffect(() => {
-    if (!allProducts.length || screenWidth >= 640) return;
-
-    setIsFiltering(true);
-    const timer = setTimeout(() => {
-      setIsFiltering(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [
-    selectedCategory,
-    selectedGender,
-    minPrice,
-    maxPrice,
-    sortBy,
-    allProducts.length,
-    screenWidth,
-  ]);
 
   const addToCart = (product) => {
     setCart((prev) => [...prev, product]);
@@ -181,8 +144,6 @@ const ProductGrid = () => {
             <p className="text-center text-gray-500">Loading products...</p>
           ) : error ? (
             <p className="text-center text-red-500">Error: {error}</p>
-          ) : isFiltering && screenWidth < 640 ? (
-            <Spinner />
           ) : filteredProducts.length === 0 ? (
             <p className="text-center text-gray-500 mt-10">No products found.</p>
           ) : (
@@ -199,6 +160,7 @@ const ProductGrid = () => {
 };
 
 export default ProductGrid;
+
 
 
 

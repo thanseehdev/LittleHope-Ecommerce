@@ -84,17 +84,28 @@
   }
 }
 
-@keyframes progress {
+@keyframes professionalFill {
   0% {
-    width: 0%;
+    transform: scaleX(0);
+    opacity: 0.6;
   }
   100% {
-    width: 100%;
+    transform: scaleX(1);
+    opacity: 1;
   }
 }
 
-.animate-progress {
-  animation: progress 2.5s ease forwards;
+.button-progress-bg {
+  animation: professionalFill 1.8s ease-in-out forwards;
+  transform-origin: left;
 }
+
+
+
+
+
+
+
+
 
 

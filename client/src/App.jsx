@@ -54,7 +54,7 @@ function App() {
       <Route path='/cart' element={<PrivateRoute><CartPage /></PrivateRoute>} />
       <Route path='/wishlist' element={<PrivateRoute><WishlistCard /></PrivateRoute>} />
       <Route path='/checkoutPayment' element={<PrivateRoute><CheckoutPayment/></PrivateRoute>} />
-      <Route path='/profile' element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+      <Route path='/profile' element={<ProfilePage />} />
       <Route path='/orderSuccess' element={<PrivateRoute><OrderSuccess /></PrivateRoute>} />
       <Route path='/order' element={<PrivateRoute><OrderPage /></PrivateRoute>} />
       <Route path="/order/:orderId" element={<PrivateRoute><OrderDetailPage /></PrivateRoute>} />
@@ -66,7 +66,7 @@ function App() {
 
 
 
-      <Route path='/admin/dashboard' element={<AdminDashboard />} />
+      <Route path='/admin/dashboard' element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
       <Route path='/admin/user' element={<AdminUsers />} />
       <Route path='/admin/orders' element={<AdminOrder />} />
       <Route path='/admin/product' element={<AdminProduct />} />

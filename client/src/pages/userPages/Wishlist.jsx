@@ -53,9 +53,8 @@ export default function WishlistCard() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full text-sm border ${
-                activeTab === tab ? "border-pink-500 text-pink-500" : "text-gray-600"
-              }`}
+              className={`px-4 py-2 rounded-full text-sm border ${activeTab === tab ? "border-pink-500 text-pink-500" : "text-gray-600"
+                }`}
             >
               {tab}
             </button>
@@ -68,11 +67,11 @@ export default function WishlistCard() {
 
         {/* Wishlist Grid or Empty State */}
         {items && items.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
             {items.map((item) => {
               const product = item.product;
               return (
-                <div key={item._id} className="bg-white shadow rounded-lg p-3 relative">
+                <div key={item._id} className=" border rounded  p-3 relative">
                   <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
                     <XMarkIcon
                       onClick={() => handleRemove(product._id)}
@@ -85,7 +84,7 @@ export default function WishlistCard() {
                     className="w-full h-40 lg:h-[250px] lg:w-[250px] rounded-md object-cover"
                   />
                   <div className="mt-2">
-                    <h3 className="font-semibold text-md mt-1">{product?.name}</h3>
+                    <h3 className="font-semibold text-sm mt-1">{product?.name}</h3>
                     <div className="text-sm text-gray-700 mt-1">
                       <span className="font-bold text-black">
                         ₹{product?.discountPrice || product?.price}
@@ -118,7 +117,7 @@ export default function WishlistCard() {
               alt="Empty Wishlist"
               className=" object-contain lg:h-[500px]"
             />
-            
+
           </div>
         )}
 
@@ -132,20 +131,26 @@ export default function WishlistCard() {
                   &times;
                 </button>
               </div>
-
               <div className="flex gap-1 justify-center mb-6">
-                {selectedProduct.size.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSelectedSize(s)}
-                    className={`border rounded text-center text-sm font-medium h-8 w-20 ${
-                      selectedSize === s ? "bg-pink-600 text-white" : "bg-gray-200 text-black"
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
+  {selectedProduct.sizeAndStock.map((s) => (
+    <button
+      key={s.size}
+      onClick={() => s.stock > 0 && setSelectedSize(s.size)}
+      disabled={s.stock === 0}
+      className={`relative border rounded text-center text-sm font-medium h-8 w-20
+        ${selectedSize === s.size ? "bg-pink-600 text-white" : "bg-gray-200 text-black"}
+        ${s.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
+      {s.size}
+      {s.stock === 0 && (
+        <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-red-600 bg-white bg-opacity-80">
+          Out
+        </span>
+      )}
+    </button>
+  ))}
+</div>
+
 
               <button
                 onClick={() => handleAddToBag(selectedProduct._id, selectedSize)}

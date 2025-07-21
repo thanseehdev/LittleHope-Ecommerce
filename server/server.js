@@ -11,10 +11,13 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser())
 
+
+
 app.use(cors({
-  origin: ' http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://172.20.10.2:5173'],
   credentials: true
 }));
+
 
 
 async function initializeDatabase() {
@@ -30,7 +33,7 @@ async function initializeDatabase() {
 app.use('/api/user',userRoute)
 app.use('/api/admin',adminRoute)
 
-app.listen(process.env.PORT||4000,async()=>{
+app.listen(process.env.PORT||4000,'0.0.0.0',async()=>{
     await initializeDatabase()
     console.log(`server is running on port ${process.env.PORT}`)
 })

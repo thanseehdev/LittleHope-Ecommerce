@@ -62,10 +62,6 @@ const productSchema = new mongoose.Schema({
   toObject: { virtuals: true },
 });
 
-// Virtual field for total stock
-productSchema.virtual('totalStock').get(function () {
-  return this.sizeAndStock.reduce((total, item) => total + item.stock, 0);
-});
 
 // Validation: max 20 size variants
 function arrayLimit(val) {

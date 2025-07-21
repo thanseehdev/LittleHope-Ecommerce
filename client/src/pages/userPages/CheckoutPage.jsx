@@ -134,118 +134,133 @@ export default function CheckoutPage() {
     };
 
     return (
-        <>
-            <Navbar />
-            <div className="min-h-screen bg-gray-100 px-4 py-6 md:px-8">
-                <div className="max-w-6xl  mx-auto bg-white  shadow-lg overflow-hidden">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-10">
-                        {/* Address Section */}
-                        <div className="space-y-6">
-                            <div>
-                                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Select Delivery Address</h2>
-                                {addresses.length === 0 ? (
-                                    <div className="text-center py-6">
-                                        <p className="text-gray-600 mb-4">No addresses found.</p>
-                                        <button
-                                            className="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 transition"
-                                            onClick={() => setShowAddModal(true)}
-                                        >
-                                            + Add New Address
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        {addresses.map((address) => (
-                                            <div
-                                                key={address._id}
-                                                onClick={() => handleSelectAddress(address._id)}
-                                                className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${selectedAddressId === address._id
-                                                    ? "border-pink-500 bg-pink-50"
-                                                    : "border-gray-200 hover:shadow-sm"
-                                                    }`}
-                                            >
-                                                <div className="flex justify-between items-center">
-                                                    <div className="text-sm font-medium text-gray-700">
-                                                        {address.fullName} - {address.city.toUpperCase()}
-                                                    </div>
-                                                </div>
-                                                <div className="text-sm mt-1 text-gray-600">{address.landmark}</div>
-                                                <div className="text-sm mt-1">Mobile: <span className="font-semibold">{address.mobileNo}</span></div>
-                                                <div className="text-sm">Pin Code: <span className="font-semibold">{address.zipCode}</span></div>
-                                                {address.cod && <div className="text-xs text-green-600 mt-1">✓ Pay on Delivery available</div>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+    <>
+    <Navbar />
+    <div className="min-h-screen bg-white px-4 py-6 md:px-8">
+        <div className="max-w-5xl mx-auto space-y-6">
+            {/* Page Title */}
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800">Checkout</h1>
+
+            {/* Grid Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {/* Left: Address and Payment */}
+                <div className="lg:col-span-2 space-y-6">
+
+                    {/* Address Section */}
+                    <section className="p-4 border border-gray-200 rounded-md">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-semibold text-gray-800">Delivery Address</h2>
+                            <button
+                                onClick={() => setShowAddModal(true)}
+                                className="text-sm text-pink-600 hover:underline"
+                            >
+                                + Add Address
+                            </button>
                         </div>
-
-                        {/* Payment & Price Summary */}
-                        <div className="space-y-6">
-                            <div>
-                                <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">Choose Payment Method</h2>
-                                <div className="space-y-3">
-                                    {paymentOptions.map((option) => (
-                                        <div
-                                            key={option.value}
-                                            onClick={() => setSelectedPayment(option.value)}
-                                            className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition ${selectedPayment === option.value
+                        {addresses.length === 0 ? (
+                            <p className="text-gray-500 text-sm">No saved addresses.</p>
+                        ) : (
+                            <div className="space-y-3">
+                                {addresses.map((address) => (
+                                    <div
+                                        key={address._id}
+                                        onClick={() => handleSelectAddress(address._id)}
+                                        className={`p-3 border rounded-md transition cursor-pointer ${
+                                            selectedAddressId === address._id
                                                 ? "border-pink-500 bg-pink-50"
-                                                : "border-gray-200 hover:bg-gray-50"
-                                                }`}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                {option.icon}
-                                                <span className="text-sm font-medium text-gray-700">{option.label}</span>
-                                            </div>
-                                            <input
-                                                type="radio"
-                                                checked={selectedPayment === option.value}
-                                                onChange={() => setSelectedPayment(option.value)}
-                                                className="accent-pink-600"
-                                            />
+                                                : "border-gray-200 hover:shadow"
+                                        }`}
+                                    >
+                                        <div className="text-sm font-medium text-gray-700">
+                                            {address.fullName} • {address.city}
                                         </div>
-                                    ))}
-                                </div>
+                                        <div className="text-xs text-gray-600">{address.landmark}</div>
+                                        <div className="text-xs">Mobile: {address.mobileNo}</div>
+                                        <div className="text-xs">Pin: {address.zipCode}</div>
+                                        {address.cod && (
+                                            <div className="text-xs text-green-600 mt-1">✓ Pay on Delivery Available</div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
+                        )}
+                    </section>
 
-                            <div className="bg-gray-50 p-4 rounded-lg border">
-                                <h2 className="text-lg font-semibold text-gray-800 mb-4">Price Summary ({items?.length || 0} Items)</h2>
-                                <div className="text-sm space-y-2 text-gray-700">
-                                    <div className="flex justify-between"><span>Total MRP</span><span>₹{cartSummary.totalMRP}</span></div>
-                                    <div className="flex justify-between text-green-600"><span>Discount</span><span>- ₹{cartSummary.totalDiscount}</span></div>
-                                    <div className="flex justify-between text-gray-500">
-                                        <span>Platform Fee</span>
-                                        <span>₹{platformFee}</span>
+                    {/* Payment Section */}
+                    <section className="p-4 border border-gray-200 rounded-md">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-4">Payment Method</h2>
+                        <div className="space-y-3">
+                            {paymentOptions.map((option) => (
+                                <label
+                                    key={option.value}
+                                    className={`flex items-center justify-between p-3 border rounded-md cursor-pointer ${
+                                        selectedPayment === option.value
+                                            ? "border-pink-500 bg-pink-50"
+                                            : "border-gray-200 hover:bg-gray-50"
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        {option.icon}
+                                        <span className="text-sm text-gray-700">{option.label}</span>
                                     </div>
-                                    {selectedCoupon && (
-                                        <div className="flex justify-between text-blue-600">
-                                            <span>Coupon ({selectedCoupon.code})</span>
-                                            <span>- ₹{selectedCoupon.discount}</span>
-                                        </div>
-                                    )}
-                                    <hr className="my-3" />
-                                    <div className="flex justify-between font-semibold text-gray-800 text-base">
-                                        <span>Total Amount</span>
-                                        <span>₹{totalAfterCoupon}</span>
-                                    </div>
+                                    <input
+                                        type="radio"
+                                        className="accent-pink-600"
+                                        checked={selectedPayment === option.value}
+                                        onChange={() => setSelectedPayment(option.value)}
+                                    />
+                                </label>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+
+                {/* Right: Order Summary */}
+                <div className="sticky top-4 space-y-6">
+                    <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                            Order Summary ({items?.length || 0} Items)
+                        </h3>
+                        <div className="space-y-2 text-sm text-gray-700">
+                            <div className="flex justify-between">
+                                <span>Total MRP</span>
+                                <span>₹{cartSummary.totalMRP}</span>
+                            </div>
+                            <div className="flex justify-between text-green-600">
+                                <span>Discount</span>
+                                <span>- ₹{cartSummary.totalDiscount}</span>
+                            </div>
+                            <div className="flex justify-between text-gray-500">
+                                <span>Platform Fee</span>
+                                <span>₹{platformFee}</span>
+                            </div>
+                            {selectedCoupon && (
+                                <div className="flex justify-between text-blue-600">
+                                    <span>Coupon ({selectedCoupon.code})</span>
+                                    <span>- ₹{selectedCoupon.discount}</span>
                                 </div>
+                            )}
+                            <hr className="my-3" />
+                            <div className="flex justify-between text-base font-semibold text-gray-800">
+                                <span>Total</span>
+                                <span>₹{totalAfterCoupon}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Footer */}
-                    <div className="border-t p-6 flex flex-col md:flex-row md:justify-between items-center gap-4 bg-gray-50">
-                        <div className="flex items-center gap-3 text-sm text-gray-700">
-                            <TagIcon className="h-5 w-5 text-indigo-600" />
+                    {/* Coupon & Place Order */}
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <TagIcon className="w-5 h-5 text-indigo-600" />
                             <span>Apply Coupon:</span>
                             {coupons.length > 0 ? (
                                 <select
                                     onChange={handleApplyCoupon}
                                     value={selectedCoupon?._id || ""}
-                                    className="border px-3 py-1.5 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                    className="border px-2 py-1 rounded-md text-sm focus:ring-2 focus:ring-pink-500"
                                 >
-                                    <option value="">-- Select Coupon --</option>
+                                    <option value="">-- Select --</option>
                                     {coupons.map((coupon) => (
                                         <option key={coupon._id} value={coupon._id}>
                                             {coupon.code}
@@ -253,27 +268,31 @@ export default function CheckoutPage() {
                                     ))}
                                 </select>
                             ) : (
-                                <span className="text-gray-400 italic">No coupons available</span>
+                                <span className="italic text-gray-400">No coupons</span>
                             )}
                         </div>
                         <button
-                            className="bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm px-6 py-3 rounded transition"
                             onClick={handlePlaceOrder}
+                            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-md transition"
                         >
                             PLACE ORDER
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            {/* Add Address Modal */}
-            <AddAddressModal
-                isOpen={showAddModal}
-                onClose={() => setShowAddModal(false)}
-                onSave={handleSaveAddress}
-            />
-        </>
-    );
+        {/* Address Modal */}
+        <AddAddressModal
+            isOpen={showAddModal}
+            onClose={() => setShowAddModal(false)}
+            onSave={handleSaveAddress}
+        />
+    </div>
+</>
+
+);
+
 }
 
 

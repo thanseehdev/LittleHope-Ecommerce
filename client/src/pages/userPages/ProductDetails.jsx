@@ -75,13 +75,20 @@ export default function ProductDetail() {
     }
   }, [wishState.message, wishState.error, dispatch]);
 
-  const handleAddToCart = () => {
+ const handleAddToCart = () => {
+    const selectedVariant = product.sizeAndStock.find(
+      (item) => item.size === selectedSize
+    );
+    if (!selectedVariant || selectedVariant.stock === 0) {
+      return;
+    }
+
     dispatch(
       addToCart({ productId: product._id, quantity: 1, size: selectedSize })
     );
   };
 
-const handleBuyNow = () => {
+  const handleBuyNow = () => {
     if (selectedSize) {
       setShowComingSoonMessage(true);
 
@@ -114,33 +121,33 @@ const handleBuyNow = () => {
         cartState.error ||
         wishState.message ||
         wishState.error) && (
-        <div
-          className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
+          <div
+            className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
           flex items-center justify-between left-1/2 -translate-x-1/2
           bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
-          role="alert"
-        >
-          <span className="flex items-center gap-2">
-            {(cartState.error || wishState.error) ? (
-              <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
-            ) : (
-              <CheckCircleIcon className="h-5 w-5 text-pink-500" />
-            )}
-            {cartState.message || cartState.error || wishState.message || wishState.error}
-          </span>
-
-          <button
-            onClick={() => {
-              dispatch(clearCartMessage());
-              dispatch(clearWishlistMessage());
-            }}
-            className="text-pink-500 hover:text-pink-400 transition ml-2"
-            aria-label="Close alert"
+            role="alert"
           >
-            <XMarkIcon className="h-5 w-5" />
-          </button>
-        </div>
-      )}
+            <span className="flex items-center gap-2">
+              {(cartState.error || wishState.error) ? (
+                <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
+              ) : (
+                <CheckCircleIcon className="h-5 w-5 text-pink-500" />
+              )}
+              {cartState.message || cartState.error || wishState.message || wishState.error}
+            </span>
+
+            <button
+              onClick={() => {
+                dispatch(clearCartMessage());
+                dispatch(clearWishlistMessage());
+              }}
+              className="text-pink-500 hover:text-pink-400 transition ml-2"
+              aria-label="Close alert"
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+          </div>
+        )}
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-10">
@@ -148,17 +155,20 @@ const handleBuyNow = () => {
           <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:sticky lg:top-24">
             <div className="flex flex-row lg:flex-col gap-2 overflow-auto max-lg:justify-center">
               {product.images?.map((img, idx) => (
-                <img
-                  key={idx}
-                  onClick={() => setSelectedImage(img)}
-                  src={img}
-                  alt={`Product thumbnail ${idx + 1}`}
-                  className={`w-16 h-20 rounded border cursor-pointer object-cover ${
-                    selectedImage === img
-                      ? "border-pink-400"
-                      : "border-gray-300"
-                  }`}
-                />
+                <div
+  key={idx}
+  onClick={() => setSelectedImage(img)}
+  className={`flex-shrink-0 w-[64px] h-[64px] rounded-full overflow-hidden border cursor-pointer mt-3 ${
+    selectedImage === img ? "border-pink-500" : "border-gray-300"
+  }`}
+>
+  <img
+    src={img}
+    alt={`Product thumbnail ${idx + 1}`}
+    className="w-full h-full object-cover block"
+/>
+</div>
+
               ))}
             </div>
 
@@ -166,7 +176,7 @@ const handleBuyNow = () => {
               <img
                 src={selectedImage || "/comingSoon2.png"}
                 alt="Main Product"
-                className="rounded-lg w-full h-[450px] lg:h-[600px] object-cover"
+                className="rounded-sm w-full h-[450px] lg:h-[600px] object-cover"
               />
               <button
                 onClick={handleWishlistToggle}
@@ -198,83 +208,91 @@ const handleBuyNow = () => {
 
             <p className="text-sm text-gray-600">{product.category}</p>
 
-            {/* Size Selector */}
+               {/* Size Selector */}
             <div>
               <p className="font-medium mt-3 mb-2">Select Size:</p>
-              <div className="flex flex-wrap gap-3">
-                {product.size.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`min-w-[60px] text-sm sm:text-base px-4 py-2 border rounded-md transition ${
-                      selectedSize === size
-                        ? "bg-gray-200 border-gray"
-                        : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
+             <div className="flex justify-start sm:justify-center md:justify-start flex-wrap gap-3.5">
+
+  {product.sizeAndStock?.map(({ size, stock }) => (
+    <button
+      key={size}
+      onClick={() => setSelectedSize(size)}
+      disabled={stock === 0}
+      className={`relative min-w-[60px] text-sm sm:text-base px-2 py-2 border rounded-md transition
+        ${selectedSize === size
+          ? "bg-gray-200 border-gray"
+          : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"}
+        ${stock === 0 ? "cursor-not-allowed opacity-50" : ""}`}
+    >
+      {size}
+      {stock === 0 && (
+        <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-xs font-bold text-red-600 bg-white bg-opacity-80">
+          Stock Out
+        </span>
+      )}
+    </button>
+  ))}
+</div>
+
               {!selectedSize && (
                 <p className="text-sm text-red-500 mt-1">Please select a size.</p>
               )}
             </div>
+
+
             {showComingSoonMessage && (
-  <div className="mt-6 p-5 border-l-4 border-blue-500 bg-blue-50 rounded-md shadow-sm relative">
-    <div className="absolute inset-0 pointer-events-none rounded-md" />
-    <div className="relative z-10">
-      <h3 className="text-base font-semibold text-blue-700 flex items-center mb-1">
-         <svg
-          className="w-5 h-5 mr-2 text-blue-600"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="16" x2="12" y2="12" />
-          <line x1="12" y1="8" x2="12" y2="8" />
-        </svg>
-        Coming Soon
-      </h3>
-      <p className="text-sm text-blue-800">
-        This feature is currently <span className="font-medium text-blue-700">under development</span>. In the meantime, please use the <span className="italic underline font-bold text-blue-800">Add to Cart</span> option.
-      </p>
-    </div>
-  </div>
-)}
+              <div className="mt-6 p-5 border-l-4 border-blue-500 bg-blue-50 rounded-md shadow-sm relative">
+                <div className="absolute inset-0 pointer-events-none rounded-md" />
+                <div className="relative z-10">
+                  <h3 className="text-base font-semibold text-blue-700 flex items-center mb-1">
+                    <svg
+                      className="w-5 h-5 mr-2 text-blue-600"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="16" x2="12" y2="12" />
+                      <line x1="12" y1="8" x2="12" y2="8" />
+                    </svg>
+                    Coming Soon
+                  </h3>
+                  <p className="text-sm text-blue-800">
+                    This feature is currently <span className="font-medium text-blue-700">under development</span>. In the meantime, please use the <span className="italic underline font-bold text-blue-800">Add to Cart</span> option.
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mt-5">
               <button
                 onClick={handleAddToCart}
                 disabled={!selectedSize || cartState.status === "loading"}
-                className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${
-                  !selectedSize || cartState.status === "loading"
+                className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize || cartState.status === "loading"
                     ? "bg-orange-300 cursor-not-allowed"
                     : "bg-orange-500 hover:bg-orange-600"
-                }`}
+                  }`}
               >
                 {cartState.status === "loading" ? "Adding..." : "Add to Cart"}
               </button>
 
 
 
-               <button
-        onClick={handleBuyNow}
-        disabled={!selectedSize}
-        className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${
-          !selectedSize
-            ? 'bg-red-300 cursor-not-allowed'
-            : 'bg-red-500 hover:bg-red-600'
-        }`}
-      >
-        Buy Now
-      </button>
+              <button
+                onClick={handleBuyNow}
+                disabled={!selectedSize}
+                className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize
+                    ? 'bg-red-300 cursor-not-allowed'
+                    : 'bg-red-500 hover:bg-red-600'
+                  }`}
+              >
+                Buy Now
+              </button>
 
             </div>
 
@@ -313,7 +331,7 @@ const handleBuyNow = () => {
                 return (
                   <div
                     key={item._id}
-                    className="border rounded-lg overflow-hidden hover:shadow-md transition"
+                    className="border rounded-sm overflow-hidden hover:shadow-lg transition"
                   >
                     <Link to={`/productDetails/${item._id}`}>
                       <img
@@ -327,6 +345,7 @@ const handleBuyNow = () => {
                           <span className="text-green-600 font-semibold">
                             ₹{item.discountPrice}
                           </span>
+                          
                           <span className="line-through text-sm text-gray-500">
                             ₹{item.price}
                           </span>

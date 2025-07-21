@@ -32,7 +32,8 @@ const DrawerItem = ({ icon, label, onClick }) => (
 
 const Navbar = () => {
   const cartItems = useSelector((state) => state.cart.items);
-  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const cartCount = cartItems.length;
+
   const dispatch = useDispatch();
 
   console.log('cart count:', cartCount);
@@ -42,9 +43,7 @@ const Navbar = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate('/test');
-  };
+
 
   useEffect(() => {
     if (cartItems.length === 0) {

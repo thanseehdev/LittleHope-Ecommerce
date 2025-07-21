@@ -5,9 +5,9 @@ import { getCartItems, updateQuantity, removeFromCart } from "../../redux/featur
 import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   const dispatch = useDispatch();
-const [checkoutLoading, setCheckoutLoading] = React.useState(false);
+  const [checkoutLoading, setCheckoutLoading] = React.useState(false);
 
   const { items = [], loading, error } = useSelector((state) => state.cart);
 
@@ -58,11 +58,11 @@ const [checkoutLoading, setCheckoutLoading] = React.useState(false);
   };
 
   const handleCheckout = async () => {
-  setCheckoutLoading(true);
-  setTimeout(() => {
-    navigate("/checkoutPayment");
-  }, 2500); // simulate loading
-};
+    setCheckoutLoading(true);
+    setTimeout(() => {
+      navigate("/checkoutPayment");
+    }, 3000); // simulate loading
+  };
 
 
   return (
@@ -186,20 +186,44 @@ const [checkoutLoading, setCheckoutLoading] = React.useState(false);
                 <span>₹{totalAmount}</span>
               </div>
             </div>
-   <button
-  onClick={handleCheckout}
-  disabled={cartItems.length === 0 || checkoutLoading}
-  className={`mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden
+            <button
+              onClick={handleCheckout}
+              disabled={cartItems.length === 0 || checkoutLoading}
+              className={`mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden transition-colors
     ${cartItems.length === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-pink-600 hover:bg-pink-700"}`}
->
-  <span className="relative z-10">
-    {checkoutLoading ? "Processing..." : "CHECKOUT"}
-  </span>
+            >
+              {/* Animated fill background */}
+              {checkoutLoading && (
+                <span className="absolute left-0 top-0 h-full w-full bg-pink-700 button-progress-bg z-0"></span>
+              )}
 
-  {checkoutLoading && (
-    <span className="absolute left-0 top-0 h-full bg-pink-700 animate-progress w-full z-0"></span>
-  )}
-</button>
+              {/* Spinner + text */}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {checkoutLoading && (
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    ></path>
+                  </svg>
+                )}
+                {checkoutLoading ? "Processing" : "CHECKOUT"}
+              </span>
+            </button>
 
 
 
