@@ -71,15 +71,15 @@ export default function Register() {
 
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-pink-50 to-white items-center justify-center bg-gray-50 px-4 py-10">
-      <div className="w-full max-w-xl bg-white shadow-md  overflow-hidden p-6 sm:p-10">
+    <div className="min-h-screen flex bg-gradient-to-br from-pink-100 to-white items-center justify-center  px-4 py-10">
+      <div className="w-full max-w-xl lg:bg-white lg:shadow-md  overflow-hidden p-6 sm:p-10">
 
         {/* Top right image inside form */}
         <div className="flex justify-end">
           <img
             src="/LittleHope-Official-Logo2.png"
             alt="Logo"
-            className="w-16 h-16 object-contain sm:w-20 sm:h-20 bg-pink-50 rounded-full"
+            className=" w-16 h-16 object-contain sm:w-20 sm:h-20 bg-white shadow rounded-full"
           />
         </div>
         {/* Heading */}

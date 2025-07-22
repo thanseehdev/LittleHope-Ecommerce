@@ -56,16 +56,16 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-pink-50 to-white items-center justify-center bg-gray-50 px-4 py-10">
-      <div className="w-full max-w-xl bg-white shadow-md  overflow-hidden p-6 sm:p-10">
+    <div className="min-h-screen flex bg-gradient-to-br from-pink-100 to-white items-center justify-center bg-gray-50 px-4 py-10">
+      <div className="w-full max-w-xl lg:bg-white lg:shadow-md  overflow-hidden p-6 sm:p-10">
         {/* Banner */}
-        <div className="bg-orange-100 rounded-lg p-4 sm:p-6 mb-6 text-center">
-          <h3 className="text-xl font-bold text-orange-500">Extra 5% OFF*</h3>
+        <div className="lg:bg-orange-100 bg-white rounded-lg shadow p-4 sm:p-6 mb-6 text-center">
+          <h3 className="text-xl font-bold text-orange-500">FLAT ₹100 OFF*</h3>
           <p className="text-sm sm:text-base mt-1 text-gray-700">
             Join us to grab more discounts + Free Shipping on First orders
           </p>
           <p className="text-sm text-purple-600 font-semibold mt-2">
-            COUPON: <span className="font-bold">HOPE5</span>
+            COUPON: <span className="font-bold"> HOPE100 </span>
           </p>
         </div>
 

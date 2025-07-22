@@ -63,14 +63,14 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (cartState.message || cartState.error) {
-      const timer = setTimeout(() => dispatch(clearCartMessage()), 3000);
+      const timer = setTimeout(() => dispatch(clearCartMessage()), 1500);
       return () => clearTimeout(timer);
     }
   }, [cartState.message, cartState.error, dispatch]);
 
   useEffect(() => {
     if (wishState.message || wishState.error) {
-      const timer = setTimeout(() => dispatch(clearWishlistMessage()), 3000);
+      const timer = setTimeout(() => dispatch(clearWishlistMessage()), 1500);
       return () => clearTimeout(timer);
     }
   }, [wishState.message, wishState.error, dispatch]);
@@ -337,12 +337,12 @@ export default function ProductDetail() {
                       <img
                         src={item.images?.[0] || "/placeholder.jpg"}
                         alt={item.name}
-                        className="w-full lg:object-fill lg:w-1/2 h-44"
+                        className="w-full lg:object-fill lg:h-64 lg:w-1/1 h-44"
                       />
                       <div className="p-2">
                         <h4 className="text-sm line-clamp-2">{item.name}</h4>
                         <div className="flex items-center gap-1">
-                          <span className="text-green-600 font-semibold">
+                          <span className="text-green-600 text-sm">
                             ₹{item.discountPrice}
                           </span>
                           

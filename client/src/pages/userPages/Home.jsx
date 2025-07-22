@@ -13,11 +13,11 @@ function Home() {
       <CategoryScroller />
 
       {/* Image Row */}
-      <div className=" w-full">
+      <div className=" lg:w-full lg:mb-0 lg:mt-0 flex justify-center mt-2 mb-2">
         <img 
           src="/comingSoon4.png" 
           alt="" 
-          className=" h-auto transition-transform duration-300 ease-in-out" 
+          className=" lg:h-auto lg:w-full h-[240px] rounded w-[370px] transition-transform duration-300 ease-in-out" 
         />
       </div>
 

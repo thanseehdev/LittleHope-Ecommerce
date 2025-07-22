@@ -33,6 +33,7 @@ import AddAdress from './components/userCom/address/AddAddressModal'
 import ForgetPassword from './pages/userPages/forgetPassword'
 import AdminOrderDetails from './pages/adminPages/AdminOrderDetails'
 import ComingSoon from './pages/userPages/ComingSoon'
+import SearchResultPage from './pages/userPages/SearchResult'
 
 
 
@@ -63,6 +64,7 @@ function App() {
       <Route path='/addAddress' element={<PrivateRoute><AddAdress /></PrivateRoute>} />
       <Route path='/forgotPassword' element={<ForgetPassword />} />
        <Route path='/comingSoon' element={<ComingSoon />} />
+       <Route path='/search' element={<SearchResultPage />} />
 
 
 

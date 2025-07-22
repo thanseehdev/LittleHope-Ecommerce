@@ -13,3 +13,14 @@ export const newArrivals=createAsyncThunk('newArrival/product',async(_,{rejectWi
         return rejectWithValue(error.response?.data?.message || 'Something went wrong')
     }
 })
+
+export const fetchSearchResults=createAsyncThunk('product/fetchSearchResult',async(query,{rejectWithValue})=>{
+    console.log('inside search action');
+    
+    try {
+        const res=await api.get(`/user/search?q=${query}`)
+        return res.data
+    } catch (error) {
+        return rejectWithValue(err.response.data.message || "Search failed");
+    }
+})

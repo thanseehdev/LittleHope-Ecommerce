@@ -39,8 +39,8 @@ export default function EnterOtp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8 space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 to-white px-4 py-10">
+      <div className="w-full max-w-md lg:bg-white lg:shadow-md rounded-lg p-8 space-y-6">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800">Enter OTP</h2>
           <p className="text-sm text-gray-500 mt-1">

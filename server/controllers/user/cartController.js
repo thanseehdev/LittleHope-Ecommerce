@@ -1,4 +1,5 @@
 const Cart = require('../../models/cartModel')
+const Product=require('../../models/productModel')
 
 
 const addToCart = async (req, res) => {
@@ -62,8 +63,27 @@ const updateQuantity = async (req, res) => {
     const { productId, size, quantity } = req.body;
 
     try {
-        const cartItem = await Cart.findOne({ userId: req.user._id });
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
 
+        const sizeVariant = product.sizeAndStock.find(
+            (s) => s.size.toString() === size.toString()
+        );
+
+        if (!sizeVariant) {
+            return res.status(404).json({ message: 'Size not available for this product' });
+        }
+
+        if (quantity > sizeVariant.stock) {
+            return res.status(400).json({
+                message: `Requested quantity exceeds available stock. Available: ${sizeVariant.stock}`,
+            });
+        }
+
+    
+        const cartItem = await Cart.findOne({ userId: req.user._id });
         if (!cartItem) {
             return res.status(404).json({ message: 'Cart not found' });
         }
@@ -72,7 +92,7 @@ const updateQuantity = async (req, res) => {
             (item) =>
                 item.productId.toString() === productId &&
                 item.size.toString() === size.toString()
-        );
+        )
 
         if (itemIndex === -1) {
             return res.status(404).json({ message: 'Item not found in cart' });
@@ -81,13 +101,13 @@ const updateQuantity = async (req, res) => {
         cartItem.items[itemIndex].quantity = quantity;
         await cartItem.save();
 
-        return res.status(200).json({ message: 'Cart updated successfully' });
+        return res.status(200).json({ message: 'quantity updated' });
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" });
     }
-};
+}
 
 
 const removeFromCart = async (req, res) => {
@@ -117,7 +137,7 @@ const removeFromCart = async (req, res) => {
     cart.items = updatedItems;
     await cart.save();
 
-    res.status(200).json({ message: "Item removed from cart.", cart });
+    res.status(200).json({ message: "Item removed from cart." });
   } catch (error) {
     console.error("Error removing item from cart:", error);
     res.status(500).json({ message: "Server error." });

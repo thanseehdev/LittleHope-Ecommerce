@@ -1,11 +1,15 @@
 // src/pages/ComingSoon.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../components/userCom/common/Navbar';
 
 const ComingSoon = () => {
   const navigate = useNavigate();
 
   return (
+    <>
+    <Navbar/>
+    <div className=' h-1'></div>
     <div className="relative w-full h-screen overflow-hidden">
       {/* Blurred background image */}
       <img
@@ -29,6 +33,7 @@ const ComingSoon = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

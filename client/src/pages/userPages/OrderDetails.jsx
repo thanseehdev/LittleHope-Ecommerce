@@ -84,6 +84,7 @@ export default function OrderDetailPage() {
       </div>
     </div>
   ))}
+  
 </section>
 
 <section className="bg-white p-4 text-sm border mb-6">

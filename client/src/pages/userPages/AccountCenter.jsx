@@ -36,7 +36,7 @@ const AccountPage = () => {
 
   const navigate = useNavigate()
   const { profileUser, loading, error } = useSelector((state) => state.profile);
-  const userState=useSelector((state)=>state.user)
+  const userState = useSelector((state) => state.user)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,160 +50,181 @@ const AccountPage = () => {
   }
 
   return (
-<>
-  <Navbar />
+    <>
+      <Navbar />
 
-  {/* Alert */}
-  {(userState.message || userState.error) && (
-    <div
-      className="fixed z-50 max-w-sm w-full left-1/2 -translate-x-1/2 sm:top-6 bottom-4 sm:bottom-auto px-4 py-3 rounded-lg shadow-md flex items-center justify-between bg-white border border-gray-200"
-      role="alert"
-    >
-      <span className="flex items-center gap-2 text-sm font-medium text-gray-800">
-        {userState.error ? (
-          <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-        ) : (
-          <CheckCircleIcon className="h-5 w-5 text-green-500" />
-        )}
-        {userState.message || userState.error}
-      </span>
+      {/* Alert */}
+      {(userState.message || userState.error) && (
+        <div className="fixed z-50 max-w-sm w-full left-1/2 -translate-x-1/2 sm:top-6 bottom-4 sm:bottom-auto px-4 py-3 rounded-lg shadow-md flex items-center justify-between bg-white border border-gray-200">
+          <span className="flex items-center gap-2 text-sm font-medium text-gray-800">
+            {userState.error ? (
+              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+            ) : (
+              <CheckCircleIcon className="h-5 w-5 text-green-500" />
+            )}
+            {userState.message || userState.error}
+          </span>
 
-      <button
-        onClick={() => dispatch(clearCartMessage())}
-        className="text-gray-400 hover:text-gray-600 transition"
-        aria-label="Close alert"
-      >
-        <XMarkIcon className="h-5 w-5" />
-      </button>
-    </div>
-  )}
+          <button
+            onClick={() => dispatch(clearCartMessage())}
+            className="text-gray-400 hover:text-gray-600 transition"
+            aria-label="Close alert"
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+        </div>
+      )}
 
-  {/* Main Layout */}
-  <main className="min-h-screen bg-gray-100 font-sans">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Container */}
+      <main className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-      <div className="grid gap-8 md:grid-cols-3">
+          {/* Sidebar - Profile + Actions */}
+          <aside className="space-y-6 lg:col-span-1">
+            {/* Profile Card */}
 
-        {/* Sidebar - Profile & Actions */}
-        <aside className="space-y-6">
-
-          {/* Profile Card */}
-          <div className="  p-6 flex flex-col bg-white  border-l-4 border-pink-500  rounded-md">
-            <div className="w-20 h-20 bg-pink-600 text-white flex items-center justify-center rounded-full text-3xl font-bold">
-              {profileUser?.name?.charAt(0).toUpperCase() || "G"}
+            <div className="max-w-sm mx-auto bg-white border border-gray-200  shadow overflow-hidden">
+              <div className="bg-gradient-to-tr from-purple-500 to-indigo-600 px-6 py-4">
+                <h2 className="text-white text-xl font-bold">
+                  {profileUser?.name || "Guest"}
+                </h2>
+                <p className="text-blue-100 text-sm">{profileUser?.email || "No email provided"}</p>
+              </div>
+              <div className="p-6 flex items-center space-x-4">
+                <div className="w-14 -rotate-12 h-14 rounded bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white text-xl font-semibold">
+                  {profileUser?.name?.charAt(0).toUpperCase() || "G"}
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-600 text-sm">
+                    Welcome to your profile! You can manage your settings, view activity, and more.
+                  </p>
+                </div>
+              </div>
             </div>
-            <h2 className="text-lg font-semibold mt-4 text-gray-900">
-              {profileUser?.name || "Guest"}
-            </h2>
-            <p className="text-sm text-gray-600">{profileUser?.email}</p>
-            
-          </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-4">
-            {quickActions.map((item) => (
-              <Link
-                to={item.path}
-                key={item.name}
-                className="bg-white border rounded-lg p-4 flex items-center hover:shadow transition"
-              >
-                <div className="text-2xl text-pink-600 mr-3">{item.icon}</div>
-                <p className="text-sm font-medium text-gray-800">{item.name}</p>
-              </Link>
-            ))}
-          </div>
 
-          {/* Logout */}
+            {/* Quick Actions */}
+            <div className="grid grid-cols-2  gap-4">
+              {quickActions.map((item) => (
+                <Link
+                  to={item.path}
+                  key={item.name}
+                  className="flex p-4 lg:py-6 lg:h-20 lg:w-40 gap-3 items-center bg-white border p-3 rounded-sm hover:shadow transition text-center"
+                >
+                  <div className="text-gray-500 mb-1">{item.icon}</div>
+                  <p className="text-xs font-medium text-gray-700">{item.name}</p>
+                </Link>
+              ))}
+            </div>
+
+            <div className="hidden lg:block flex justify-center mt-5">
           <button
             onClick={() => setShowLogoutConfirm(true)}
-            className="w-full py-2 text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-100 transition"
+            className="  w-[330px] py-2 text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-100 transition"
           >
             LOG OUT
           </button>
+        </div>
+        <div className="hidden lg:block flex justify-center mt-5">
+          <p className="text-xs text-gray-400 text-center">Beta Version 4.2506.20</p>
+        </div>
+          </aside>
 
-          {/* Logout Modal */}
-          {showLogoutConfirm && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-              <div className="bg-white rounded-xl w-80 p-6 shadow-lg">
-                <h2 className="text-lg font-semibold mb-2 text-gray-800">Are you sure?</h2>
-                <p className="text-sm text-gray-500 mb-6">Do you really want to log out?</p>
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={() => setShowLogoutConfirm(false)}
-                    className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 transition text-sm font-medium"
+
+           <div class="hidden lg:block lg:col-span-2">
+              {/* Content Section */}
+              <div className="w-full md:w-2/3 space-y-4">
+                {[
+                  {
+                    title: "Ultimate Glam Clan",
+                    subtitle: "LittleHope Influencer Program",
+                    badge: "NEW",
+                  },
+                  {
+                    title: "Payments & Currencies",
+                    subtitle: "Manage your cards & currency",
+                  },
+                  {
+                    title: "Earn & Redeem",
+                    subtitle: "Track and redeem your rewards",
+                  },
+                  {
+                    title: "Manage Account",
+                    subtitle: "Edit profile & address book",
+                  },
+                  {
+                    title: "Wishlist",
+                    subtitle: "Your favorite products",
+                  },
+                  {
+                    title: "Settings",
+                    subtitle: "Notification preferences",
+                  },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white w-[800px] p-6 rounded-md shadow-sm hover:shadow transition cursor-pointer"
                   >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm font-medium"
-                  >
-                    Log Out
-                  </button>
-                </div>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="text-base font-medium text-gray-800">{item.title}</h3>
+                        {item.subtitle && (
+                          <p className="text-sm text-gray-500">{item.subtitle}</p>
+                        )}
+                      </div>
+                      {item.badge && (
+                        <span className="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full">
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+               
               </div>
             </div>
-          )}
-        </aside>
+        </div>
 
-        {/* Settings/Content Area */}
-        <section className="md:col-span-2 space-y-5">
-          {[
-            {
-              title: "Ultimate Glam Clan",
-              subtitle: "Myntra Influencer program for shoppers",
-              badge: "NEW",
-            },
-            {
-              title: "Payments & Currencies",
-              subtitle: "View balance and saved payment methods",
-            },
-            {
-              title: "Earn & Redeem",
-              subtitle: "View prizes and earn rewards",
-            },
-            {
-              title: "Manage Account",
-              subtitle: "Manage your account and saved addresses",
-            },
-            {
-              title: "Wishlist",
-              subtitle: "Your most loved styles",
-            },
-            {
-              title: "Settings",
-              subtitle: "Manage Notifications",
-            },
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer"
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900">
-                    {item.title}
-                  </h3>
-                  {item.subtitle && (
-                    <p className="text-sm text-gray-500 mt-1">{item.subtitle}</p>
-                  )}
-                </div>
-                {item.badge && (
-                  <span className="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full font-medium">
-                    {item.badge}
-                  </span>
-                )}
-              </div>
+
+        <div className="sm:hidden flex justify-center mt-5">
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="mt-10  w-[330px] py-2 text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-100 transition"
+          >
+            LOG OUT
+          </button>
+        </div>
+        <div className="sm:hidden flex justify-center mt-5">
+          <p className="text-xs text-gray-400 text-right">Beta Version 4.2506.20</p>
+        </div>
+      </main>
+
+
+      {/* Logout Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl w-[90%] sm:w-80 p-6 shadow-lg">
+            <h2 className="text-lg font-semibold mb-2 text-gray-800">Are you sure?</h2>
+            <p className="text-sm text-gray-500 mb-6">Do you really want to log out?</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 transition text-sm font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm font-medium"
+              >
+                Log Out
+              </button>
             </div>
-          ))}
-          <p className="text-xs text-gray-400 text-right mt-4">
-            Beta Version 4.2506.20
-          </p>
-        </section>
-      </div>
-    </div>
-  </main>
-</>
+          </div>
+        </div>
+      )}
+    </>
+
 
 
   );

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getCartItems } from "../../../redux/features/user/cart/cartAction";
 import { Link } from 'react-router-dom';
+import { setQuery } from "../../../redux/features/user/product/newArrivalSlice";
 
 import {
   FaSearch,
@@ -33,16 +34,25 @@ const DrawerItem = ({ icon, label, onClick }) => (
 const Navbar = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const cartCount = cartItems.length;
-
+  const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
 
   console.log('cart count:', cartCount);
+ const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const placeholderWords = ['Boys', 'Girls', 'Casual'];
 
 
   // Removed isDrawerOpen state because drawer is removed
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
+ useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % placeholderWords.length);
+    }, 2500); // Change word every 2 seconds
+
+    return () => clearInterval(interval); // Clean up on unmount
+  }, []);
 
 
   useEffect(() => {
@@ -51,13 +61,18 @@ const Navbar = () => {
     }
   }, [dispatch, cartItems.length]);
 
-
+  const handleSearch = () => {
+    if (searchInput.trim() !== "") {
+      dispatch(setQuery(searchInput));
+      navigate(`/search?q=${encodeURIComponent(searchInput)}`);
+    }
+  };
   return (
     <>
       <nav className="w-full border-b sticky top-0 z-50 bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-[1300px] mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo */}
-          <img src="/LittleHope-Official-Logo2.png" alt="Logo" className="h-12 w-auto hidden lg:block" />
+          <img src="/LittleHope-Official-Logo2.png" alt="Logo" className="h-20  hidden lg:block" />
 
           {/* Mobile Search Box with Logo inside (visible only on small screens) */}
           <div className="w-full block lg:hidden mr-5">
@@ -66,16 +81,19 @@ const Navbar = () => {
                 <img
                   src="/LittleHope-Official-Logo2.png"
                   alt="Little Hope Logo"
-                  className="w-auto h-6 rounded-full bg-pink-50"
+                  className="w-auto h-10 rounded-full "
                 />
               </div>
               <input
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 type="text"
-                placeholder='Search "Products"'
-                className="flex-1 w-full py-2 px-2 text-[16px] focus:outline-none"
+                placeholder={`Search for '${placeholderWords[placeholderIndex]}'`}
+                className="flex-1 w-full py-2 px-2 placeholder:text-sm text-[16px] focus:outline-none"
               />
               <button type="submit" className="mr-2">
-                <FaSearch className="text-gray-500 hover:text-pink-500 text-sm" />
+                <FaSearch onClick={handleSearch} className="text-gray-500 h-[13px] hover:text-pink-500 text-sm" />
               </button>
             </div>
           </div>
@@ -85,11 +103,14 @@ const Navbar = () => {
           <div className="flex-1 mx-6 hidden lg:block">
             <div className="relative">
               <input
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 type="text"
                 placeholder="Search for products, brands and more"
                 className="w-1/2 border bg-white border-gray-300 rounded-md py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-pink-500"
               />
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+              <FaSearch onClick={handleSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             </div>
           </div>
 

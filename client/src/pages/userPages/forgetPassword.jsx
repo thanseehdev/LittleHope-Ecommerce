@@ -50,13 +50,13 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center p-2 sm:items-center items-start pt-16 lg:py-1 bg-gradient-to-br from-white to-pink-100">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6 relative">
+    <div className="min-h-screen flex justify-center p-2 sm:items-center items-start pt-16 lg:py-1 bg-gradient-to-br from-pink-100 to-white">
+      <div className="w-full max-w-md lg:bg-white lg:shadow-md rounded-lg p-6 relative">
         {/* Logo */}
         <img
           src="/LittleHope-Official-Logo2.png"
           alt="Logo"
-          className="w-10 h-10 object-contain rounded-full bg-pink-100 absolute top-4 right-4"
+          className="w-10 h-10 object-contain rounded-full bg-white shadow absolute top-4 right-4"
         />
 
         <h2 className="text-2xl font-semibold text-center mb-6">Forgot Password</h2>
@@ -80,7 +80,7 @@ export default function ForgotPassword() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-green-500"
-                placeholder="you@example.com"
+                placeholder="john@gmail.com"
               />
             </div>
 

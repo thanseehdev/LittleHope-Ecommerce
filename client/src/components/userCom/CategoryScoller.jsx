@@ -15,7 +15,7 @@ export default function CategoryScroller() {
   return (
     <div className="w-full bg-white border-b border-gray-200 py-4 overflow-x-auto hide-scrollbar sm:border-b-0">
       <div className="max-w-6xl mx-auto">
-        <div className="flex gap-6 px-4 w-max lg:w-full lg:justify-center">
+        <div className="flex  lg:gap-9 gap-6 px-4 w-max lg:w-full lg:justify-center">
           {categories.map((cat, index) => (
   <Link
     to={cat.path}
@@ -25,7 +25,7 @@ export default function CategoryScroller() {
     <img
       src={cat.img}
       alt={cat.label}
-      className="w-20 h-20 object-cover rounded shadow"
+      className="lg:w-[100px] lg:h-[100px] w-20 h-20 object-cover rounded shadow"
     />
     <span className="mt-1">{cat.label}</span>
   </Link>

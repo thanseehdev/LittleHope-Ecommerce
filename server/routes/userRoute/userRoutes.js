@@ -2,7 +2,7 @@ const express = require('express')
 const {register,verifyOTP,login,me,FPEmailOtp,verifyFPOTP,conFirmForgetPassword,logout}=require('../../controllers/user/authController')
 const router=express.Router()
 const protect=require('../../middleware/authMiddleware')
-const {getNewArrivals, productDetails,getAllProducts }=require('../../controllers/user/productController')
+const {getNewArrivals, productDetails,getAllProducts,searchResult }=require('../../controllers/user/productController')
 const {getProfile,getCoupons,addAddress,getAddress,deleteAddress}=require('../../controllers/user/profileController')
 const {addToCart,getCartItems,updateQuantity,removeFromCart}=require('../../controllers/user/cartController')
 const {createOrder,getUserOrders,getSingleOrder,cancellOrder} =require('../../controllers/user/orderController')
@@ -56,6 +56,8 @@ router.post('/FPEmailOtp',FPEmailOtp)
 router.post('/verifyFPOTP',verifyFPOTP)
 
 router.post('/conFirmForgetPassword',conFirmForgetPassword)
+
+router.get('/search',searchResult)
 
 router.get('/logout',logout)
 

@@ -94,7 +94,7 @@ export default function CartPage() {
               cartItems.map((item) => (
                 <div
                   key={`${item.id}-${item.size}`}
-                  className="bg-white p-4 rounded-lg shadow flex flex-row items-start gap-4 relative"
+                  className="bg-white p-4 rounded shadow flex flex-row items-start gap-4 relative"
                 >
                   <button
                     className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-lg font-bold"

@@ -1,32 +1,73 @@
 const Order = require('../../models/orderModel')
 const Coupon = require('../../models/couponModel')
 const Cart = require('../../models/cartModel')
+const Product = require('../../models/productModel')
+const CouponUsage = require('../../models/couponUsageModel')
 
 
 const createOrder = async (req, res) => {
     console.log('inside create order controller');
 
-    const userId = req.user._id
+    const userId = req.user._id;
+    const { items, coupon } = req.body;
+
     try {
+        if (coupon) {
+            const alreadyUsed = await CouponUsage.findOne({ user: userId, coupon });
+            if (alreadyUsed) {
+                return res.status(400).json({ message: 'Coupon already used' });
+            }
+        }
+
+        // 2. Decrease stock (only if sufficient stock exists)
+        for (const item of items) {
+            const updatedProduct = await Product.findOneAndUpdate(
+                {
+                    _id: item.productId,
+                    "sizeAndStock.size": item.size,
+                    "sizeAndStock.stock": { $gte: item.quantity }
+                },
+                {
+                    $inc: { "sizeAndStock.$.stock": -item.quantity }
+                },
+                { new: true }
+            );
+
+            if (!updatedProduct) {
+                return res.status(400).json({
+                    message: `Insufficient stock for product ${item.productId}, size ${item.size}`
+                });
+            }
+        }
+
         const order = new Order({
             user: userId,
             ...req.body,
-        })
-        await Cart.updateOne({ userId }, { $set: { items: [] } })
-        await order.save()
+        });
+        await order.save();
 
-        res.status(200).json({ message: 'order created successfull' })
+        await Cart.updateOne({ userId }, { $set: { items: [] } });
+
+        if (coupon) {
+            await CouponUsage.create({
+                user: userId,
+                coupon,
+            });
+        }
+
+        res.status(200).json({ message: 'Order created successfully' });
+
     } catch (error) {
         console.error("Order Error:", error);
         res.status(500).json({ message: "Failed to place order." });
     }
 }
 
+
 const getUserOrders = async (req, res) => {
     console.log('inside getUserOrders');
 
-    const userId = req.user._id; // assuming you're using a middleware that sets req.user
-
+    const userId = req.user._id
     try {
         const orders = await Order.find({ user: userId })
             .populate('items.productId', 'name price')
@@ -65,7 +106,8 @@ const getSingleOrder = async (req, res) => {
 }
 
 const cancellOrder = async (req, res) => {
-    const orderId  = req.params.id
+    const orderId = req.params.id;
+
     try {
         const order = await Order.findById(orderId);
 
@@ -74,18 +116,35 @@ const cancellOrder = async (req, res) => {
         }
 
         if (order.status !== "pending") {
-            return res.status(400).json({ message: "Order cannot be canceled, it is not in the 'pending' status" });
+            return res.status(400).json({ message: "Only pending orders can be cancelled" });
         }
 
         order.status = "cancelled";
         await order.save();
 
-        res.status(200).json({ message: "Order canceled successfully"});
+        const restoreStockPromises = order.items.map(item => {
+            return Product.updateOne(
+                { _id: item.productId, "sizeAndStock.size": item.size },
+                { $inc: { "sizeAndStock.$.stock": item.quantity } }
+            );
+        });
+        await Promise.all(restoreStockPromises);
+
+
+        if (order.coupon) {
+            await CouponUsage.deleteOne({
+                user: order.user,
+                coupon: order.coupon,
+            });
+        }
+
+        res.status(200).json({ message: "Order cancelled successfully" });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
+        console.error("Cancel Order Error:", error);
+        res.status(500).json({ message: "Failed to cancel order" });
     }
-}
+};
 
 
 

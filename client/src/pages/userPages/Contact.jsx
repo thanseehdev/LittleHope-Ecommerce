@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center px-1 py-7">
+      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col items-center px-1 py-7">
         <div className="w-full max-w-4xl  p-6 sm:p-10">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Contact Us</h1>
           <p className="text-center text-sm text-gray-500 mb-8">
@@ -21,8 +21,8 @@ export default function ContactPage() {
           </p>
 
           {/* Responsive Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <ContactCard
+          <div className="grid bg-whit grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <ContactCard 
               icon={<FaWhatsapp className="text-green-500 w-5 h-5" />}
               label="Chat on WhatsApp"
               href="https://wa.me/8086154280"
@@ -54,7 +54,7 @@ export default function ContactPage() {
             />
           </div>
 
-          <p className="text-center text-xs text-gray-400 mt-10">
+          <p className="text-center text-xs text-gray-700 mt-10">
             We typically respond within 1–2 business days.
           </p>
         </div>
@@ -70,7 +70,7 @@ function ContactCard({ icon, label, href }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm hover:bg-gray-100 transition-all"
+      className="flex items-center gap-4 p-4 bg-white rounded-md border-b-2  shadow-sm hover:border-pink-500 transition-300"
     >
       <div className="flex-shrink-0">{icon}</div>
       <span className="text-gray-800 font-medium">{label}</span>

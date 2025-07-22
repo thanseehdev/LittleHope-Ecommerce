@@ -22,7 +22,7 @@ const productDetails = async (req, res) => {
             //category: product.category,
             gender: product.gender,
         }).limit(6)
-        res.status(200).json({product,similarProducts})
+        res.status(200).json({ product, similarProducts })
 
     } catch (error) {
         console.log('product detail' + error)
@@ -42,8 +42,31 @@ const getAllProducts = async (req, res) => {
     }
 }
 
+const searchResult = async (req, res) => {
+    console.log('inside search controller');
+    
+    const query = (req.query.q || '').trim();
+
+    try {
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: query, $options: 'i' } },
+                { category: { $regex: query, $options: 'i' } },
+                { gender: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } },
+            ],
+        });
+
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: "Search failed" });
+    }
+}
+
 module.exports = {
     getNewArrivals,
     productDetails,
-    getAllProducts
+    getAllProducts,
+    searchResult,
+    searchResult
 }

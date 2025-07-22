@@ -4,6 +4,7 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { getWishItem, removeWishItem } from "../../redux/features/user/wishlist/wishlistAction";
 import { addToCart } from "../../redux/features/user/cart/cartAction";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function WishlistCard() {
   const dispatch = useDispatch();
@@ -78,13 +79,15 @@ export default function WishlistCard() {
                       className="h-4 w-4 text-gray-500"
                     />
                   </button>
+                  <Link key={product.id} to={`/productDetails/${product._id}`}>
                   <img
                     src={product?.images?.[0] || "/default-product.jpg"}
                     alt={product?.name || "Product"}
                     className="w-full h-40 lg:h-[250px] lg:w-[250px] rounded-md object-cover"
                   />
+                   </Link>
                   <div className="mt-2">
-                    <h3 className="font-semibold text-sm mt-1">{product?.name}</h3>
+                    <h3 className=" text-sm mt-1">{product?.name}</h3>
                     <div className="text-sm text-gray-700 mt-1">
                       <span className="font-bold text-black">
                         ₹{product?.discountPrice || product?.price}
