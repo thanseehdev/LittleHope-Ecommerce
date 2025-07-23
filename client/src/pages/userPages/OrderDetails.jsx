@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../../components/userCom/common/Navbar";
 import { useSelector, useDispatch } from "react-redux";
-import { getOrderDetails, cancellOrder } from "../../redux/features/user/order/orderAction"; // Assuming you have cancelOrder action
+import { getOrderDetails, cancellOrder } from "../../redux/features/user/order/orderAction";
+import { Link } from "react-router-dom";
 import {
   CheckCircleIcon,
   TruckIcon,
   HomeIcon,
   ClipboardDocumentCheckIcon,
-  XCircleIcon, // Icon for cancel order button
+  XCircleIcon,
 } from "@heroicons/react/24/solid";
 
 export default function OrderDetailPage() {
@@ -18,9 +19,7 @@ export default function OrderDetailPage() {
   const { orderDetail, loading, error } = useSelector((state) => state.order);
 
   useEffect(() => {
-    if (orderId) {
-      dispatch(getOrderDetails(orderId));
-    }
+    if (orderId) dispatch(getOrderDetails(orderId));
   }, [dispatch, orderId]);
 
   const order = orderDetail;
@@ -39,13 +38,12 @@ export default function OrderDetailPage() {
     delivered: 3,
   };
 
-  const currentStep = statusIndex[order.status] ?? 0;
+  const currentStep = statusIndex[order?.status] ?? 0;
 
-  // Handle cancel order click
   const handleCancelOrder = async () => {
     if (window.confirm("Are you sure you want to cancel this order?")) {
-      await dispatch(cancellOrder(order._id)); // Dispatch cancel order action
-      dispatch(getOrderDetails(orderId))
+      await dispatch(cancellOrder(order._id));
+      dispatch(getOrderDetails(orderId));
     }
   };
 
@@ -56,65 +54,113 @@ export default function OrderDetailPage() {
   return (
     <>
       <Navbar />
-      <header className="bg-gradient-to-r from-pink-500 to-pink-300 p-6 text-white  mb-6">
-  <h1 className="text-2xl font-bold">Order #{order._id.slice(-6).toUpperCase()}</h1>
-  <p className="mt-1">{new Date(order.createdAt).toLocaleDateString()}</p>
-  <span className="inline-block bg-white text-pink-500 px-3 py-1 rounded-full mt-2">
-    {order.status.toUpperCase()}
-  </span>
-  {order.status === "pending" && (
-    <button
-      onClick={handleCancelOrder}
-      className="ml-4 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full"
-    >
-      Cancel Order
-    </button>
-  )}
-</header>
 
-<section className="space-y-4 mb-6">
-  
-  {order.items.map((item, i) => (
-    <div key={i} className="flex bg-gray-50 p-4">
-      <img src={item.productId.images[0]} alt="" className="w-24 h-24 object-cover rounded" />
-      <div className="ml-4 flex-1">
-        <h4 className="font-medium">{item.productId.name}</h4>
-        <p className="text-sm text-gray-600">Size: {item.size} • Qty: {item.quantity}</p>
-        <p className="text-lg font-semibold mt-2">₹{item.discountPriceAtPurchase}</p>
-      </div>
-    </div>
-  ))}
-  
-</section>
+      {/* Header */}
+      <header className="bg-gradient-to-r from-pink-600 to-pink-400 p-6 text-white shadow-sm mb-8">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-2xl font-bold">Order #{order._id.slice(-6).toUpperCase()}</h1>
+          <p className="mt-1 text-sm">{new Date(order.createdAt).toLocaleDateString()}</p>
+          <div className="mt-3 flex items-center gap-4">
+            <span className="bg-white text-pink-600 font-medium px-3 py-1 rounded-full shadow-sm">
+              {order.status.toUpperCase()}
+            </span>
+            {order.status === "pending" && (
+              <button
+                onClick={handleCancelOrder}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm transition duration-200"
+              >
+                Cancel Order
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
 
-<section className="bg-white p-4 text-sm border mb-6">
-  <h3 className="font-semibold mb-3">Delivery Address</h3>
-  <p>{order.addressInfo.fullName}, {order.addressInfo.mobileNo}</p>
-  <p>{`${order.addressInfo.landmark}, ${order.addressInfo.city},${order.addressInfo.zipCode}`}</p>
-</section>
+      <main className="max-w-5xl mx-auto px-4 space-y-8">
+
+        {/* Items */}
+        <section className="space-y-3">
+          {order.items.map((item, i) => (
+            <div
+              key={i}
+              className=" flex bg-white  border border-gray-200"
+            >
+              {/* Left: Image */}
+              <div className="w-[100px] h-[100px]">
+                <Link key={item.productId} to={`/productDetails/${item.productId._id}`}>
+                  <img
+                    src={item.productId.images[0]}
+                    alt={item.productId.name}
+                    className="w-full h-full object-cover"
+                  />
+                </Link>
+              </div>
+
+              {/* Right: Content */}
+              <div className="flex-1 p-3 flex justify-between items-center">
+                <div>
+                  <h4 className="lg:text-base text-sm font-semibold text-gray-900">
+                    {item.productId.name}
+                  </h4>
+                  <p className="lg:text-sm text-xs text-gray-600 mt-0.5">
+                    Size: <span className="font-medium">{item.size}</span> &bull; Qty:{" "}
+                    <span className="font-medium">{item.quantity}</span>
+                  </p>
+                </div>
+                <div className="lg:text-base text-sm font-semibold text-pink-500">
+                  ₹{item.discountPriceAtPurchase}
+                </div>
+              </div>
+            </div>
+          ))}
+        </section>
 
 
-<section className="bg-white p-4 rounded-lg ">
-      {order.status === "cancelled" ? (
-            <div className="flex items-center bg-red-500 text-white px-6 py-4 rounded-md shadow mt-6">
+
+
+
+        {/* Address */}
+        <section className="bg-white border  p-4 text-sm max-w-md ">
+          <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Delivery Address</h3>
+
+          <div className="flex items-center lg:text-base font-semibold text-gray-800 mb-2 space-x-2">
+            <span>{order.addressInfo.fullName}</span>
+            <span className="text-gray-400">|</span>
+            <span>{order.addressInfo.mobileNo}</span>
+          </div>
+
+          <div className="lg:text-base text-gray-700 leading-relaxed">
+            {order.addressInfo.landmark}<br />
+            {order.addressInfo.city} - {order.addressInfo.zipCode}
+          </div>
+        </section>
+
+
+
+        {/* Tracking or Status Message */}
+        <section className="bg-gray-50 border-t bg-white p-3 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+          {order.status === "cancelled" ? (
+            <div className="flex items-center bg-red-500 text-white px-6 py-4 rounded-md mb-5 shadow-md mt-6">
               <XCircleIcon className="w-6 h-6 mr-3" />
               <div>
                 <p className="text-sm">Your order has been cancelled.</p>
               </div>
             </div>
           ) : order.status === "delivered" ? (
-            <div className="flex items-center bg-green-600 text-white px-6 py-4  shadow mt-6">
+            <div className="flex items-center bg-green-600 text-white px-6 py-4 mb-5 shadow-md mt-6">
               <CheckCircleIcon className="w-6 h-6 mr-3" />
               <div>
-
-                <p className="text-sm ">Your order was delivered successfully.</p>
+                <p className="text-sm">Order was delivered successfully.</p>
               </div>
             </div>
           ) : (
-            <div className="max-w-3xl mx-auto bg-white py-4 mt-5">
-              <h3 className="text-lg font-semibold mb-5 ">Order Tracking</h3>
+            <div className=" max-w-3xl  mx-auto  py-4 mb-6">
+              <h3 className="text-lg font-semibold mb-5">Order Tracking</h3>
               <div className="relative mb-8">
+                {/* Base Progress Bar */}
                 <div className="absolute top-5 left-8 right-8 h-1 bg-gray-300 z-0"></div>
+
+                {/* Progress Fill */}
                 <div
                   className="absolute top-5 left-8 h-1 bg-pink-500 z-10 transition-all duration-500"
                   style={{
@@ -122,6 +168,8 @@ export default function OrderDetailPage() {
                       })`,
                   }}
                 ></div>
+
+                {/* Step Icons */}
                 <div className="flex justify-between items-center relative z-20">
                   {steps.map((step, index) => (
                     <div key={index} className="flex flex-col mr-2 items-center text-center">
@@ -132,7 +180,7 @@ export default function OrderDetailPage() {
                         <step.icon className="w-6 h-6" />
                       </div>
                       <p
-                        className={`text-xs ${index <= currentStep ? "text-blue-900" : "text-gray-500"
+                        className={`lg:text text-xs ${index <= currentStep ? "text-blue-900" : "text-gray-500"
                           }`}
                       >
                         {step.title}
@@ -141,16 +189,19 @@ export default function OrderDetailPage() {
                   ))}
                 </div>
               </div>
-                 <p className="text-sm text-gray-500 mt-3">
-      <strong>Note:</strong> You can only cancel the order while it is in the <strong>'Processed'</strong> status.
-    </p>
+              <p className="lg:text-sm text-xs text-gray-500 mt-3">
+                <strong>Note:</strong> You can only cancel the order while it is in the <strong>'Processed'</strong> status.
+              </p>
+
             </div>
-            
           )}
-          </section>
+        </section>
+
+      </main>
     </>
   );
 }
+
 
 
 

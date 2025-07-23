@@ -262,3 +262,55 @@ export default AccountPage;
     <p className="text-gray-600 mt-1 text-sm">{profileUser?.email || "No email provided"}</p>
   </div>
 </div> */}
+
+
+// font-mono
+
+<div className="flex justify-center items-end min-h-screen px-4 py-6 bg-gray-100">
+  <div className="w-full max-w-md bg-white rounded-t-2xl shadow-lg border-t border-gray-200 px-6 pt-6 pb-10">
+    
+    <div className="flex justify-center mb-4">
+      <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+    </div>
+
+    <div className="flex items-center gap-3 mb-4">
+      <CheckCircle2 className="text-green-500 w-6 h-6" />
+      <h1 className="text-lg font-semibold text-gray-800">
+        Order Confirmed
+      </h1>
+    </div>
+
+    <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+      Thanks for shopping at <span className="text-pink-500 font-medium">Little Hope</span>. 
+      Your order is being prepped. Confirmation sent to your inbox 📦.
+    </p>
+
+    <div className="bg-gray-50 border border-gray-200 rounded-md px-4 py-3 mb-5">
+      <p className="text-sm text-gray-700">
+        🎁 You earned <span className="text-pink-600 font-semibold">20 LittlePoints</span> to use next time.
+      </p>
+    </div>
+
+    <button
+      onClick={handleViewOrders}
+      disabled={isLoading}
+      className={`w-full py-3 text-sm rounded-full font-medium transition-all duration-200
+        ${isLoading
+          ? "bg-gray-300 text-gray-500 cursor-wait"
+          : "bg-pink-500 text-white hover:bg-pink-400"}`}
+    >
+      {isLoading ? "Loading..." : "View My Orders"}
+    </button>
+
+    <div className="mt-6 text-[11px] text-gray-400 text-center">
+      Need help? Contact support or view your full receipt.
+    </div>
+  </div>
+</div>
+
+
+
+//  <div className="flex justify-center mb-4">
+//       <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+//     </div>
+

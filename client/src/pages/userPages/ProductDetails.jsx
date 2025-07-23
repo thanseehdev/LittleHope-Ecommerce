@@ -105,8 +105,8 @@ export default function ProductDetail() {
     setIsWishlisted(true);
   };
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-  if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
+  if (loading) return <p className="p-8 text-gray-600">Loading...</p>;
+  if (error) return <p className="p-8 text-red-500">Error: {error}</p>;
   if (!product) return <div className="text-center py-10 text-gray-500">Product not found.</div>;
 
   const discountPercentage = Math.round(
@@ -194,19 +194,23 @@ export default function ProductDetail() {
 
           {/* Right: Product Info */}
           <div className="w-full lg:w-1/2">
-            <h2 className="text-2xl font-semibold">{product.name}</h2>
+           <h2 className="lg:text-2xl text-xl font-medium text-gray-900 mb-2">{product.name}</h2>
 
-            <div className="flex items-center gap-3">
-              <span className="text-green-600 font-semibold text-xl">
-                ₹{product.discountPrice}
-              </span>
-              <span className="line-through text-gray-500">₹{product.price}</span>
-              <span className="text-green-500 font-medium">
-                {discountPercentage}% off
-              </span>
-            </div>
+<div className="flex items-center space-x-3 mb-2">
+  <span className="text-lg font-semibold text-green-600">
+    ₹{product.discountPrice}
+  </span>
+  <span className="text-sm text-gray-400 line-through">
+    ₹{product.price}
+  </span>
+  <span className="text-xs font-semibold text-white bg-green-600 rounded px-2 py-0.5">
+    {discountPercentage}% OFF
+  </span>
+</div>
 
-            <p className="text-sm text-gray-600">{product.category}</p>
+<p className="text-xs text-gray-500 uppercase">{product.category}</p>
+
+
 
                {/* Size Selector */}
             <div>
@@ -298,7 +302,7 @@ export default function ProductDetail() {
 
             {/* Description */}
             {product.description && (
-              <div className="mt-4 text-sm text-gray-700">
+              <div className="mt-4 lg:text-base text-sm text-gray-700">
                 <p className="font-medium mb-1">Description:</p>
                 <p className="leading-relaxed">{product.description}</p>
               </div>
@@ -337,12 +341,12 @@ export default function ProductDetail() {
                       <img
                         src={item.images?.[0] || "/placeholder.jpg"}
                         alt={item.name}
-                        className="w-full lg:object-fill lg:h-64 lg:w-1/1 h-44"
+                        className="w-full lg:object-fill lg:h-[280px] lg:w-1/1 h-44"
                       />
                       <div className="p-2">
-                        <h4 className="text-sm line-clamp-2">{item.name}</h4>
+                        <h4 className="lg:text-base font-semibold text-sm line-clamp-2">{item.name}</h4>
                         <div className="flex items-center gap-1">
-                          <span className="text-green-600 text-sm">
+                          <span className="text-green-600 lg:text-base text-sm">
                             ₹{item.discountPrice}
                           </span>
                           

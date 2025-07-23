@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { getProfile } from "../../redux/features/user/profile/profileAction";
 import { useEffect, useState } from "react";
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import {
   FiPackage,
   FiHeart,
@@ -91,31 +92,35 @@ const AccountPage = () => {
                 <p className="text-blue-100 text-sm">{profileUser?.email || "No email provided"}</p>
               </div>
               <div className="p-6 flex items-center space-x-4">
-                <div className="w-14 -rotate-12 h-14 rounded bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white text-xl font-semibold">
+                <div className="w-14 shadow-md -rotate-12 h-14 rounded bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white text-xl font-semibold">
                   {profileUser?.name?.charAt(0).toUpperCase() || "G"}
                 </div>
                 <div className="flex-1">
                   <p className="text-gray-600 text-sm">
-                    Welcome to your profile! You can manage your settings, view activity, and more.
+                    Welcome to your profile! You can manage your orders, view activity, and more.
                   </p>
                 </div>
               </div>
             </div>
 
 
-            {/* Quick Actions */}
-            <div className="grid grid-cols-2  gap-4">
-              {quickActions.map((item) => (
-                <Link
-                  to={item.path}
-                  key={item.name}
-                  className="flex p-4 lg:py-6 lg:h-20 lg:w-40 gap-3 items-center bg-white border p-3 rounded-sm hover:shadow transition text-center"
-                >
-                  <div className="text-gray-500 mb-1">{item.icon}</div>
-                  <p className="text-xs font-medium text-gray-700">{item.name}</p>
-                </Link>
-              ))}
-            </div>
+         {/* Quick Actions */}
+<div className="grid grid-cols-2 gap-4">
+  {quickActions.map((item) => (
+    <Link
+      to={item.path}
+      key={item.name}
+      className="flex justify-between items-center p-4 lg:py-6 lg:h-14 lg:w-40 bg-white border rounded-sm hover:shadow transition"
+    >
+      <div className="flex items-center gap-3">
+        <div className="text-gray-500">{item.icon}</div>
+        <p className="text-xs font-medium text-gray-700">{item.name}</p>
+      </div>
+      <div className="text-gray-400 text-sm"><ChevronRightIcon className="w-4 h-4 text-gray-400" /></div>
+    </Link>
+  ))}
+</div>
+
 
             <div className="hidden lg:block flex justify-center mt-5">
           <button

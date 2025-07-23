@@ -3,6 +3,7 @@ import Navbar from "../../components/userCom/common/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartItems, updateQuantity, removeFromCart } from "../../redux/features/user/cart/cartAction";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function CartPage() {
   const navigate = useNavigate()
@@ -72,12 +73,10 @@ export default function CartPage() {
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-2">
-            <h2 className="text-xl font-semibold text-gray-800">
-              My Cart{" "}
-              <span className="text-gray-500 text-sm">
-                ({cartItems.length} items)
-              </span>
-            </h2>
+            <div className="flex items-center justify-between ">
+          <h2 className="lg:text-xl text-lg font-semibold">My Cart</h2>
+          <span className="text-gray-500 lg:text-sm text-xs">{cartItems.length || 0} items</span>
+        </div>
 
             {loading ? (
               <p className="text-gray-600">Loading...</p>
@@ -94,7 +93,7 @@ export default function CartPage() {
               cartItems.map((item) => (
                 <div
                   key={`${item.id}-${item.size}`}
-                  className="bg-white p-4 rounded shadow flex flex-row items-start gap-4 relative"
+                  className="bg-white p-4 rounded-sm shadow flex flex-row items-start gap-4 relative"
                 >
                   <button
                     className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-lg font-bold"
@@ -102,21 +101,22 @@ export default function CartPage() {
                   >
                     ✕
                   </button>
-
+                  <Link key={item.id} to={`/productDetails/${item.id}`}>
                   <img
                     src={item.image}
                     alt={item.title}
                     className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] object-cover rounded"
                   />
+                  </Link>
 
                   <div className="flex-1 flex flex-col justify-between gap-2">
-                    <h3 className="text-base font-semibold text-gray-800">{item.title}</h3>
+                    <h3 className="lg:text-lg lg:font-semibold text-sm font-bold text-gray-800">{item.title}</h3>
                     <p className="text-sm text-gray-600 line-clamp-2">{item.subtitle}</p>
 
                     <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 mt-2">
                       <div className="flex items-center text-sm gap-1">
                         <span className="font-medium text-gray-700">Size:</span>
-                        <span className="border border-gray-300 px-2 py-0.5 rounded-md bg-gray-50">
+                        <span className="border lg:text-sm text-xs border-gray-300 px-2 py-0.5 rounded-md bg-gray-50">
                           {item.size}
                         </span>
                       </div>
@@ -126,7 +126,7 @@ export default function CartPage() {
                         <select
                           value={item.qty}
                           onChange={(e) => handleQtyChange(item.id, e.target.value, item.size)}
-                          className="border rounded  bg-white text-sm"
+                          className="lg:text-base text-xs border rounded  bg-white text-sm"
                         >
                           {[1, 2, 3, 4, 5].map((qty) => (
                             <option key={qty} value={qty}>
@@ -140,7 +140,7 @@ export default function CartPage() {
                     </div>
 
                     <div className="flex items-center gap-2 text-sm">
-                      <span className="text-lg font-bold text-gray-800">
+                      <span className="lg:text-lg font-bold text-gray-800">
                         ₹{item.price * item.qty}
                       </span>
                       <span className="line-through text-gray-500">

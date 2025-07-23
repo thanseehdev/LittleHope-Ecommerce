@@ -49,20 +49,21 @@ const ProductGrid = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col sm:flex-row gap-6 px-4 py-4 bg-gray-50 min-h-screen">
+
+      <div className="flex flex-col sm:flex-row gap-4 px-3 py-2 bg-gray-50 min-h-screen">
         {/* Mobile Filter/Sort Buttons */}
         <div className="block sm:hidden w-full sticky top-14 z-40 bg-gray-50">
           <div className="flex justify-between w-full">
             <button
               onClick={() => setIsFilterOpen((prev) => !prev)}
-              className="w-1/2 bg-gray-500 text-white p-2 border rounded-l-md  hover:bg-pink-500 flex items-center justify-center gap-2"
+              className="w-1/2 bg-gray-500 text-white p-2 border rounded-l-md hover:bg-pink-500 flex items-center justify-center gap-2"
             >
               <FunnelIcon className="w-5 h-5" />
               {isFilterOpen ? "Hide Filters" : "Filters"}
             </button>
             <button
               onClick={() => setIsSortOpen((prev) => !prev)}
-              className="w-1/2 bg-gray-500 text-white p-2 border rounded-r-md  hover:bg-pink-500 flex items-center justify-center gap-2"
+              className="w-1/2 bg-gray-500 text-white p-2 border rounded-r-md hover:bg-pink-500 flex items-center justify-center gap-2"
             >
               <ChevronUpDownIcon className="w-5 h-5" />
               {isSortOpen ? "Hide Sort" : "Sort"}
@@ -70,11 +71,11 @@ const ProductGrid = () => {
           </div>
         </div>
 
-        {/* Sidebar for desktop */}
+        {/* Sticky Sidebar for desktop */}
         <div
           className={`sm:w-64 w-full bg-white rounded-lg shadow-md ${
             isFilterOpen ? "block" : "hidden sm:block"
-          }`}
+          } sm:sticky sm:top-[72px] sm:h-fit sm:max-h-screen`}
         >
           <Sidebar
             selectedCategory={selectedCategory}
@@ -135,8 +136,8 @@ const ProductGrid = () => {
 
         {/* Product Grid */}
         <div className="flex-1">
-          {/* SortBar for desktop */}
-          <div className={`${isSortOpen ? "block" : "hidden sm:block"}`}>
+          {/* Sticky SortBar for desktop */}
+          <div className="hidden sm:block sticky top-[72px] z-30 ">
             <SortBar sortBy={sortBy} setSortBy={setSortBy} />
           </div>
 
@@ -147,7 +148,7 @@ const ProductGrid = () => {
           ) : filteredProducts.length === 0 ? (
             <p className="text-center text-gray-500 mt-10">No products found.</p>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
+            <div className=" grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
               {filteredProducts.map((product, idx) => (
                 <ProductCard product={product} key={idx} addToCart={addToCart} />
               ))}
@@ -160,6 +161,8 @@ const ProductGrid = () => {
 };
 
 export default ProductGrid;
+
+
 
 
 

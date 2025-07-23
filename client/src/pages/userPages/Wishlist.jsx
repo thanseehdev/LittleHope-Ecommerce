@@ -41,8 +41,8 @@ export default function WishlistCard() {
       <Navbar />
       <div className="bg-white min-h-screen px-4 pt-4 md:px-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Wishlist</h2>
-          <span className="text-gray-500 text-sm">{items?.length || 0} items</span>
+          <h2 className="lg:text-xl text-lg font-semibold">Wishlist</h2>
+          <span className="text-gray-500 lg:text-sm text-xs">{items?.length || 0} items</span>
         </div>
 
         {/* Tabs */}

@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col items-center px-1 py-7">
+      <div className="min-h-screen flex flex-col items-center px-1 py-7">
         <div className="w-full max-w-4xl  p-6 sm:p-10">
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Contact Us</h1>
           <p className="text-center text-sm text-gray-500 mb-8">
@@ -70,7 +70,7 @@ function ContactCard({ icon, label, href }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-4 p-4 bg-white rounded-md border-b-2  shadow-sm hover:border-pink-500 transition-300"
+      className="flex items-center gap-4 p-4 bg-white rounded border border-b-4 hover:border-b-pink-500 transition-300"
     >
       <div className="flex-shrink-0">{icon}</div>
       <span className="text-gray-800 font-medium">{label}</span>

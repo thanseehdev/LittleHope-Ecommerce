@@ -17,61 +17,46 @@ export default function OrderSuccess() {
   return (
     <>
       <Navbar />
-      <div className="flex justify-center items-center px-4 py-12 mt-10">
-        <div className="w-full max-w-xl bg-[#f7f7f7] rounded-lg shadow-sm border border-gray-200 p-6 sm:p-10">
-          <div className="flex items-center gap-3 mb-6">
-            <CheckCircle2 className="text-green-600 w-8 h-8" />
-            <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
-              Your order has been placed!
-            </h1>
-          </div>
+    <div className=" flex justify-center items-start min-h-screen lg:mt-14 mt-7 px-4 bg-[#fefefe]">
+  <div className="w-full max-w-2xl bg-white border border-gray-200 shadow-md rounde px-8 py-12">
+<div className="flex justify-center items-center mb-4 -translate-y-6">
+  <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+</div>
 
-          <div className="text-gray-700 text-sm sm:text-base mb-4 leading-relaxed">
-            Thank you for shopping with{" "}
-            <span className="font-medium text-pink-500">Little Hope</span>. Your
-            order is confirmed and will be processed shortly.
-          </div>
+    <h1 className="text-3xl font-serif font-bold text-gray-900 mb-6 leading-snug">
+      Your Order Has Been Placed
+    </h1>
 
-          <div className="bg-white border border-gray-300 rounded-md px-4 py-3 mb-6">
-            <p className="text-sm text-gray-900">
-              🎉 You earned{" "}
-              <span className="font-semibold text-pink-600">20 LittlePoints</span>.
-              Redeem them on your next order!
-            </p>
-          </div>
+    <p className="text-gray-700 text-base mb-8 leading-relaxed font-light">
+      Thank you for placing your order with <span className="font-medium text-pink-500">Little Hope</span>. 
+      You’ll receive a detailed confirmation via email shortly. Our team is preparing your items with care.
+    </p>
 
-          <button
-            onClick={handleViewOrders}
-            disabled={isLoading}
-            className="relative w-full text-white py-3 rounded-md text-sm font-semibold tracking-wide overflow-hidden"
-            style={{
-              backgroundColor: "#f92b5bff",
-            }}
-          >
-            {/* Progress background */}
-            <span
-              className={`absolute top-0 left-0 h-full bg-[#ec043aff]
-                 transition-[width] duration-[1500ms] ease-linear ${
-                isLoading ? "w-full" : "w-0"
-              }`}
-              style={{ zIndex: 0 }}
-            ></span>
+    <div className="bg-[#fff9fa] border-l-4 border-pink-400 px-6 py-4 mb-10">
+      <p className="text-sm text-gray-800 italic">
+        “You’ve earned <span className="font-bold text-pink-500">20 LittlePoints</span> on this purchase. Use them to save on your next order.”
+      </p>
+    </div>
 
-            {/* Button text above progress bar */}
-            <span
-              className={`relative z-10 flex justify-center text-white items-center ${
-                isLoading ? "opacity-100" : "opacity-100"
-              }`}
-            >
-              {isLoading ? "Loading..." : "VIEW ORDERS"}
-            </span>
-          </button>
+    <div className="flex justify-start">
+      <button
+        onClick={handleViewOrders}
+        disabled={isLoading}
+        className={`px-6 py-3 rounded-full text-sm font-medium tracking-wide border transition-all duration-300
+          ${isLoading
+            ? "bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed"
+            : "bg-black text-white border-black hover:bg-white hover:text-black"}`}
+      >
+        {isLoading ? "Loading..." : "View My Orders"}
+      </button>
+    </div>
 
-          <div className="mt-6 text-xs text-gray-500 text-center">
-            A confirmation has been sent to your registered Email and Phone number.
-          </div>
-        </div>
-      </div>
+    <div className="mt-10 text-xs text-gray-400 tracking-wide text-left">
+      A confirmation message was sent to your email and phone. If you don’t see it, check your spam folder.
+    </div>
+  </div>
+</div>
+
     </>
   );
 }

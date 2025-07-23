@@ -151,33 +151,33 @@ const Navbar = () => {
                 onMouseLeave={() => setIsProfileDropdownOpen(false)}
               >
                 <FaUser size={18} className="hover:text-pink-600" />
-                <span className="mt-1">Profile</span>
+                <span className="mt-1 font-semibold">Profile</span>
 
                 {isProfileDropdownOpen && (
-                  <div className="absolute top-10 left-0 bg-white shadow rounded-md w-62 h-50 py-2 text-gray-700">
+                  <div className="absolute  top-10 left-0 bg-white border  w-[250px] h-50 py-2 text-gray-700">
                     <Link to="/account" title="account">
                       <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
 
-                        <FaUser size={18} />
-                        <span>Account</span>
+                        <FaUser size={19} />
+                        <span className="text-sm" >Account</span>
                       </div>
                     </Link>
                     <Link to="/order" title="order">
                       <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                        <FaBox size={18} />
-                        <span>Orders</span>
+                        <FaBox size={19} />
+                        <span className="text-sm">Orders</span>
                       </div>
                     </Link>
                     <Link to="/profile" title="profile">
                       <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                        <FaTag size={18} />
-                        <span>Coupons</span>
+                        <FaTag size={19} />
+                        <span className="text-sm">Coupons</span>
                       </div>
                     </Link>
                     <Link to="/contact" title="profile">
                       <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                        <FaComments size={18} />
-                        <span>Contact</span>
+                        <FaComments size={19} />
+                        <span className="text-sm">Contact</span>
                       </div>
                     </Link>
                   </div>
@@ -187,20 +187,21 @@ const Navbar = () => {
               <Link to="/wishlist" title="profile">
                 <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
                   <FaHeart size={18} />
-                  <span className="mt-1">Wishlist</span>
+                  <span className="mt-1 font-semibold">Wishlist</span>
                 </div>
               </Link>
 
               <Link to="/cart" title="profile">
-                <div className="relative cursor-pointer transition hover:text-pink-600">
-                  <FaShoppingBag size={18} />
-                  <span className="text-sm mt-1">Bag</span>
-                  {cartCount > 0 && (
-                    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                      {cartCount}
-                    </span>
-                  )}
-                </div>
+              <div className="relative cursor-pointer transition hover:text-pink-600 flex flex-col items-center">
+  <FaShoppingBag size={18} />
+  {cartCount > 0 && (
+    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+      {cartCount}
+    </span>
+  )}
+  <span className="mt-1 font-semibold block">Bag</span>
+</div>
+
               </Link>
             </div>
           </div>

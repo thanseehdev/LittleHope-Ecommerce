@@ -30,7 +30,7 @@ export default function OrdersPage() {
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-        <h2 className="text-xl font-bold mb-6">My Orders</h2>
+        <h2 className="lg:text-xl text-lg font-semibold mb-6">My Orders</h2>
 
         {loading && <p className="text-sm text-gray-500">Loading orders...</p>}
         {error && <p className="text-sm text-red-500">Error: {error}</p>}
@@ -43,24 +43,24 @@ export default function OrdersPage() {
           {orderData.map((order) => (
             <div
               key={order._id}
-              className="bg-white shadow rounded p-4 md:flex md:items-center md:justify-between cursor-pointer hover:bg-pink-50 transition"
+              className="bg-white shadow rounded p-4 md:flex md:items-center md:justify-between cursor-pointer hover:bg-gray-100 transition"
               onClick={() => navigate(`/order/${order._id}`)}
             >
               <div className="space-y-1">
-                <p className="text-sm text-gray-700 font-medium flex items-center space-x-2">
+                <p className="lg:text-lg text-sm text-gray-700 font-medium flex items-center space-x-2">
                   <span>Order #{order._id.slice(-6).toUpperCase()}</span>
                   {isOrderNew(order.createdAt) && (
-                    <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full">
+                    <span className="bg-green-600 text-white lg:text-sm text-xs px-2 py-0.5 rounded-full">
                       New
                     </span>
                   )}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="lg:text-sm text-xs text-gray-500">
                   Placed on {new Date(order.createdAt).toLocaleDateString()}
                 </p>
-                <p className="text-xs text-gray-500">Status: {order.status}</p>
+                <p className="lg:text-sm text-xs text-gray-500">Status: {order.status}</p>
               </div>
-              <div className="text-sm mt-2 md:mt-0 text-right">
+              <div className="lg:text-md text-sm mt-2 md:mt-0 text-right">
                 <p>{order.items.length} Item(s)</p>
                 <p className="font-semibold">₹{order.pricingSummary?.finalAmount}</p>
                 <button className="mt-2 text-blue-600 text-xs underline">
