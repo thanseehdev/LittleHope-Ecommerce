@@ -106,7 +106,7 @@ export default function Register() {
 
     {error && (
       <div className="mb-6 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center font-semibold text-sm max-w-md w-full flex items-center justify-center gap-2">
-        <span className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span>
+
         {error}
       </div>
     )}
@@ -118,7 +118,7 @@ export default function Register() {
         </label>
         {formErrors.name && (
           <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
-            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.name}
+            <span className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.name}
           </p>
         )}
         <input
@@ -126,7 +126,7 @@ export default function Register() {
           value={form.name}
           onChange={(e) => handleInputChange('name', e.target.value)}
           placeholder="Enter your full name"
-          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-green-500 transition ${
             formErrors.name ? 'border-red-500' : 'border-gray-300'
           }`}
         />
@@ -138,7 +138,7 @@ export default function Register() {
         </label>
         {formErrors.email && (
           <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
-            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.email}
+            <span className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.email}
           </p>
         )}
         <input
@@ -146,7 +146,7 @@ export default function Register() {
           value={form.email}
           onChange={(e) => handleInputChange('email', e.target.value)}
           placeholder="Enter your email"
-          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-green-500 transition ${
             formErrors.email ? 'border-red-500' : 'border-gray-300'
           }`}
         />
@@ -158,7 +158,7 @@ export default function Register() {
         </label>
         {formErrors.password && (
           <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
-            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.password}
+            <span className="w-10 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.password}
           </p>
         )}
         <input
@@ -166,7 +166,7 @@ export default function Register() {
           value={form.password}
           onChange={(e) => handleInputChange('password', e.target.value)}
           placeholder="Enter your password"
-          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-green-500 transition ${
             formErrors.password ? 'border-red-500' : 'border-gray-300'
           }`}
         />
@@ -178,7 +178,7 @@ export default function Register() {
         </label>
         {formErrors.confirmPassword && (
           <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
-            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.confirmPassword}
+            <span className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.confirmPassword}
           </p>
         )}
         <input
@@ -186,7 +186,7 @@ export default function Register() {
           value={form.confirmPassword}
           onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
           placeholder="Confirm password"
-          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-green-500 transition ${
             formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
           }`}
         />

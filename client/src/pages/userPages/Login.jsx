@@ -111,7 +111,7 @@ export default function Login() {
           onChange={(e) => handleInputChange('email', e.target.value)}
           required
           placeholder="Enter your email address"
-          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${
             formErrors.email ? 'border-red-500' : 'border-gray-300'
           }`}
         />
@@ -123,7 +123,7 @@ export default function Login() {
         </label>
         {formErrors.password && (
           <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
-            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.password}
+            <span className="w-10 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.password}
           </p>
         )}
         <input
@@ -132,7 +132,7 @@ export default function Login() {
           onChange={(e) => handleInputChange('password', e.target.value)}
           required
           placeholder="Enter your password"
-          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${
             formErrors.password ? 'border-red-500' : 'border-gray-300'
           }`}
         />

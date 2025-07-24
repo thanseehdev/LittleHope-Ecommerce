@@ -150,7 +150,7 @@ export default function ProductDetail() {
         )}
 
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-10">
+        <div className="flex flex-col lg:flex-row md:flex-row gap-10">
           {/* Left: Image Gallery */}
           <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:sticky lg:top-24">
             <div className="flex flex-row lg:flex-col gap-2 overflow-auto max-lg:justify-center">
@@ -197,7 +197,7 @@ export default function ProductDetail() {
            <h2 className="lg:text-2xl text-xl font-medium text-gray-900 mb-2">{product.name}</h2>
 
 <div className="flex items-center space-x-3 mb-2">
-  <span className="text-lg font-semibold text-green-600">
+  <span className="lg:text-xl text-base font-semibold text-green-600">
     ₹{product.discountPrice}
   </span>
   <span className="text-sm text-gray-400 line-through">

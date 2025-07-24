@@ -38,7 +38,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   console.log('cart count:', cartCount);
- const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const placeholderWords = ['Boys', 'Girls', 'Casual'];
 
 
@@ -46,7 +46,7 @@ const Navbar = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
- useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setPlaceholderIndex((prev) => (prev + 1) % placeholderWords.length);
     }, 2500); // Change word every 2 seconds
@@ -72,17 +72,20 @@ const Navbar = () => {
       <nav className="w-full border-b sticky top-0 z-50 bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-[1300px] mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo */}
-          <img src="/LittleHope-Official-Logo2.png" alt="Logo" className="h-20  hidden lg:block" />
-
+          <Link to="/home">
+            <img src="/LittleHope-Official-Logo2.png" alt="Logo" className="h-20  hidden lg:block" />
+          </Link>
           {/* Mobile Search Box with Logo inside (visible only on small screens) */}
           <div className="w-full block lg:hidden mr-5">
             <div className="relative flex items-center border border-gray-300 rounded-full bg-white px-2">
               <div className="mr-2">
-                <img
-                  src="/LittleHope-Official-Logo2.png"
-                  alt="Little Hope Logo"
-                  className="w-auto h-10 rounded-full "
-                />
+                <Link to="/home">
+                  <img
+                    src="/LittleHope-Official-Logo2.png"
+                    alt="Little Hope Logo"
+                    className="w-auto h-10 rounded-full "
+                  />
+                </Link>
               </div>
               <input
                 value={searchInput}
@@ -154,33 +157,36 @@ const Navbar = () => {
                 <span className="mt-1 font-semibold">Profile</span>
 
                 {isProfileDropdownOpen && (
-                  <div className="absolute  top-10 left-0 bg-white border  w-[250px] h-50 py-2 text-gray-700">
-                    <Link to="/account" title="account">
-                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-
-                        <FaUser size={19} />
-                        <span className="text-sm" >Account</span>
+                  <div className="absolute top-7 left-0 w-64 bg-white border border-gray-200  shadow-xl z-50 overflow-hidden">
+                    <Link to="/account" title="Account">
+                      <div className="group flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-all duration-200">
+                        <FaUser size={20} className="text-gray-500 group-hover:text-pink-600 transition-colors duration-200" />
+                        <span className="text-[15px] font-medium text-gray-800 group-hover:text-pink-600">Account</span>
                       </div>
                     </Link>
-                    <Link to="/order" title="order">
-                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                        <FaBox size={19} />
-                        <span className="text-sm">Orders</span>
+                    <hr className="border-t border-gray-100" />
+                    <Link to="/order" title="Orders">
+                      <div className="group flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-all duration-200">
+                        <FaBox size={20} className="text-gray-500 group-hover:text-pink-600 transition-colors duration-200" />
+                        <span className="text-[15px] font-medium text-gray-800 group-hover:text-pink-600">Orders</span>
                       </div>
                     </Link>
-                    <Link to="/profile" title="profile">
-                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                        <FaTag size={19} />
-                        <span className="text-sm">Coupons</span>
+                    <hr className="border-t border-gray-100" />
+                    <Link to="/coupon" title="Coupons">
+                      <div className="group flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-all duration-200">
+                        <FaTag size={20} className="text-gray-500 group-hover:text-pink-600 transition-colors duration-200" />
+                        <span className="text-[15px] font-medium text-gray-800 group-hover:text-pink-600">Coupons</span>
                       </div>
                     </Link>
-                    <Link to="/contact" title="profile">
-                      <div className="flex items-center space-x-2 py-2 px-4 cursor-pointer hover:text-pink-600">
-                        <FaComments size={19} />
-                        <span className="text-sm">Contact</span>
+                    <hr className="border-t border-gray-100" />
+                    <Link to="/contact" title="Contact">
+                      <div className="group flex items-center gap-4 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-all duration-200">
+                        <FaComments size={20} className="text-gray-500 group-hover:text-pink-600 transition-colors duration-200" />
+                        <span className="text-[15px] font-medium text-gray-800 group-hover:text-pink-600">Contact</span>
                       </div>
                     </Link>
                   </div>
+
                 )}
               </div>
 
@@ -192,15 +198,15 @@ const Navbar = () => {
               </Link>
 
               <Link to="/cart" title="profile">
-              <div className="relative cursor-pointer transition hover:text-pink-600 flex flex-col items-center">
-  <FaShoppingBag size={18} />
-  {cartCount > 0 && (
-    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-      {cartCount}
-    </span>
-  )}
-  <span className="mt-1 font-semibold block">Bag</span>
-</div>
+                <div className="relative cursor-pointer transition hover:text-pink-600 flex flex-col items-center">
+                  <FaShoppingBag size={18} />
+                  {cartCount > 0 && (
+                    <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                      {cartCount}
+                    </span>
+                  )}
+                  <span className="mt-1 font-semibold block">Bag</span>
+                </div>
 
               </Link>
             </div>

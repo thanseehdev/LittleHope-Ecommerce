@@ -31,8 +31,8 @@ const SearchResultPage = () => {
               <Link key={product.id} to={`/productDetails/${product._id}`}>
           <div key={product._id} className="border lg:p-2 p-1 rounded  hover:shadow-lg">
             <img src={product.images[0]} alt={product.name} className="lg:h-64 h-44 w-full rounded-b-xl" />
-            <h4 className="mt-2 text-sm">{product.name}</h4>
-            <p className="text-pink-500 font-semibold">₹{product.price}</p>
+            <h4 className="ml-1 mt-2 text-sm font-semibold">{product.name}</h4>
+            <p className="ml-1 lg:text-base text-sm text-pink-500 font-semibold">₹{product.price}</p>
           </div>
           </Link>
         ))}

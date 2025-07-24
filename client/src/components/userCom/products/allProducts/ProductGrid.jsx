@@ -6,6 +6,7 @@ import Navbar from "../../common/Navbar";
 import { FunnelIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllProducts } from "../../../../redux/features/user/product/allProductAction";
+import { useMemo } from "react";
 
 const ProductGrid = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const ProductGrid = () => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedGender, setSelectedGender] = useState([]);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(10000);
+  const [maxPrice, setMaxPrice] = useState(100000);
   const [sortBy, setSortBy] = useState("");
   const [cart, setCart] = useState([]);
 
@@ -32,19 +33,30 @@ const ProductGrid = () => {
     alert(`${product.name} added to cart!`);
   };
 
-  const filteredProducts = allProducts
+const filteredProducts = useMemo(() => {
+  if (!Array.isArray(allProducts) || allProducts.length === 0) return [];
+
+  return allProducts
     .filter(
       (p) =>
+        p.price != null &&
+        !isNaN(p.price) &&
         (selectedCategory.length === 0 || selectedCategory.includes(p.category)) &&
         (selectedGender.length === 0 || selectedGender.includes(p.gender)) &&
-        p.price >= minPrice &&
-        p.price <= maxPrice
+        Number(p.discountPrice) >= minPrice &&
+        Number(p.discountPrice) <= maxPrice
     )
     .sort((a, b) => {
-      if (sortBy === "priceLow") return a.price - b.price;
-      if (sortBy === "priceHigh") return b.price - a.price;
+      const priceA = Number(a.discountPrice);
+      const priceB = Number(b.discountPrice);
+
+      if (sortBy === "priceLow") return priceA - priceB;
+      if (sortBy === "priceHigh") return priceB - priceA;
+
       return 0;
     });
+}, [allProducts, selectedCategory, selectedGender, minPrice, maxPrice, sortBy]);
+
 
   return (
     <>

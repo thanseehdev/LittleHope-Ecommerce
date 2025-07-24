@@ -138,19 +138,19 @@ export default function OrderDetailPage() {
 
 
         {/* Tracking or Status Message */}
-        <section className="bg-gray-50 border-t bg-white p-3 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+        <section className="bg-gray-50 flex justify-center border-t bg-white p-3 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
           {order.status === "cancelled" ? (
-            <div className="flex items-center bg-red-500 text-white px-6 py-4 rounded-md mb-5 shadow-md mt-6">
+            <div className="lg:max-w-[600px] justify-center flex items-center bg-red-500 text-white px-6 py-4 rounded-md mb-5 shadow-md mt-6">
               <XCircleIcon className="w-6 h-6 mr-3" />
               <div>
-                <p className="text-sm">Your order has been cancelled.</p>
+                <p className="lg:text-base text-sm">Your order has been cancelled.</p>
               </div>
             </div>
           ) : order.status === "delivered" ? (
-            <div className="flex items-center bg-green-600 text-white px-6 py-4 mb-5 shadow-md mt-6">
+            <div className="flex lg:max-w-[600px] justify-center items-center bg-green-600 text-white px-6 py-4 mb-5 shadow-md mt-6">
               <CheckCircleIcon className="w-6 h-6 mr-3" />
               <div>
-                <p className="text-sm">Order was delivered successfully.</p>
+                <p className="lg:text-base text-sm">Order was delivered successfully.</p>
               </div>
             </div>
           ) : (

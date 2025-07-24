@@ -50,10 +50,10 @@ export default function ForgotPassword() {
   };
 
   return (
-   <div className="min-h-screen flex flex-col md:flex-row">
+   <div className="min-h-screen flex  flex-col md:flex-row">
   {/* Promo Section */}
   <div
-    className="w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-purple-900 text-white text-center"
+    className=" w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-purple-900 text-white text-center"
     style={{
       backgroundImage:
         "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80')",
@@ -77,7 +77,7 @@ export default function ForgotPassword() {
   </div>
 
   {/* Form Section */}
-  <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl shadow-lg relative">
+  <div className=" flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl  relative">
     {/* Logo (top-right corner for large screens) */}
     <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 text-center">
       Forgot Password
@@ -87,7 +87,7 @@ export default function ForgotPassword() {
     {loading && <p className="text-blue-500 font-medium text-center mb-4">Processing...</p>}
     {error && (
       <p className="text-red-600 text-sm mb-4 text-center flex items-center justify-center gap-2">
-        <span className="bg-red-500 px-2 py-1 text-white rounded-full font-bold">!</span> {error}
+        {error}
       </p>
     )}
     {message && <p className="text-green-600 text-sm mb-4 text-center">{message}</p>}
@@ -105,13 +105,13 @@ export default function ForgotPassword() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="john@example.com"
-            className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition border-gray-300"
+            className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-purple-500 transition border-gray-300"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
+          className="w-full bg-purple-600  hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition"
         >
           Send OTP
         </button>
@@ -132,13 +132,13 @@ export default function ForgotPassword() {
             onChange={(e) => setOtp(e.target.value)}
             placeholder="6-digit code"
             maxLength={6}
-            className="w-full border rounded-lg px-5 py-3 text-lg tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-purple-500 transition border-gray-300"
+            className="w-full border rounded-lg px-5 py-3 text-lg tracking-widest text-center focus:outline-none focus:border-purple-500 transition border-gray-300"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition"
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition"
         >
           Verify OTP
         </button>
@@ -158,7 +158,7 @@ export default function ForgotPassword() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="Enter new password"
-            className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition border-gray-300"
+            className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-purple-500 transition border-gray-300"
           />
         </div>
 
@@ -172,7 +172,7 @@ export default function ForgotPassword() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Re-enter new password"
-            className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition border-gray-300"
+            className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-purple-500 transition border-gray-300"
           />
         </div>
 
