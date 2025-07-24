@@ -71,159 +71,173 @@ export default function Register() {
 
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-pink-100 to-white items-center justify-center  px-4 py-10">
-      <div className="w-full max-w-xl lg:bg-white lg:shadow-md  overflow-hidden p-6 sm:p-10">
-
-        {/* Top right image inside form */}
-        <div className="flex justify-end">
-          <img
-            src="/LittleHope-Official-Logo2.png"
-            alt="Logo"
-            className=" w-16 h-16 object-contain sm:w-20 sm:h-20 bg-white shadow rounded-full"
-          />
-        </div>
-        {/* Heading */}
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center sm:text-left">
-          Register
-        </h2>
-{error && (
-  <div className="flex items-center justify-center">
-    <span className="ml-1 w-5 mb-3 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
-      !
-    </span>
-    <p className="text-red-500 ml-1 text-sm mb-3">{error}</p>
-  </div>
-)}
-
-
-              
-        {/* Form */}
-        <form className="space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name <span className="text-red-500">*</span>
-            </label>
-            {formErrors.name && (
-              <div className="flex items-center">
-                <span className=" w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
-                  !
-                </span>
-                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.name}</p>
-              </div>
-            )}
-            <input
-              value={form.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              type="text"
-              placeholder="Enter your full name"
-              className={`w-full border ${formErrors.name ? 'border-red-500' : 'border-gray-300'
-                } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address <span className="text-red-500">*</span>
-            </label>
-            {formErrors.email && (
-              <div className="flex items-center">
-                <span className="  w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
-                  !
-                </span>
-                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.email}</p>
-              </div>
-            )}
-            <input
-              value={form.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              type="email"
-              placeholder="Enter your email"
-              className={`w-full border ${formErrors.email ? 'border-red-500' : 'border-gray-300'
-                } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password <span className="text-red-500">*</span>
-            </label>
-            {formErrors.password && (
-              <div className="flex items-center">
-                <span className=" w-11 lg:w-9 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
-                  !
-                </span>
-                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.password}</p>
-              </div>
-            )}
-            <input
-              value={form.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              type="password"
-              placeholder="Enter password"
-              className={`w-full border ${formErrors.password ? 'border-red-500' : 'border-gray-300'
-                } px-4 py-2 rounded-md   shadow-sm  focus:outline-none focus:border-green-500`}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password <span className="text-red-500">*</span>
-            </label>
-            {formErrors.confirmPassword && (
-              <div className="flex items-center">
-                <span className=" w-5 h-5 bg-red-500 text-white text-center rounded-full flex items-center justify-center">
-                  !
-                </span>
-                <p className="text-red-500 ml-1 text-sm mb-1">{formErrors.confirmPassword}</p>
-              </div>
-            )}
-            <input
-              value={form.confirmPassword}
-              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-              type="password"
-              placeholder="Confirm password"
-              className={`w-full border ${formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                } px-4 py-2 rounded-md  shadow-sm  focus:outline-none focus:border-green-500`}
-            />
-          </div>
-
-          <p className="text-xs text-gray-500 mt-1">An OTP will be sent to your email address.</p>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full bg-green-600 text-white font-semibold py-2 rounded-md hover:bg-green-700 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {loading ? 'Processing...' : 'Get OTP'}
-          </button>
-
-        </form>
-
-        <p className="text-xs text-gray-500 mt-5 text-center">
-          By continuing, I agree to LittleHope's{' '}
-          <a href="#" className="text-blue-600  hover:text-blue-800 transition">Terms of Use</a>{' '}
-          and{' '}
-          <a href="#" className="text-blue-600  hover:text-blue-800 transition ">Privacy Policy</a>.
-        </p>
-        <p className="text-sm text-center text-gray-600 mt-4">
-  Already have an account?{' '}
-  <Link
-    to="/login"
-    className="text-blue-600 font-medium hover:underline underline"
+   <div className="min-h-screen flex flex-col md:flex-row">
+  {/* Promo Section */}
+  <div
+    className="w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-green-900 text-white text-center"
+    style={{
+      backgroundImage:
+        "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
   >
-    Log in here
-  </Link>
-</p>
+    {/* Overlay */}
+    <div className="absolute inset-0 bg-opacity-60 md:bg-opacity-60 bg-green-900"></div>
+
+    <div className="relative z-10 max-w-md space-y-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
+        JOIN & SAVE ₹100*
+      </h1>
+      <p className="text-base md:text-lg drop-shadow-md">
+        Create your account to enjoy exclusive offers plus free shipping on your first order.
+      </p>
+      <div className="bg-green-700 bg-opacity-80 rounded-lg px-6 py-3 shadow-lg font-semibold tracking-wide text-lg md:text-xl inline-block">
+        COUPON: <span className="uppercase">HOPE100</span>
       </div>
-      {/* Loading overlay */}
-      {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      )}
-      {/* Show Notification only if it's true */}
-      {showNotification && <Notification message={message} onClose={() => setShowNotification(false)} />}
     </div>
+  </div>
+
+  {/* Register Form Section */}
+  <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl shadow-lg">
+    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 text-center">
+      Register
+    </h2>
+
+    {error && (
+      <div className="mb-6 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center font-semibold text-sm max-w-md w-full flex items-center justify-center gap-2">
+        <span className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span>
+        {error}
+      </div>
+    )}
+
+    <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+      <div>
+        <label className="block mb-2 text-sm font-semibold text-gray-700">
+          Full Name <span className="text-red-500">*</span>
+        </label>
+        {formErrors.name && (
+          <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
+            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.name}
+          </p>
+        )}
+        <input
+          type="text"
+          value={form.name}
+          onChange={(e) => handleInputChange('name', e.target.value)}
+          placeholder="Enter your full name"
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+            formErrors.name ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+      </div>
+
+      <div>
+        <label className="block mb-2 text-sm font-semibold text-gray-700">
+          Email Address <span className="text-red-500">*</span>
+        </label>
+        {formErrors.email && (
+          <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
+            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.email}
+          </p>
+        )}
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => handleInputChange('email', e.target.value)}
+          placeholder="Enter your email"
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+            formErrors.email ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+      </div>
+
+      <div>
+        <label className="block mb-2 text-sm font-semibold text-gray-700">
+          Password <span className="text-red-500">*</span>
+        </label>
+        {formErrors.password && (
+          <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
+            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.password}
+          </p>
+        )}
+        <input
+          type="password"
+          value={form.password}
+          onChange={(e) => handleInputChange('password', e.target.value)}
+          placeholder="Enter your password"
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+            formErrors.password ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+      </div>
+
+      <div>
+        <label className="block mb-2 text-sm font-semibold text-gray-700">
+          Confirm Password <span className="text-red-500">*</span>
+        </label>
+        {formErrors.confirmPassword && (
+          <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
+            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.confirmPassword}
+          </p>
+        )}
+        <input
+          type="password"
+          value={form.confirmPassword}
+          onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+          placeholder="Confirm password"
+          className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+            formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+      </div>
+
+      <p className="text-xs text-gray-500 mt-1 text-center">
+        An OTP will be sent to your email address.
+      </p>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className={`w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition ${
+          loading ? 'opacity-60 cursor-not-allowed' : ''
+        }`}
+      >
+        {loading ? 'Processing...' : 'Get OTP'}
+      </button>
+    </form>
+
+    <p className="text-xs text-gray-400 text-center mt-8 max-w-md">
+      By continuing, you agree to LittleHope's{' '}
+      <a href="#" className="text-green-600 hover:underline">
+        Terms of Use
+      </a>{' '}
+      and{' '}
+      <a href="#" className="text-green-600 hover:underline">
+        Privacy Policy
+      </a>
+      .
+    </p>
+
+    <p className="text-sm text-center text-gray-600 mt-4 max-w-md">
+      Already have an account?{' '}
+      <Link to="/login" className="text-green-600 font-semibold hover:underline">
+        Log in here
+      </Link>
+    </p>
+  </div>
+
+  {/* Loading overlay */}
+  {loading && (
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+      <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  )}
+
+  {/* Notification */}
+  {showNotification && <Notification message={message} onClose={() => setShowNotification(false)} />}
+</div>
+
   );
 }
 

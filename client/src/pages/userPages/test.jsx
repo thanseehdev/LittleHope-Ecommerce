@@ -310,7 +310,120 @@ export default AccountPage;
 
 
 
-//  <div className="flex justify-center mb-4">
-//       <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
-//     </div>
 
+
+
+//   <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-blue-600 to-indigo-700">
+//   {/* Left Side - Banner & Promo */}
+//   <div className="hidden md:flex flex-col justify-center items-center w-full md:w-1/2 p-12 text-white">
+//     <h1 className="text-5xl font-extrabold mb-6 tracking-tight drop-shadow-lg">
+//       Welcome Back!
+//     </h1>
+//     <p className="text-lg max-w-md mb-10 drop-shadow-md">
+//       Log in to continue enjoying exclusive offers, personalized deals, and free shipping on your first order!
+//     </p>
+//     <div className="bg-yellow-400 rounded-lg px-6 py-4 shadow-lg text-indigo-900 font-bold text-xl">
+//       FLAT ₹100 OFF* <br />
+//       COUPON: <span className="uppercase tracking-wide">HOPE100</span>
+//     </div>
+//   </div>
+
+//   {/* Right Side - Login Form */}
+//   <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white  md:rounded-l-3xl md:rounded-tr-none p-10 shadow-xl">
+//     <h2 className="text-3xl font-bold text-gray-800 mb-8">Log In</h2>
+
+//     {error && (
+//       <div className="mb-6 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center font-semibold text-sm">
+//         {error}
+//       </div>
+//     )}
+
+//     <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
+//       <div>
+//         <label className="block mb-2 text-sm font-semibold text-gray-700">
+//           Email Id <span className="text-red-500">*</span>
+//         </label>
+//         {formErrors.email && (
+//           <p className="text-red-500 text-xs mb-1 flex items-center gap-1">
+//             <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.email}
+//           </p>
+//         )}
+//         <input
+//           type="email"
+//           value={form.email}
+//           onChange={(e) => handleInputChange('email', e.target.value)}
+//           required
+//           placeholder="Enter your email address"
+//           className={`w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+//             formErrors.email ? 'border-red-500' : 'border-gray-300'
+//           }`}
+//         />
+//       </div>
+
+//       <div>
+//         <label className="block mb-2 text-sm font-semibold text-gray-700">
+//           Password <span className="text-red-500">*</span>
+//         </label>
+//         {formErrors.password && (
+//           <p className="text-red-500 text-xs mb-1 flex items-center gap-1">
+//             <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {formErrors.password}
+//           </p>
+//         )}
+//         <input
+//           type="password"
+//           value={form.password}
+//           onChange={(e) => handleInputChange('password', e.target.value)}
+//           required
+//           placeholder="Enter your password"
+//           className={`w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+//             formErrors.password ? 'border-red-500' : 'border-gray-300'
+//           }`}
+//         />
+//         <div className="text-right mt-2">
+//           <Link to="/forgotPassword" className="text-blue-600 hover:underline text-sm font-semibold">
+//             Forgot Password?
+//           </Link>
+//         </div>
+//       </div>
+
+//       <button
+//         type="submit"
+//         disabled={loading}
+//         className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition ${
+//           loading ? 'opacity-60 cursor-not-allowed' : ''
+//         }`}
+//       >
+//         {loading ? 'Processing...' : 'CONTINUE'}
+//       </button>
+//     </form>
+
+//     <p className="text-center text-gray-600 mt-8 text-sm max-w-sm">
+//       New to LittleHope?{' '}
+//       <Link
+//         to="/register"
+//         className="text-blue-600 font-semibold hover:underline"
+//       >
+//         Register here
+//       </Link>
+//     </p>
+
+//     <p className="text-xs text-gray-400 text-center mt-4 max-w-sm">
+//       By continuing, you agree to LittleHope's{' '}
+//       <a href="#" className="text-blue-600 hover:underline">
+//         Terms of Use
+//       </a>{' '}
+//       and{' '}
+//       <a href="#" className="text-blue-600 hover:underline">
+//         Privacy Policy
+//       </a>
+//     </p>
+//   </div>
+// </div>
+
+
+
+
+
+
+
+        

@@ -78,7 +78,7 @@ const AccountPage = () => {
 
       {/* Main Container */}
       <main className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:max-w-6xl max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* Sidebar - Profile + Actions */}
           <aside className="space-y-6 lg:col-span-1">
@@ -105,12 +105,12 @@ const AccountPage = () => {
 
 
          {/* Quick Actions */}
-<div className="grid grid-cols-2 gap-4">
+<div className="grid  grid-cols-2 gap-4">
   {quickActions.map((item) => (
     <Link
       to={item.path}
       key={item.name}
-      className="flex justify-between items-center p-4 lg:py-6 lg:h-14 lg:w-40 bg-white border rounded-sm hover:shadow transition"
+      className="flex lg:max-w-sm lg:mx-auto  justify-between items-center p-4 lg:py-6 lg:h-14 lg:w-40 bg-white border rounded-sm hover:shadow transition"
     >
       <div className="flex items-center gap-3">
         <div className="text-gray-500">{item.icon}</div>
@@ -122,10 +122,10 @@ const AccountPage = () => {
 </div>
 
 
-            <div className="hidden lg:block flex justify-center mt-5">
+            <div className="lg:ml-4 hidden lg:block flex justify-center mt-5">
           <button
             onClick={() => setShowLogoutConfirm(true)}
-            className="  w-[330px] py-2 text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-100 transition"
+            className=" w-[330px] py-2 text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-100 transition"
           >
             LOG OUT
           </button>

@@ -113,7 +113,7 @@ export default function CartPage() {
                     <h3 className="lg:text-lg lg:font-semibold text-sm font-bold text-gray-800">{item.title}</h3>
                     <p className="text-sm text-gray-600 line-clamp-2">{item.subtitle}</p>
 
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 mt-2">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 ">
                       <div className="flex items-center text-sm gap-1">
                         <span className="font-medium text-gray-700">Size:</span>
                         <span className="border lg:text-sm text-xs border-gray-300 px-2 py-0.5 rounded-md bg-gray-50">

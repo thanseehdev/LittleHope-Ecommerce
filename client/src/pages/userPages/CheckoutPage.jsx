@@ -197,6 +197,13 @@ export default function CheckoutPage() {
 
                             {/* Payment Section */}
                             <section className="p-4 border border-gray-200 rounded">
+                                <p className="mb-4 text-[10px] sm:text-xs text-gray-700 bg-yellow-100 border border-yellow-300 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 flex items-center gap-2">
+                                    <strong className="text-yellow-800 text-[11px] sm:text-sm flex items-center gap-1">
+                                        <span role="img" aria-label="warning">⚠️</span> Note:
+                                    </strong>
+                                    <span className="font-semibold">Only Cash on Delivery</span> payment is available.
+                                </p>
+
                                 <h2 className="lg:text-lg text-base font-semibold text-gray-800 mb-4">Payment Method</h2>
                                 <div className="space-y-3">
                                     {paymentOptions.map((option) => {
@@ -243,7 +250,7 @@ export default function CheckoutPage() {
                         <div className="sticky top-4 space-y-6">
                             <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
                                 <h3 className="lg:text-lg text-base font-semibold text-gray-800 mb-4">
-                                    Order Summary ({items?.length || 0} Items)
+                                    Order Summary <span className="text-sm">({items?.length || 0} Items)</span>
                                 </h3>
                                 <div className="space-y-2 text-sm text-gray-700">
                                     <div className="flex justify-between">
@@ -264,7 +271,7 @@ export default function CheckoutPage() {
                                             <span>- ₹{selectedCoupon.discount}</span>
                                         </div>
                                     )}
-                                    <hr className="my-3" />
+                                    <div className="border-t border-dashed border-gray-300 my-4"></div>
                                     <div className="flex justify-between text-base font-semibold text-gray-800">
                                         <span>Total</span>
                                         <span>₹{totalAfterCoupon}</span>
@@ -273,17 +280,20 @@ export default function CheckoutPage() {
                             </div>
 
                             {/* Coupon & Place Order */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 text-sm text-gray-700">
-                                    <TagIcon className="w-5 h-5 text-indigo-600" />
-                                    <span>Apply Coupon:</span>
+                            <div className="rounded bg-white shadow-md border border-gray-200 p-6 space-y-6">
+                                {/* Coupon Header */}
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <TagIcon className="w-5 h-5 text-purple-600" />
+                                        <h3 className="text-sm font-semibold text-gray-800">Discount Coupon</h3>
+                                    </div>
                                     {coupons.length > 0 ? (
                                         <select
                                             onChange={handleApplyCoupon}
                                             value={selectedCoupon?._id || ""}
-                                            className="border px-2 py-1 rounded-md text-sm focus:ring-2 focus:ring-pink-500"
+                                            className="bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         >
-                                            <option value="">-- Select --</option>
+                                            <option value="">Choose one</option>
                                             {coupons.map((coupon) => (
                                                 <option key={coupon._id} value={coupon._id}>
                                                     {coupon.code}
@@ -291,13 +301,21 @@ export default function CheckoutPage() {
                                             ))}
                                         </select>
                                     ) : (
-                                        <span className="italic text-gray-400">No coupons</span>
+                                        <span className="text-sm text-gray-400 italic">No coupons available</span>
                                     )}
                                 </div>
+
+                                {/* Divider */}
+                                <hr className="border-gray-200" />
+
+                                {/* Place Order Button */}
                                 <button
                                     disabled={!selectedAddressId || !selectedPayment || items.length === 0}
                                     onClick={handlePlaceOrder}
-                                    className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-lg transition"
+                                    className={`w-full py-3 rounded-lg font-semibold text-white transition ${!selectedAddressId || !selectedPayment || items.length === 0
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : "bg-pink-600 hover:bg-purple-700"
+                                        }`}
                                 >
                                     PLACE ORDER
                                 </button>

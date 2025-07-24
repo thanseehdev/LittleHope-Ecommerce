@@ -39,53 +39,84 @@ export default function EnterOtp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 to-white px-4 py-10">
-      <div className="w-full max-w-md lg:bg-white lg:shadow-md rounded-lg p-8 space-y-6">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800">Enter OTP</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            We've sent a 6-digit verification code to your {email}
-          </p>
-        </div>
+   <div className="min-h-screen flex flex-col md:flex-row">
+  {/* Promo Section */}
+  <div
+    className="w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-green-900 text-white text-center"
+    style={{
+      backgroundImage:
+        "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+  >
+    {/* Overlay */}
+    <div className="absolute inset-0 bg-opacity-75 md:bg-opacity-60 bg-green-900"></div>
 
-        <form className="space-y-5" onSubmit={submitOTP}>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              OTP Code <span className="text-red-500">*</span>
-            </label>
-            <input
-              value={otp}
-              type="text"
-              onChange={(e) => setOtp(e.target.value)}
-              maxLength={6}
-              placeholder="Enter OTP"
-              className={`w-full border ${
-                error ? 'border-red-500' : 'border-gray-300'
-              } px-4 py-2 rounded-md text-lg tracking-widest text-center focus:outline-none focus:border-green-500`}
-            />
-            {error && (
-              <p className="text-sm text-red-600 mt-1">{error}</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white font-semibold py-2 rounded-md hover:bg-green-700 transition"
-          >
-            Verify OTP
-          </button>
-        </form>
-
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Didn't get the code?{' '}
-            <button className="text-blue-600 hover:underline hover:text-blue-800 transition">
-              Resend OTP
-            </button>
-          </p>
-        </div>
+    <div className="relative z-10 max-w-md space-y-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
+        VERIFY YOUR ACCOUNT
+      </h1>
+      <p className="text-base md:text-lg drop-shadow-md">
+        Please enter the OTP sent to your email to continue.
+      </p>
+      <div className="bg-green-700 bg-opacity-80 rounded-lg px-6 py-3 shadow-lg font-semibold tracking-wide text-lg md:text-xl inline-block">
+        LittleHope Security
       </div>
     </div>
+  </div>
+
+  {/* OTP Form Section */}
+  <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl shadow-lg">
+    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 text-center">
+      Enter OTP
+    </h2>
+    <p className="text-gray-600 mb-8 max-w-md text-center">
+      We've sent a 6-digit verification code to your <span className="font-semibold">{email}</span>
+    </p>
+
+    <form onSubmit={submitOTP} className="w-full max-w-md space-y-6">
+      <div>
+        <label className="block mb-2 text-sm font-semibold text-gray-700">
+          OTP Code <span className="text-red-500">*</span>
+        </label>
+        <input
+          value={otp}
+          type="text"
+          maxLength={6}
+          onChange={(e) => setOtp(e.target.value)}
+          placeholder="Enter OTP"
+          className={`w-full border rounded-lg px-5 py-3 text-lg tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+            error ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+        {error && (
+          <p className="text-red-600 text-xs mt-1 flex items-center gap-2">
+            <span className="bg-red-500 rounded-full px-2 text-white font-bold">!</span> {error}
+          </p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition"
+      >
+        Verify OTP
+      </button>
+    </form>
+
+    <p className="text-center text-gray-600 mt-8 max-w-md text-sm">
+      Didn&apos;t get the code?{' '}
+      <button
+        // onClick={handleResendOTP}
+        className="text-green-600 font-semibold hover:underline"
+      >
+        Resend OTP
+      </button>
+    </p>
+  </div>
+</div>
+
   );
 }
 
