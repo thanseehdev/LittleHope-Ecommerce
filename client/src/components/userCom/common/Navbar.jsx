@@ -37,7 +37,6 @@ const Navbar = () => {
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
 
-  console.log('cart count:', cartCount);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const placeholderWords = ['Boys', 'Girls', 'Casual'];
 

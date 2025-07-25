@@ -12,6 +12,7 @@ import orderReducer from '../redux/features/user/order/orderSlice'
 import wishlistReducer from '../redux/features/user/wishlist/wishlistSlice'
 import adminOrderReducer from '../redux/features/admin/adminOrder/adminOrderSlice'
 import adminDashReducer from '../redux/features/admin/adminDash/adminDashSlice'
+import messageReducer from '../redux/features/user/message'
 
 
 export const store = configureStore({
@@ -28,6 +29,7 @@ export const store = configureStore({
     order:orderReducer,
     wishlist:wishlistReducer,
     adminOrder:adminOrderReducer,
-    adminDash:adminDashReducer
+    adminDash:adminDashReducer,
+    message:messageReducer
   },
 });

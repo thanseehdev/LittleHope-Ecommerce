@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../../api/axios";
+import { setSuccessMessage,setErrorMessage } from "../message";
 
 export const addToCart = createAsyncThunk('user/addToCart', async ({ productId, quantity, size }, { rejectWithValue }) => {
     try {
@@ -22,12 +23,14 @@ export const getCartItems = createAsyncThunk('user/getCartItems', async (_, { re
     }
 })
 
-export const updateQuantity = createAsyncThunk('user/updateQuantity', async ({ productId, size, quantity }, { rejectWithValue }) => {
+export const updateQuantity = createAsyncThunk('user/updateQuantity', async ({ productId, size, quantity }, { dispatch }) => {
     try {
         const res = await api.put('/user/updateItemQuantity', { productId, size, quantity })
+        dispatch(setSuccessMessage('Quantity changed'))
         return res.data
     } catch (error) {
-        return rejectWithValue(error.response?.data?.message || "Failed to update item Quantity");
+        const msg=error.response?.data?.message || "Failed to update item Quantity"
+        dispatch(setErrorMessage(msg))
     }
 })
 

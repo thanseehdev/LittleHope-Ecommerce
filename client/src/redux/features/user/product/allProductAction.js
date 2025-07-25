@@ -2,9 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../../api/axios";
 
 
-export const fetchAllProducts=createAsyncThunk('/products/fetchAllproduct',async(_,{rejectWithValue})=>{
+export const fetchAllProducts=createAsyncThunk('/products/fetchAllproduct',async({ page, limit},{rejectWithValue})=>{
     try { 
-        const res=await api.get('/user/getAllproducts')
+        const res=await api.get(`/user/getAllproducts?page=${page}&limit=${limit}`)
 
         return res.data
     } catch (error) {

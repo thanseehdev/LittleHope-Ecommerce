@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/userCom/common/Navbar";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,22 +8,31 @@ export default function OrdersPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { orderData, loading, error } = useSelector((state) => state.order);
+  const { orderData, loading, error } = useSelector((state) => state.order)
+  const [page, setPage] = useState(1)
+  const limit = 5
 
-  useEffect(() => {
-    dispatch(getOrders());
-  }, [dispatch]);
+useEffect(() => {
+  dispatch(getOrders({ page, limit }))
+}, [dispatch, page, limit])
 
-  // Helper function to check if order was placed today
+
   const isOrderNew = (orderDate) => {
     const orderDay = new Date(orderDate);
     const today = new Date();
-
     return (
       orderDay.getDate() === today.getDate() &&
       orderDay.getMonth() === today.getMonth() &&
       orderDay.getFullYear() === today.getFullYear()
     );
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
+
+  const handleNextPage = () => {
+    if (page < orderData.totalPages) setPage((prev) => prev + 1);
   };
 
   return (
@@ -35,44 +44,69 @@ export default function OrdersPage() {
         {loading && <p className="text-sm text-gray-500">Loading orders...</p>}
         {error && <p className="text-sm text-red-500">Error: {error}</p>}
 
-        {!loading && orderData.length === 0 && (
+        {!loading && (!orderData.orders || orderData.orders.length === 0) && (
           <p className="text-sm text-gray-600">No orders found.</p>
         )}
 
         <div className="space-y-4">
-          {orderData.map((order) => (
-            <div
-              key={order._id}
-              className="bg-white shadow rounded p-4 md:flex md:items-center md:justify-between cursor-pointer hover:bg-gray-100 transition"
-              onClick={() => navigate(`/order/${order._id}`)}
-            >
-              <div className="space-y-1">
-                <p className="lg:text-lg text-sm text-gray-700 font-medium flex items-center space-x-2">
-                  <span>Order #{order._id.slice(-6).toUpperCase()}</span>
-                  {isOrderNew(order.createdAt) && (
-                    <span className="bg-green-600 text-white lg:text-sm text-xs px-2 py-0.5 rounded-full">
-                      New
-                    </span>
-                  )}
-                </p>
-                <p className="lg:text-sm text-xs text-gray-500">
-                  Placed on {new Date(order.createdAt).toLocaleDateString()}
-                </p>
-                <p className="lg:text-sm text-xs text-gray-500">Status: {order.status}</p>
+          {orderData.orders &&
+            orderData.orders.map((order) => (
+              <div
+                key={order._id}
+                className="bg-white shadow rounded p-4 md:flex md:items-center md:justify-between cursor-pointer hover:bg-gray-100 transition"
+                onClick={() => navigate(`/order/${order._id}`)}
+              >
+                <div className="space-y-1">
+                  <p className="lg:text-lg text-sm text-gray-700 font-medium flex items-center space-x-2">
+                    <span>Order #{order._id.slice(-6).toUpperCase()}</span>
+                    {isOrderNew(order.createdAt) && (
+                      <span className="bg-green-600 text-white lg:text-sm text-xs px-2 py-0.5 rounded-full">
+                        New
+                      </span>
+                    )}
+                  </p>
+                  <p className="lg:text-sm text-xs text-gray-500">
+                    Placed on {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                  <p className="lg:text-sm text-xs text-gray-500">
+                    Status: {order.status}
+                  </p>
+                </div>
+                <div className="lg:text-md text-sm mt-2 md:mt-0 text-right">
+                  <p>{order.items.length} Item(s)</p>
+                  <p className="font-semibold">₹{order.pricingSummary?.finalAmount}</p>
+                  <button className="mt-2 text-blue-600 text-xs underline">Details</button>
+                </div>
               </div>
-              <div className="lg:text-md text-sm mt-2 md:mt-0 text-right">
-                <p>{order.items.length} Item(s)</p>
-                <p className="font-semibold">₹{order.pricingSummary?.finalAmount}</p>
-                <button className="mt-2 text-blue-600 text-xs underline">
-                  Details
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
+
+        {/* Pagination Controls */}
+        {orderData.totalPages > 1 && (
+          <div className="flex justify-center space-x-4 mt-6">
+            <button
+              onClick={handlePrevPage}
+              disabled={page === 1}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <span className="px-4 py-2">
+              Page {page} of {orderData.totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={page === orderData.totalPages}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
 }
+
 
 

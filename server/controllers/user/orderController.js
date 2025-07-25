@@ -65,21 +65,31 @@ const createOrder = async (req, res) => {
 
 
 const getUserOrders = async (req, res) => {
-    console.log('inside getUserOrders');
+  console.log('inside getUserOrders');
 
-    const userId = req.user._id
-    try {
-        const orders = await Order.find({ user: userId })
-            .populate('items.productId', 'name price')
-            .populate('coupon', 'code discount')
-            .sort({ createdAt: -1 });
+  const userId = req.user._id;
+  const page = parseInt(req.query.page) || 1;      // Current page number, default 1
+  const limit = parseInt(req.query.limit) || 3;   // Items per page, default 10
+  console.log('limit '+limit);
 
-        res.status(200).json(orders);
-    } catch (error) {
-        console.error("Error fetching user orders:", error);
-        res.status(500).json({ message: "Failed to fetch user orders." });
-    }
+  try {
+    const orders = await Order.find({ user: userId })
+      .populate('items.productId', 'name price')
+      .populate('coupon', 'code discount')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      orders,
+     
+    });
+  } catch (error) {
+    console.log("Error fetching user orders:", error);
+    res.status(500).json({ message: "Failed to fetch user orders." });
+  }
 };
+
 
 const getSingleOrder = async (req, res) => {
     console.log('inside getSingleOrder')

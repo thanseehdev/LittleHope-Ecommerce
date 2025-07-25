@@ -9,10 +9,15 @@ import { fetchAllProducts } from "../../../../redux/features/user/product/allPro
 import { useMemo } from "react";
 
 const ProductGrid = () => {
-  const dispatch = useDispatch();
-  const { items: allProducts, loading, error } = useSelector(
-    (state) => state.allProducts
-  );
+
+  const [page, setPage] = useState(1)
+  const limit = 6
+  const dispatch = useDispatch()
+  const { items: allProducts, loading, totalPages, error } = useSelector((state) => state.allProducts)
+
+  useEffect(() => {
+    dispatch(fetchAllProducts({ page, limit }));
+  }, [dispatch, page, limit]);
 
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedGender, setSelectedGender] = useState([]);
@@ -24,38 +29,42 @@ const ProductGrid = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
 
-  useEffect(() => {
-    dispatch(fetchAllProducts());
-  }, [dispatch]);
-
   const addToCart = (product) => {
     setCart((prev) => [...prev, product]);
     alert(`${product.name} added to cart!`);
   };
 
-const filteredProducts = useMemo(() => {
-  if (!Array.isArray(allProducts) || allProducts.length === 0) return [];
+  const filteredProducts = useMemo(() => {
+    if (!Array.isArray(allProducts) || allProducts.length === 0) return [];
 
-  return allProducts
-    .filter(
-      (p) =>
-        p.price != null &&
-        !isNaN(p.price) &&
-        (selectedCategory.length === 0 || selectedCategory.includes(p.category)) &&
-        (selectedGender.length === 0 || selectedGender.includes(p.gender)) &&
-        Number(p.discountPrice) >= minPrice &&
-        Number(p.discountPrice) <= maxPrice
-    )
-    .sort((a, b) => {
-      const priceA = Number(a.discountPrice);
-      const priceB = Number(b.discountPrice);
+    return allProducts
+      .filter(
+        (p) =>
+          p.price != null &&
+          !isNaN(p.price) &&
+          (selectedCategory.length === 0 || selectedCategory.includes(p.category)) &&
+          (selectedGender.length === 0 || selectedGender.includes(p.gender)) &&
+          Number(p.discountPrice) >= minPrice &&
+          Number(p.discountPrice) <= maxPrice
+      )
+      .sort((a, b) => {
+        const priceA = Number(a.discountPrice);
+        const priceB = Number(b.discountPrice);
 
-      if (sortBy === "priceLow") return priceA - priceB;
-      if (sortBy === "priceHigh") return priceB - priceA;
+        if (sortBy === "priceLow") return priceA - priceB;
+        if (sortBy === "priceHigh") return priceB - priceA;
 
-      return 0;
-    });
-}, [allProducts, selectedCategory, selectedGender, minPrice, maxPrice, sortBy]);
+        return 0;
+      });
+  }, [allProducts, selectedCategory, selectedGender, minPrice, maxPrice, sortBy]);
+
+  const handlePrevPage = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages) setPage((prev) => prev + 1);
+  };
 
 
   return (
@@ -85,9 +94,8 @@ const filteredProducts = useMemo(() => {
 
         {/* Sticky Sidebar for desktop */}
         <div
-          className={`sm:w-64 w-full bg-white rounded-lg shadow-md ${
-            isFilterOpen ? "block" : "hidden sm:block"
-          } sm:sticky sm:top-[72px] sm:h-fit sm:max-h-screen`}
+          className={`sm:w-64 w-full bg-white rounded-lg shadow-md ${isFilterOpen ? "block" : "hidden sm:block"
+            } sm:sticky sm:top-[72px] sm:h-fit sm:max-h-screen`}
         >
           <Sidebar
             selectedCategory={selectedCategory}
@@ -167,6 +175,27 @@ const filteredProducts = useMemo(() => {
             </div>
           )}
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center space-x-4 mt-6">
+            <button
+              onClick={handlePrevPage}
+              disabled={page === 1}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <span className="px-4 py-2">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={page === totalPages}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

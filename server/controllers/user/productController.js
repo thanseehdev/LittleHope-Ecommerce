@@ -32,15 +32,32 @@ const productDetails = async (req, res) => {
 
 
 const getAllProducts = async (req, res) => {
-    console.log('inside getAllproduct controller');
+  console.log("inside getAllproduct controller");
 
-    try {
-        const products = await Product.find()
-        res.status(200).json(products)
-    } catch (error) {
-        res.status(500).json({ message: "Failed to fetch products", error: error.message });
-    }
-}
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  try {
+    const totalProducts = await Product.countDocuments();
+    const products = await Product.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    res.status(200).json({
+      products,
+      totalPages,
+      currentPage: page,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch products", error: error.message });
+  }
+};
+
+
 
 const searchResult = async (req, res) => {
     console.log('inside search controller');

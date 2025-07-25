@@ -4,13 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCartItems, updateQuantity, removeFromCart } from "../../redux/features/user/cart/cartAction";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { clearMessages } from "../../redux/features/user/message";
+import {
+  XMarkIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/solid";
 
 export default function CartPage() {
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const [checkoutLoading, setCheckoutLoading] = React.useState(false);
 
-  const { items = [], loading, error } = useSelector((state) => state.cart);
+  const { items = [], loading } = useSelector((state) => state.cart);
+  const { message, error } = useSelector((state) => state.message);
 
   useEffect(() => {
     dispatch(getCartItems());
@@ -65,18 +72,65 @@ export default function CartPage() {
     }, 3000); // simulate loading
   };
 
+  useEffect(() => {
+    if (message || error) {
+      // Show the message or error
+      const timer = setTimeout(() => {
+        // Only dispatch clearMessages if the message/error is still present
+        if (message || error) {
+          dispatch(clearMessages());
+        }
+      }, 3000);
+      return () => clearTimeout(timer); // Clear the timeout if the component is unmounted or before re-triggering
+    }
+  }, [message, error, dispatch]);
+
 
   return (
     <>
       <Navbar />
+
+      {(message || error) && (
+        <div
+          className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md flex items-center justify-between left-1/2 -translate-x-1/2 bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
+          role="alert"
+          aria-live="assertive" // Announce the message dynamically
+        >
+          <span className="flex items-center gap-2">
+            {/* Conditional Icon */}
+            {error ? (
+              <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
+            ) : (
+              <CheckCircleIcon className="h-5 w-5 text-pink-500" />
+            )}
+
+            {/* Message or Error */}
+            {error || message}
+          </span>
+
+          <button
+            onClick={() => {
+              dispatch(clearMessages());
+            }}
+            className="text-pink-500 hover:text-pink-400 transition ml-2"
+            aria-label="Close alert"
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+        </div>
+      )}
+
+
+
+
       <div className="bg-gray-100 min-h-screen py-6 px-4 md:px-8">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-2">
             <div className="flex items-center justify-between ">
-          <h2 className="lg:text-xl text-lg font-semibold">My Cart</h2>
-          <span className="text-gray-500 lg:text-sm text-xs">{cartItems.length || 0} items</span>
-        </div>
+              <h2 className="lg:text-xl text-lg font-semibold">My Cart</h2>
+              <span className="text-gray-500 lg:text-sm text-xs">{cartItems.length || 0} items</span>
+            </div>
 
             {loading ? (
               <p className="text-gray-600">Loading...</p>
@@ -102,11 +156,11 @@ export default function CartPage() {
                     ✕
                   </button>
                   <Link key={item.id} to={`/productDetails/${item.id}`}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] object-cover rounded"
-                  />
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] object-cover rounded"
+                    />
                   </Link>
 
                   <div className="flex-1 flex flex-col justify-between gap-2">

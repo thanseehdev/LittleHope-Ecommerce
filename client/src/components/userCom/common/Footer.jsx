@@ -7,11 +7,11 @@ import { RxCross2 } from "react-icons/rx";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 text-gray-700 border-t border-gray-300">
+    <footer className="bg-gray-100 text-gray-700 border-t border-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-12">
         
         {/* Contact Info - Grid for desktop, stacked for mobile */}
-        <div className=" grid lg:text-base text-sm grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-center md:text-left">
+        <div className="hidden lg:grid md:grid grid lg:text-base text-sm grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-center md:text-left">
           <div className="flex items-center justify-center md:justify-end gap-3 flex-wrap">
             <HiOutlineMail className="text-indigo-600 text-xl" />
             <span className="font-semibold">littlehope@gmail.com</span>
@@ -26,7 +26,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <hr className="border-gray-300 mb-8" />
+        <hr className="hidden lg:block md:block border-gray-300 mb-8" />
 
         {/* Bottom Row */}
         <div className="flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-6">

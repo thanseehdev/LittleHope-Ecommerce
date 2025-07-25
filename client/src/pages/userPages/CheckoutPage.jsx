@@ -38,6 +38,7 @@ export default function CheckoutPage() {
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [selectedPayment, setSelectedPayment] = useState("cod");
     const [selectedCoupon, setSelectedCoupon] = useState(null);
+    const [placeOrderLoading, setPlaceOrderLoading] = React.useState(false);
 
     useEffect(() => {
         dispatch(getAddress());
@@ -108,7 +109,7 @@ export default function CheckoutPage() {
             alert("Selected address not found.");
             return;
         }
-
+        setPlaceOrderLoading(true);
         const orderData = {
             addressInfo: {
                 fullName: selectedAddress.fullName,
@@ -134,8 +135,10 @@ export default function CheckoutPage() {
                 finalAmount: totalAfterCoupon,
             },
         };
-
         dispatch(postOrder(orderData, navigate));
+        setTimeout(() => {
+            navigate("/orderSuccess");
+        }, 2500); // simulate loading
     };
 
     return (
@@ -310,15 +313,49 @@ export default function CheckoutPage() {
 
                                 {/* Place Order Button */}
                                 <button
-                                    disabled={!selectedAddressId || !selectedPayment || items.length === 0}
+                                    disabled={
+                                        !selectedAddressId || !selectedPayment || items.length === 0 || placeOrderLoading
+                                    }
                                     onClick={handlePlaceOrder}
-                                    className={`w-full py-3 rounded-lg font-semibold text-white transition ${!selectedAddressId || !selectedPayment || items.length === 0
-                                        ? "bg-gray-300 cursor-not-allowed"
-                                        : "bg-pink-600 hover:bg-purple-700"
+                                    className={`w-full py-3 rounded-lg font-semibold text-white relative overflow-hidden transition-colors
+    ${!selectedAddressId || !selectedPayment || items.length === 0
+                                            ? "bg-gray-300 cursor-not-allowed"
+                                            : "bg-pink-600 hover:bg-pink-700"
                                         }`}
                                 >
-                                    PLACE ORDER
+                                    {/* Animated fill background */}
+                                    {placeOrderLoading && (
+                                        <span className="absolute left-0 top-0 h-full w-full bg-pink-700 button-progress-bg z-0"></span>
+                                    )}
+
+                                    {/* Spinner + text */}
+                                    <span className="relative z-10 flex items-center justify-center gap-2">
+                                        {placeOrderLoading && (
+                                            <svg
+                                                className="animate-spin h-4 w-4 text-white"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                                ></path>
+                                            </svg>
+                                        )}
+                                        {placeOrderLoading ? "Processing" : "PLACE ORDER"}
+                                    </span>
                                 </button>
+
                             </div>
                         </div>
                     </div>

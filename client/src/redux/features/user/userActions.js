@@ -1,14 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import api from '../../../api/axios'
+import { setSuccessMessage,setErrorMessage } from './message'
 
-export const registerUser=createAsyncThunk('auth/register',async(userData,{rejectWithValue})=>{
+export const registerUser=createAsyncThunk('auth/register',async(userData,{dispatch})=>{
     console.log('inside register user action')
     try {
         const res = await api.post('/user/register',userData)
+        dispatch(setSuccessMessage('Registration successful!'))
         return res.data 
     } catch (error) {
-        return rejectWithValue(error.response?.data?.message || 'Something went wrong')
-
+         const msg = error.response?.data?.message || "Registration failed";
+         dispatch(setErrorMessage(msg));
     }
 })
 
@@ -22,13 +24,15 @@ export const verifyOTP=createAsyncThunk('auth/verifyOTP',async(userData,{rejectW
     }
 })
 
-export const login=createAsyncThunk('auth/login',async(userData,{rejectWithValue})=>{
+export const login=createAsyncThunk('auth/login',async(userData,{dispatch})=>{
     console.log('inside login action');
     try {
         const res=await api.post("/user/login",userData)
+        dispatch(setSuccessMessage('Login successful!'))
         return res.data.user
     } catch (error) {
-        return rejectWithValue(error.response?.data?.message||'Something went wrong')
+        const msg = error.response?.data?.message || "Login failed";
+         dispatch(setErrorMessage(msg));
     }
     
 })
