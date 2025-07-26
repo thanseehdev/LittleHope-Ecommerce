@@ -101,6 +101,16 @@
   );
 }
 
+.shadow-neumorph {
+  box-shadow: 6px 6px 10px #bebebe, -6px -6px 10px #ffffff;
+}
+.shadow-neumorph-hover {
+  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff;
+}
+
+
+
+
 
 
 

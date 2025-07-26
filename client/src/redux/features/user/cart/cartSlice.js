@@ -24,18 +24,15 @@ const cartSlice=createSlice({
         .addCase(addToCart.pending,(state)=>{
             state.status = "loading";
             state.loading=true;
-            state.error=null
         })
         .addCase(addToCart.fulfilled,(state,action)=>{
             state.status = "succeeded";
             state.loading=false;
-            state.error=null
             state.message = action.payload.message
         })
         .addCase(addToCart.rejected,(state,action)=>{
             state.status = "failed";
             state.loading=false;
-            state.error=action.payload||'something went wrong'
         })
 
         .addCase(getCartItems.pending,(state)=>{
@@ -55,15 +52,12 @@ const cartSlice=createSlice({
 
         .addCase(updateQuantity.pending,(state)=>{
             state.loading=true;
-            state.error=null
         })
         .addCase(updateQuantity.fulfilled,(state)=>{
             state.loading=false;
-            state.error=null
         })
         .addCase(updateQuantity.rejected,(state,action)=>{
             state.loading=false;
-            state.error=action.payload||'something went wrong'
         })
 
 

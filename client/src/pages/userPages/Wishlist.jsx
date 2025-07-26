@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
-import { XMarkIcon } from "@heroicons/react/24/solid";
 import { getWishItem, removeWishItem } from "../../redux/features/user/wishlist/wishlistAction";
-import { addToCart } from "../../redux/features/user/cart/cartAction";
+import { addToCart, getCartItems } from "../../redux/features/user/cart/cartAction";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { clearMessages } from "../../redux/features/user/message";
+
+import {
+  XMarkIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/solid"
 
 export default function WishlistCard() {
   const dispatch = useDispatch();
@@ -14,6 +20,7 @@ export default function WishlistCard() {
   const [selectedSize, setSelectedSize] = useState(null);
 
   const { items, error, loading } = useSelector((state) => state.wishlist);
+  const { message, error: err } = useSelector((state) => state.message);
 
   useEffect(() => {
     dispatch(getWishItem());
@@ -36,9 +43,49 @@ export default function WishlistCard() {
     setSelectedSize(null);
   };
 
+  useEffect(() => {
+  if (message || err) {
+    dispatch(getCartItems());
+
+    const timer = setTimeout(() => {
+      dispatch(clearMessages());
+    }, 1500);
+
+    // Cleanup timeout on dependency change or unmount
+    return () => clearTimeout(timer);
+  }
+  // If no message or err, no side effect or cleanup needed
+}, [message, err, dispatch]);
+
+
   return (
     <>
       <Navbar />
+      {(message || err) && (
+        <div
+          className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
+      flex items-center justify-between left-1/2 -translate-x-1/2
+      bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
+          role="alert"
+        >
+          <span className="flex items-center gap-2">
+            {err ? (
+              <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
+            ) : (
+              <CheckCircleIcon className="h-5 w-5 text-pink-500" />
+            )}
+            {message || (typeof err === 'string' ? err : 'An error occurred')}
+          </span>
+
+          <button
+            onClick={() => dispatch(clearMessages())}
+            className="text-pink-500 hover:text-pink-400 transition ml-2"
+            aria-label="Close alert"
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+        </div>
+      )}
       <div className="bg-white min-h-screen px-4 pt-4 md:px-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="lg:text-xl text-lg font-semibold">Wishlist</h2>
@@ -80,12 +127,12 @@ export default function WishlistCard() {
                     />
                   </button>
                   <Link key={product.id} to={`/productDetails/${product._id}`}>
-                  <img
-                    src={product?.images?.[0] || "/default-product.jpg"}
-                    alt={product?.name || "Product"}
-                    className="w-full h-40 lg:h-[250px] lg:w-[250px] rounded-md object-cover"
-                  />
-                   </Link>
+                    <img
+                      src={product?.images?.[0] || "/default-product.jpg"}
+                      alt={product?.name || "Product"}
+                      className="w-full h-40 lg:h-[250px] lg:w-[250px] rounded-md object-cover"
+                    />
+                  </Link>
                   <div className="mt-2">
                     <h3 className=" text-sm mt-1">{product?.name}</h3>
                     <div className="text-sm text-gray-700 mt-1">
@@ -135,24 +182,24 @@ export default function WishlistCard() {
                 </button>
               </div>
               <div className="flex gap-1 justify-center mb-6">
-  {selectedProduct.sizeAndStock.map((s) => (
-    <button
-      key={s.size}
-      onClick={() => s.stock > 0 && setSelectedSize(s.size)}
-      disabled={s.stock === 0}
-      className={`relative border rounded text-center text-sm font-medium h-8 w-20
+                {selectedProduct.sizeAndStock.map((s) => (
+                  <button
+                    key={s.size}
+                    onClick={() => s.stock > 0 && setSelectedSize(s.size)}
+                    disabled={s.stock === 0}
+                    className={`relative border rounded text-center text-sm font-medium h-8 w-20
         ${selectedSize === s.size ? "bg-pink-600 text-white" : "bg-gray-200 text-black"}
         ${s.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-    >
-      {s.size}
-      {s.stock === 0 && (
-        <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-red-600 bg-white bg-opacity-80">
-          Out
-        </span>
-      )}
-    </button>
-  ))}
-</div>
+                  >
+                    {s.size}
+                    {s.stock === 0 && (
+                      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-red-600 bg-white bg-opacity-80">
+                        Out
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
 
 
               <button

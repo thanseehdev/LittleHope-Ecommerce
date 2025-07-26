@@ -11,28 +11,28 @@ export default function Login() {
   const { loading, isAuthenticated, user } = useSelector((state) => state.user);
   const { message, error } = useSelector((state) => state.message);
 
-useEffect(() => {
-  if (isAuthenticated && user) {
-    if (message) {
-      // If there is a success message, do not redirect immediately
-      const timer = setTimeout(() => {
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (message) {
+        // If there is a success message, do not redirect immediately
+        const timer = setTimeout(() => {
+          if (user.role === 'admin') {
+            navigate('/admin/dashboard');
+          } else {
+            navigate('/home');
+          }
+        }, 2000); // Delay for 3 seconds to show the message
+        return () => clearTimeout(timer); // Clean up the timeout
+      } else {
+        // Redirect without delay if no message
         if (user.role === 'admin') {
           navigate('/admin/dashboard');
         } else {
           navigate('/home');
         }
-      }, 2000); // Delay for 3 seconds to show the message
-      return () => clearTimeout(timer); // Clean up the timeout
-    } else {
-      // Redirect without delay if no message
-      if (user.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/home');
       }
     }
-  }
-}, [isAuthenticated, user, message, navigate]);
+  }, [isAuthenticated, user, message, navigate]);
 
 
   const [form, setForm] = useState({
@@ -75,7 +75,7 @@ useEffect(() => {
         if (message || error) {
           dispatch(clearMessages());
         }
-      }, 3000);
+      }, 2000);
       return () => clearTimeout(timer); // Clear the timeout if the component is unmounted or before re-triggering
     }
   }, [message, error, dispatch]);
@@ -114,17 +114,26 @@ useEffect(() => {
           Welcome Back!
         </h2>
 
-        {error && (
-          <div className="mb-6 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center font-semibold text-sm max-w-md w-full">
-            {error}
+      {(error || message) && (
+          <div className="max-w-md mx-auto flex items-center bg-gray-50 border border-gray-300 rounded-md shadow-sm p-4 space-x-4 text-gray-800 font-medium text-sm relative">
+            {/* Icon */}
+            <div className={`flex-shrink-0 text-xl ${error ? 'text-red-500' : 'text-green-500'
+              }`}>
+              {error ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </div>
+            {/* Message Text */}
+            <p className="flex-grow">{error || message}</p>
           </div>
         )}
 
-        {message && (
-          <div className="mb-6 p-3 bg-green-100 border border-green-400 text-green-700 rounded text-center font-semibold text-sm max-w-md w-full">
-            {message}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
           <div>
@@ -142,9 +151,8 @@ useEffect(() => {
               onChange={(e) => handleInputChange('email', e.target.value)}
               required
               placeholder="Enter your email address"
-              className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${
-                formErrors.email ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${formErrors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
           </div>
 
@@ -163,9 +171,8 @@ useEffect(() => {
               onChange={(e) => handleInputChange('password', e.target.value)}
               required
               placeholder="Enter your password"
-              className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${
-                formErrors.password ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${formErrors.password ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             <div className="text-right mt-2">
               <Link to="/forgotPassword" className="text-indigo-600 hover:underline text-sm font-semibold">
@@ -177,9 +184,8 @@ useEffect(() => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition ${
-              loading ? 'opacity-60 cursor-not-allowed' : ''
-            }`}
+            className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition ${loading ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
           >
             {loading ? 'Processing...' : 'CONTINUE'}
           </button>

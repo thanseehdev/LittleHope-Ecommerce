@@ -3,12 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import { registerUser, verifyOTP, login,loadUser,FPEmailOtp,verifyFPOTP,conFirmForgetPassword,logoutUser } from "./userActions";
 
 const initialState = {
-  loading: true,
+  loading: false,
   user: null,
   emailForOTP: null,
   isAuthenticated: false,
   success:false,
-  error:null
+
 }
 
 const userSlice = createSlice({
@@ -33,8 +33,9 @@ const userSlice = createSlice({
         state.user = null;
         state.emailForOTP = action.payload.email;
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(registerUser.rejected, (state) => {
         state.loading = false;
+        state.user=null
       })
 //---------------------------------------------------------------
       .addCase(verifyOTP.pending, (state) => {
@@ -46,7 +47,7 @@ const userSlice = createSlice({
         state.isAuthenticated = true;
         state.emailForOTP = null;
       })
-      .addCase(verifyOTP.rejected, (state, action) => {
+      .addCase(verifyOTP.rejected, (state) => {
         state.loading = false;
       })
 //---------------------------------------------------------------
@@ -58,13 +59,12 @@ const userSlice = createSlice({
         state.isAuthenticated = true
         state.user = action.payload
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state) => {
         state.loading = false;
       })
 //---------------------------------------------------------------
          .addCase(loadUser.pending,(state)=>{
         state.loading=true;
-        state.error=null;
       })
       .addCase(loadUser.fulfilled,(state,action)=>{
         state.loading=false;
@@ -75,16 +75,15 @@ const userSlice = createSlice({
         state.loading=false;
         state.user=null;
         state.isAuthenticated=false;
-        state.error=action.payload
       })
 
       .addCase(FPEmailOtp.pending,(state)=>{
         state.loading=true;
       })
-      .addCase(FPEmailOtp.fulfilled,(state,action)=>{
+      .addCase(FPEmailOtp.fulfilled,(state)=>{
         state.loading=false;
       })
-      .addCase(FPEmailOtp.rejected,(state,action)=>{
+      .addCase(FPEmailOtp.rejected,(state)=>{
         state.loading=false;
       })
 
@@ -92,10 +91,10 @@ const userSlice = createSlice({
       .addCase(verifyFPOTP.pending,(state)=>{
         state.loading=true;
       })
-      .addCase(verifyFPOTP.fulfilled,(state,action)=>{
+      .addCase(verifyFPOTP.fulfilled,(state)=>{
         state.loading=false;
       })
-      .addCase(verifyFPOTP.rejected,(state,action)=>{
+      .addCase(verifyFPOTP.rejected,(state)=>{
         state.loading=false;
       })
 
@@ -103,10 +102,10 @@ const userSlice = createSlice({
       .addCase(conFirmForgetPassword.pending,(state)=>{
         state.loading=true;
       })
-      .addCase(conFirmForgetPassword.fulfilled,(state,action)=>{
+      .addCase(conFirmForgetPassword.fulfilled,(state)=>{
         state.loading=false;
       })
-      .addCase(conFirmForgetPassword.rejected,(state,action)=>{
+      .addCase(conFirmForgetPassword.rejected,(state)=>{
         state.loading=false;
       })
 
@@ -114,11 +113,11 @@ const userSlice = createSlice({
       .addCase(logoutUser.pending,(state)=>{
         state.loading=true;
       })
-      .addCase(logoutUser.fulfilled,(state,action)=>{
+      .addCase(logoutUser.fulfilled,(state)=>{
         state.loading=false;
         
       })
-      .addCase(logoutUser.rejected,(state,action)=>{
+      .addCase(logoutUser.rejected,(state)=>{
         state.loading=false;
       })
   }

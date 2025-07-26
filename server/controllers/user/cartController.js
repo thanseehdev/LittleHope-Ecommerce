@@ -25,7 +25,7 @@ const addToCart = async (req, res) => {
             const existingItem = cart.items.find((item) => item.productId.toString() === productId && item.size === size)
 
             if (existingItem) {
-                return res.status(200).json({ message: 'product already in cart' })
+                return res.status(400).json({ message: 'product already in cart' })
             } else {
                 cart.items.push({ productId, quantity, size });
             }
@@ -78,7 +78,7 @@ const updateQuantity = async (req, res) => {
 
         if (quantity > sizeVariant.stock) {
             return res.status(400).json({
-                message: `Requested quantity exceeds available stock. Available: ${sizeVariant.stock}`,
+                message: `Limited availability: only ${sizeVariant.stock} is remaining`,
             });
         }
 

@@ -1,15 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../../api/axios";
+import { setSuccessMessage,setErrorMessage } from "../message";
 
-export const addToWishlist=createAsyncThunk('user/addToWishlist',async(ProductId,{rejectWithValue})=>{
+export const addToWishlist=createAsyncThunk('user/addToWishlist',async(ProductId,{rejectWithValue,dispatch})=>{
     try {
-        console.log(ProductId.ProductId);
-        
         const res = await api.post(`/user/addToWishlist/${ProductId.ProductId}`);
-
+        dispatch(setSuccessMessage('Added to wishlist successfully.'))
         return res.data
     } catch (error) {
-         return rejectWithValue(error.response?.data?.message || "added to wishlist failed");
+         const msg = error.response?.data?.message || " Please try again";
+        dispatch(setErrorMessage(msg))
+        return rejectWithValue(msg)
     }
 })
 

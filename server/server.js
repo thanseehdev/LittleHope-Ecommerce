@@ -6,6 +6,7 @@ const {connectDB,getDB}=require('./config/db/db.connection')
 const userRoute=require('./routes/userRoute/userRoutes')
 const adminRoute=require('./routes/adminRoute/adminRoute')
 const cookieParser = require('cookie-parser')
+const session = require('express-session');
 
 
 app.use(express.json());
@@ -19,6 +20,15 @@ app.use(cors({
 }));
 
 
+app.use(session({
+  secret: process.env.SESSIONPASS,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production', // set true only if using HTTPS
+    maxAge: 10 * 60 * 1000 // e.g., 10 minutes session expiration
+  }
+}));
 
 async function initializeDatabase() {
     try {

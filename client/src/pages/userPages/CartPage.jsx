@@ -135,7 +135,7 @@ export default function CartPage() {
             {loading ? (
               <p className="text-gray-600">Loading...</p>
             ) : cartItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center  ">
+              <div className="flex flex-col items-center justify-center mt-10 lg:mt-20flex flex-col items-center justify-center pt-10 lg:pt-24">
                 <img
                   src="/emptyCartTSP.png"
                   alt="Empty Cart"
@@ -216,72 +216,68 @@ export default function CartPage() {
             )}
           </div>
 
-          {/* Price Summary */}
-          <div className="bg-white p-6 rounded-lg shadow-md h-fit sticky top-4">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              Price Details
-            </h3>
-            <div className="space-y-3 text-sm text-gray-700">
-              <div className="flex justify-between">
-                <span>Total MRP</span>
-                <span>₹{totalMRP}</span>
-              </div>
-              <div className="flex justify-between text-green-600">
-                <span>Discount on MRP</span>
-                <span>-₹{discount}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Platform Fee</span>
-                <span>₹{platformFee}</span>
-              </div>
-              <hr />
-              <div className="flex justify-between font-semibold text-gray-800">
-                <span>Total Amount</span>
-                <span>₹{totalAmount}</span>
-              </div>
-            </div>
-            <button
-              onClick={handleCheckout}
-              disabled={cartItems.length === 0 || checkoutLoading}
-              className={`mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden transition-colors
-    ${cartItems.length === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-pink-600 hover:bg-pink-700"}`}
-            >
-              {/* Animated fill background */}
-              {checkoutLoading && (
-                <span className="absolute left-0 top-0 h-full w-full bg-pink-700 button-progress-bg z-0"></span>
-              )}
-
-              {/* Spinner + text */}
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                {checkoutLoading && (
-                  <svg
-                    className="animate-spin h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    ></path>
-                  </svg>
-                )}
-                {checkoutLoading ? "Processing" : "CHECKOUT"}
-              </span>
-            </button>
-
-
-
+           {/* RIGHT SIDE: Price Summary – Only if cart has items */}
+    {cartItems.length > 0 && (
+      <div className="bg-white p-6 rounded-lg shadow-md h-fit sticky top-4">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Price Details</h3>
+        <div className="space-y-3 text-sm text-gray-700">
+          <div className="flex justify-between">
+            <span>Total MRP</span>
+            <span>₹{totalMRP}</span>
           </div>
+          <div className="flex justify-between text-green-600">
+            <span>Discount on MRP</span>
+            <span>-₹{discount}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Platform Fee</span>
+            <span>₹{platformFee}</span>
+          </div>
+          <hr />
+          <div className="flex justify-between font-semibold text-gray-800">
+            <span>Total Amount</span>
+            <span>₹{totalAmount}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={handleCheckout}
+          disabled={checkoutLoading}
+          className={`mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden transition-colors ${
+            checkoutLoading ? "bg-pink-700" : "bg-pink-600 hover:bg-pink-700"
+          }`}
+        >
+          {checkoutLoading && (
+            <span className="absolute left-0 top-0 h-full w-full bg-pink-700 button-progress-bg z-0"></span>
+          )}
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            {checkoutLoading && (
+              <svg
+                className="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+            )}
+            {checkoutLoading ? "Processing" : "CHECKOUT"}
+          </span>
+        </button>
+      </div>
+    )}
         </div>
       </div>
     </>

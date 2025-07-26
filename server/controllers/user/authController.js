@@ -4,68 +4,94 @@ const generateToken = require('../../utils/generateToken')
 const bcrypt = require('bcryptjs')
 
 const register = async (req, res) => {
-    const { name, email, password } = req.body
-    console.log('inside register controller')
+    const { name, email, password } = req.body;
     try {
-        const userExist = await User.findOne({ email })
+        const userExist = await User.findOne({ email });
         if (userExist) {
-            console.log('user exist')
-            return res.status(400).json({ message: "User already exists, please login" })
+            return res.status(400).json({ message: "User already exists, please login" });
         }
-        const otp = Math.floor(100000 + Math.random() * 900000).toString()
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = await User.create({
+        req.session.tempUser = {
             name,
             email,
-            password: await bcrypt.hash(password, 10),
+            password: hashedPassword,  // store hashed password in session
             otp,
-            otpExpires: Date.now() + 10 * 60 * 1000,
-        })
-        console.log(`otp is ${otp}`)
-        await sendOTPEmail(email, otp)
+            otpExpires: Date.now() + 10* 60 * 1000
+        };
+        console.log('otp is',otp);
+        
+
+        await sendOTPEmail(email, otp);
         res.status(201).json({ message: 'OTP sent to your email', email });
     } catch (error) {
-        console.error('Register error:', error);
+        console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
+
+
 
 
 const verifyOTP = async (req, res) => {
-    const { email, otp } = req.body
+    const { email, otp } = req.body;
     console.log('inside verify otp');
-    try {
-        const user = await User.findOne({ email })
-        if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
-            return res.status(400).json({ message: "Invalid or expired OTP" })
-        }
-        console.log('otp entered successfull')
-        user.isVerified = true
-        user.otp = undefined
-        user.otpExpires = undefined;
-        await user.save()
 
-        const token = generateToken(user._id, user.role)
+    try {
+        // Check if tempUser exists in session
+        const tempUser = req.session.tempUser;
+        console.log(tempUser.eamil);
+        
+
+        if (!tempUser || tempUser.email !== email) {
+            return res.status(400).json({ message: "No registration in progress for this email" });
+        }
+
+        if (tempUser.otp !== otp || tempUser.otpExpires < Date.now()) {
+            return res.status(400).json({ message: "Invalid or expired OTP" });
+        }
+
+        // use the hashed password directly from session:
+        const newUser = await User.create({
+            name: tempUser.name,
+            email: tempUser.email,
+            password: tempUser.password,  // already hashed
+            isVerified: true,
+        });
+
+
+        console.log('otp entered successfully');
+
+        // Clear session tempUser data
+        req.session.tempUser = null;
+
+        // Generate JWT token
+        const token = generateToken(newUser._id, newUser.role);
+
+        // Set cookie
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax', // Or 'Strict' / 'None'
+            sameSite: 'Lax',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
         res.status(200).json({
-            message: "OTP verified successfully", user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
+            message: "OTP verified successfully",
+            user: {
+                id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                role: newUser.role
             }
-        })
+        });
     } catch (error) {
         console.error('Verify OTP error:', error);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
+
 
 
 const login = async (req, res) => {
@@ -81,7 +107,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: 'invalid email or password' })
         }
         if (!user.isVerified) {
-            return res.status(400).json({ message: "user is not verified" })
+            return res.status(400).json({ message: "Blocked by ADMIN" })
         }
         const token = generateToken(user._id, user.role)
 
@@ -125,7 +151,7 @@ const FPEmailOtp = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Please register' });
+            return res.status(400).json({ message: 'Email not exist! Please register' });
         }
 
 
@@ -181,7 +207,7 @@ const conFirmForgetPassword = async (req, res) => {
 
 const logout = async (req, res) => {
     console.log('inside logout controleer');
-    
+
     try {
         res.cookie('token', '', {
             httpOnly: true,

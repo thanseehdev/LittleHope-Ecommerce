@@ -3,24 +3,21 @@ import Navbar from "../../components/userCom/common/Navbar";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { productDetail } from "../../redux/features/user/product/productDetailAction";
-import { addToCart } from "../../redux/features/user/cart/cartAction";
+import { addToCart, getCartItems } from "../../redux/features/user/cart/cartAction";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import {
   addToWishlist,
   getWishItem,
 } from "../../redux/features/user/wishlist/wishlistAction";
 import { Link } from "react-router-dom";
-import {
-  clearMessage as clearCartMessage,
-} from "../../redux/features/user/cart/cartSlice";
-import {
-  clearMessage as clearWishlistMessage,
-} from "../../redux/features/user/wishlist/wishlistSlice";
+
 import {
   XMarkIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
+
+import { clearMessages } from "../../redux/features/user/message";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -37,6 +34,7 @@ export default function ProductDetail() {
   );
   const wishState = useSelector((state) => state.wishlist);
   const cartState = useSelector((state) => state.cart);
+  const { message, error:err } = useSelector((state) => state.message);
 
   useEffect(() => {
     if (id) {
@@ -61,21 +59,20 @@ export default function ProductDetail() {
     }
   }, [wishState.items, product]);
 
-  useEffect(() => {
-    if (cartState.message || cartState.error) {
-      const timer = setTimeout(() => dispatch(clearCartMessage()), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [cartState.message, cartState.error, dispatch]);
 
   useEffect(() => {
-    if (wishState.message || wishState.error) {
-      const timer = setTimeout(() => dispatch(clearWishlistMessage()), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [wishState.message, wishState.error, dispatch]);
+  if (message || err) {
+    const timer = setTimeout(() => {
+      dispatch(clearMessages());
+    }, 1500);
 
- const handleAddToCart = () => {
+    // Cleanup: clear the timeout if message or err changes or component unmounts
+    return () => clearTimeout(timer);
+  }
+}, [message, err, dispatch]);
+
+
+  const handleAddToCart = async() => {
     const selectedVariant = product.sizeAndStock.find(
       (item) => item.size === selectedSize
     );
@@ -83,9 +80,11 @@ export default function ProductDetail() {
       return;
     }
 
-    dispatch(
+    await dispatch(
       addToCart({ productId: product._id, quantity: 1, size: selectedSize })
     );
+    dispatch(getCartItems())
+
   };
 
   const handleBuyNow = () => {
@@ -117,37 +116,32 @@ export default function ProductDetail() {
     <>
       <Navbar />
 
-      {(cartState.message ||
-        cartState.error ||
-        wishState.message ||
-        wishState.error) && (
-          <div
-            className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
-          flex items-center justify-between left-1/2 -translate-x-1/2
-          bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
-            role="alert"
-          >
-            <span className="flex items-center gap-2">
-              {(cartState.error || wishState.error) ? (
-                <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
-              ) : (
-                <CheckCircleIcon className="h-5 w-5 text-pink-500" />
-              )}
-              {cartState.message || cartState.error || wishState.message || wishState.error}
-            </span>
+    {(message || err) && (
+  <div
+    className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
+      flex items-center justify-between left-1/2 -translate-x-1/2
+      bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
+    role="alert"
+  >
+    <span className="flex items-center gap-2">
+      {err ? (
+        <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
+      ) : (
+        <CheckCircleIcon className="h-5 w-5 text-pink-500" />
+      )}
+      {message || (typeof err === 'string' ? err : 'An error occurred')}
+    </span>
 
-            <button
-              onClick={() => {
-                dispatch(clearCartMessage());
-                dispatch(clearWishlistMessage());
-              }}
-              className="text-pink-500 hover:text-pink-400 transition ml-2"
-              aria-label="Close alert"
-            >
-              <XMarkIcon className="h-5 w-5" />
-            </button>
-          </div>
-        )}
+    <button
+      onClick={() => dispatch(clearMessages())}
+      className="text-pink-500 hover:text-pink-400 transition ml-2"
+      aria-label="Close alert"
+    >
+      <XMarkIcon className="h-5 w-5" />
+    </button>
+  </div>
+)}
+
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row md:flex-row gap-10">
@@ -156,18 +150,17 @@ export default function ProductDetail() {
             <div className="flex flex-row lg:flex-col gap-2 overflow-auto max-lg:justify-center">
               {product.images?.map((img, idx) => (
                 <div
-  key={idx}
-  onClick={() => setSelectedImage(img)}
-  className={`flex-shrink-0 w-[64px] h-[64px] rounded-full overflow-hidden border cursor-pointer mt-3 ${
-    selectedImage === img ? "border-pink-500" : "border-gray-300"
-  }`}
->
-  <img
-    src={img}
-    alt={`Product thumbnail ${idx + 1}`}
-    className="w-full h-full object-cover block"
-/>
-</div>
+                  key={idx}
+                  onClick={() => setSelectedImage(img)}
+                  className={`flex-shrink-0 w-[64px] h-[64px] rounded-full overflow-hidden border cursor-pointer mt-3 ${selectedImage === img ? "border-pink-500" : "border-gray-300"
+                    }`}
+                >
+                  <img
+                    src={img}
+                    alt={`Product thumbnail ${idx + 1}`}
+                    className="w-full h-full object-cover block"
+                  />
+                </div>
 
               ))}
             </div>
@@ -194,49 +187,49 @@ export default function ProductDetail() {
 
           {/* Right: Product Info */}
           <div className="w-full lg:w-1/2">
-           <h2 className="lg:text-2xl text-xl font-medium text-gray-900 mb-2">{product.name}</h2>
+            <h2 className="lg:text-2xl text-xl font-medium text-gray-900 mb-2">{product.name}</h2>
 
-<div className="flex items-center space-x-3 mb-2">
-  <span className="lg:text-xl text-base font-semibold text-green-600">
-    ₹{product.discountPrice}
-  </span>
-  <span className="text-sm text-gray-400 line-through">
-    ₹{product.price}
-  </span>
-  <span className="text-xs font-semibold text-white bg-green-600 rounded px-2 py-0.5">
-    {discountPercentage}% OFF
-  </span>
-</div>
+            <div className="flex items-center space-x-3 mb-2">
+              <span className="lg:text-xl text-base font-semibold text-green-600">
+                ₹{product.discountPrice}
+              </span>
+              <span className="text-sm text-gray-400 line-through">
+                ₹{product.price}
+              </span>
+              <span className="text-xs font-semibold text-white bg-green-600 rounded px-2 py-0.5">
+                {discountPercentage}% OFF
+              </span>
+            </div>
 
-<p className="text-xs text-gray-500 uppercase">{product.category}</p>
+            <p className="text-xs text-gray-500 uppercase">{product.category}</p>
 
 
 
-               {/* Size Selector */}
+            {/* Size Selector */}
             <div>
               <p className="font-medium mt-3 mb-2">Select Size:</p>
-             <div className="flex justify-start sm:justify-center md:justify-start flex-wrap gap-3.5">
+              <div className="flex justify-start sm:justify-center md:justify-start flex-wrap gap-3.5">
 
-  {product.sizeAndStock?.map(({ size, stock }) => (
-    <button
-      key={size}
-      onClick={() => setSelectedSize(size)}
-      disabled={stock === 0}
-      className={`relative min-w-[60px] text-sm sm:text-base px-2 py-2 border rounded-md transition
+                {product.sizeAndStock?.map(({ size, stock }) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    disabled={stock === 0}
+                    className={`relative min-w-[60px] text-sm sm:text-base px-2 py-2 border rounded-md transition
         ${selectedSize === size
-          ? "bg-gray-200 border-gray"
-          : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"}
+                        ? "bg-gray-200 border-gray"
+                        : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"}
         ${stock === 0 ? "cursor-not-allowed opacity-50" : ""}`}
-    >
-      {size}
-      {stock === 0 && (
-        <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-xs font-bold text-red-600 bg-white bg-opacity-80">
-          Stock Out
-        </span>
-      )}
-    </button>
-  ))}
-</div>
+                  >
+                    {size}
+                    {stock === 0 && (
+                      <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-xs font-bold text-red-600 bg-white bg-opacity-80">
+                        Stock Out
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
 
               {!selectedSize && (
                 <p className="text-sm text-red-500 mt-1">Please select a size.</p>
@@ -278,8 +271,8 @@ export default function ProductDetail() {
                 onClick={handleAddToCart}
                 disabled={!selectedSize || cartState.status === "loading"}
                 className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize || cartState.status === "loading"
-                    ? "bg-orange-300 cursor-not-allowed"
-                    : "bg-orange-500 hover:bg-orange-600"
+                  ? "bg-orange-300 cursor-not-allowed"
+                  : "bg-orange-500 hover:bg-orange-600"
                   }`}
               >
                 {cartState.status === "loading" ? "Adding..." : "Add to Cart"}
@@ -291,8 +284,8 @@ export default function ProductDetail() {
                 onClick={handleBuyNow}
                 disabled={!selectedSize}
                 className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize
-                    ? 'bg-red-300 cursor-not-allowed'
-                    : 'bg-red-500 hover:bg-red-600'
+                  ? 'bg-red-300 cursor-not-allowed'
+                  : 'bg-red-500 hover:bg-red-600'
                   }`}
               >
                 Buy Now
@@ -349,7 +342,7 @@ export default function ProductDetail() {
                           <span className="text-green-600 lg:text-base text-sm">
                             ₹{item.discountPrice}
                           </span>
-                          
+
                           <span className="line-through text-sm text-gray-500">
                             ₹{item.price}
                           </span>

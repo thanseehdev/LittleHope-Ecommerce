@@ -2,15 +2,17 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../../api/axios";
 import { setSuccessMessage,setErrorMessage } from "../message";
 
-export const addToCart = createAsyncThunk('user/addToCart', async ({ productId, quantity, size }, { rejectWithValue }) => {
+
+export const addToCart = createAsyncThunk('user/addToCart', async ({ productId, quantity, size }, { rejectWithValue,dispatch }) => {
     try {
         console.log('inside addToCart Action');
-
         const res = await api.post('/user/addToCart', { productId, quantity, size })
-
+        dispatch(setSuccessMessage('Added to cart successfully.'))
         return res.data
     } catch (error) {
-        return rejectWithValue(error.response?.data?.message || "Failed to fetch Cart Items");
+        const msg = error.response?.data?.message || " Please try again";
+        dispatch(setErrorMessage(msg))
+        return rejectWithValue(msg)
     }
 })
 
@@ -23,7 +25,7 @@ export const getCartItems = createAsyncThunk('user/getCartItems', async (_, { re
     }
 })
 
-export const updateQuantity = createAsyncThunk('user/updateQuantity', async ({ productId, size, quantity }, { dispatch }) => {
+export const updateQuantity = createAsyncThunk('user/updateQuantity', async ({ productId, size, quantity }, { dispatch,rejectWithValue }) => {
     try {
         const res = await api.put('/user/updateItemQuantity', { productId, size, quantity })
         dispatch(setSuccessMessage('Quantity changed'))
@@ -31,6 +33,7 @@ export const updateQuantity = createAsyncThunk('user/updateQuantity', async ({ p
     } catch (error) {
         const msg=error.response?.data?.message || "Failed to update item Quantity"
         dispatch(setErrorMessage(msg))
+        return rejectWithValue(msg)
     }
 })
 

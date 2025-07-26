@@ -117,12 +117,12 @@ export default function OrderSuccess() {
           </p>
 
           <div className="bg-[#fff9fa] border-l-4 border-pink-400 px-6 py-4 mb-10">
-            <p className="text-sm text-gray-800 italic">
-              “You’ve earned{" "}
-              <span className="font-bold text-pink-500">20 LittlePoints</span> on this purchase. Use them to save on
-              your next order.”
-            </p>
-          </div>
+  <p className="text-sm text-gray-800 italic">
+    “Every purchase is a step closer to the life you imagine. Thanks for choosing us!”{" "}
+    <span className="lg:text-sm text-xs font-bold text-pink-500">— From LittleHope Team</span>
+  </p>
+</div>
+
 
           <div className="flex justify-start">
             <button

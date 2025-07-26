@@ -69,10 +69,11 @@ const getUserOrders = async (req, res) => {
 
   const userId = req.user._id;
   const page = parseInt(req.query.page) || 1;      // Current page number, default 1
-  const limit = parseInt(req.query.limit) || 3;   // Items per page, default 10
+  const limit = parseInt(req.query.limit) || 10;   // Items per page, default 10
   console.log('limit '+limit);
 
   try {
+    const totalOrders = await Order.countDocuments({ user: userId });
     const orders = await Order.find({ user: userId })
       .populate('items.productId', 'name price')
       .populate('coupon', 'code discount')
@@ -80,8 +81,10 @@ const getUserOrders = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
+    const totalPages = Math.ceil(totalOrders / limit);
     res.status(200).json({
       orders,
+      totalPages
      
     });
   } catch (error) {

@@ -8,13 +8,15 @@ export default function OrdersPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { orderData, loading, error } = useSelector((state) => state.order)
+  const { orderData, loading, totalPages, error } = useSelector((state) => state.order)
+  console.log("totalPages:", totalPages);
+
   const [page, setPage] = useState(1)
   const limit = 5
 
-useEffect(() => {
-  dispatch(getOrders({ page, limit }))
-}, [dispatch, page, limit])
+  useEffect(() => {
+    dispatch(getOrders({ page, limit }))
+  }, [dispatch, page, limit])
 
 
   const isOrderNew = (orderDate) => {
@@ -32,7 +34,7 @@ useEffect(() => {
   };
 
   const handleNextPage = () => {
-    if (page < orderData.totalPages) setPage((prev) => prev + 1);
+    if (page < totalPages) setPage((prev) => prev + 1);
   };
 
   return (
@@ -69,8 +71,28 @@ useEffect(() => {
                     Placed on {new Date(order.createdAt).toLocaleDateString()}
                   </p>
                   <p className="lg:text-sm text-xs text-gray-500">
-                    Status: {order.status}
+                    Status:{" "}
+                    <span
+                      className={
+                        order.status === "cancelled"
+                          ? "text-red-500"
+                          : order.status === "delivered"
+                            ? "text-green-600"
+                            : order.status === "pending"
+                              ? "text-orange-500"
+                              : order.status === "confirmed"
+                                ? "text-blue-500"
+                                : order.status === "shipped"
+                                  ? "text-purple-500"
+                                  : "text-gray-500"
+                      }
+                    >
+                      {order.status}
+                    </span>
                   </p>
+
+
+
                 </div>
                 <div className="lg:text-md text-sm mt-2 md:mt-0 text-right">
                   <p>{order.items.length} Item(s)</p>
@@ -82,22 +104,26 @@ useEffect(() => {
         </div>
 
         {/* Pagination Controls */}
-        {orderData.totalPages > 1 && (
-          <div className="flex justify-center space-x-4 mt-6">
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center flex-wrap gap-4 mt-10 px-4 sm:px-0">
+
             <button
               onClick={handlePrevPage}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            <span className="px-4 py-2">
-              Page {page} of {orderData.totalPages}
+              className="lg:text-base text-xs px-5 py-3 rounded-xl bg-gray-100 text-gray-700 shadow-neumorph
+             disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed
+             hover:shadow-neumorph-hover focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+            >prev</button>
+
+            <span className="lg:text-base text-xs px-4 py-2">
+              Page {page} of {totalPages}
             </span>
             <button
               onClick={handleNextPage}
-              disabled={page === orderData.totalPages}
-              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+              disabled={page === totalPages}
+              className="lg:text-base text-xs px-5 py-3 rounded-xl bg-gray-100 text-gray-700 shadow-neumorph
+             disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed
+             hover:shadow-neumorph-hover focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
             >
               Next
             </button>

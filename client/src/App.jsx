@@ -34,7 +34,7 @@ import ForgetPassword from './pages/userPages/forgetPassword'
 import AdminOrderDetails from './pages/adminPages/AdminOrderDetails'
 import ComingSoon from './pages/userPages/ComingSoon'
 import SearchResultPage from './pages/userPages/SearchResult'
-import UserCoupon from './pages/userPages/coupon'
+import UserCoupon from './pages/userPages/Coupon'
 
 
 
@@ -56,7 +56,7 @@ function App() {
       <Route path='/cart' element={<PrivateRoute><CartPage /></PrivateRoute>} />
       <Route path='/wishlist' element={<PrivateRoute><WishlistCard /></PrivateRoute>} />
       <Route path='/checkoutPayment' element={<PrivateRoute><CheckoutPayment/></PrivateRoute>} />
-      <Route path='/profile' element={<ProfilePage />} />
+      <Route path='/profile' element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
       <Route path='/orderSuccess' element={<PrivateRoute><OrderSuccess /></PrivateRoute>} />
       <Route path='/order' element={<PrivateRoute><OrderPage /></PrivateRoute>} />
       <Route path="/order/:orderId" element={<PrivateRoute><OrderDetailPage /></PrivateRoute>} />

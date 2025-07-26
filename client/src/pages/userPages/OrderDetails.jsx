@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../../components/userCom/common/Navbar";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,7 +15,7 @@ import {
 export default function OrderDetailPage() {
   const { orderId } = useParams();
   const dispatch = useDispatch();
-
+const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { orderDetail, loading, error } = useSelector((state) => state.order);
 
   useEffect(() => {
@@ -39,13 +39,20 @@ export default function OrderDetailPage() {
   };
 
   const currentStep = statusIndex[order?.status] ?? 0;
-
-  const handleCancelOrder = async () => {
-    if (window.confirm("Are you sure you want to cancel this order?")) {
-      await dispatch(cancellOrder(order._id));
-      dispatch(getOrderDetails(orderId));
-    }
+  const handleCancelClick = () => {
+    setShowConfirmModal(true); // Show the modal instead of window.confirm
   };
+
+  const confirmCancelOrder = async () => {
+    setShowConfirmModal(false);
+    await dispatch(cancellOrder(order._id));
+    dispatch(getOrderDetails(orderId));
+  };
+
+  const cancelModal = () => {
+    setShowConfirmModal(false);
+  };
+
 
   if (loading) return <p className="p-8 text-gray-600">Loading order...</p>;
   if (error) return <p className="p-8 text-red-500">Error: {error}</p>;
@@ -66,7 +73,7 @@ export default function OrderDetailPage() {
             </span>
             {order.status === "pending" && (
               <button
-                onClick={handleCancelOrder}
+                onClick={handleCancelClick}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm transition duration-200"
               >
                 Cancel Order
@@ -120,7 +127,7 @@ export default function OrderDetailPage() {
 
 
         {/* Address */}
-        <section className="bg-white border  p-4 text-sm max-w-md ">
+        <section className="bg-white border  p-4 text-sm max-w-md">
           <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Delivery Address</h3>
 
           <div className="flex items-center lg:text-base font-semibold text-gray-800 mb-2 space-x-2">
@@ -138,7 +145,9 @@ export default function OrderDetailPage() {
 
 
         {/* Tracking or Status Message */}
-        <section className="bg-gray-50 flex justify-center border-t bg-white p-3 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+       <section className="relative top-5 bg-gray-50 flex justify-center border-t bg-white p-3 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+
+
           {order.status === "cancelled" ? (
             <div className="lg:max-w-[600px] justify-center flex items-center bg-red-500 text-white px-6 py-4 rounded-md mb-5 shadow-md mt-6">
               <XCircleIcon className="w-6 h-6 mr-3" />
@@ -196,7 +205,13 @@ export default function OrderDetailPage() {
             </div>
           )}
         </section>
-
+{showConfirmModal && (
+        <ConfirmModal
+          message="Are you sure you want to cancel this order?"
+          onConfirm={confirmCancelOrder}
+          onCancel={cancelModal}
+        />
+      )}
       </main>
     </>
   );
@@ -205,3 +220,24 @@ export default function OrderDetailPage() {
 
 
 
+const ConfirmModal = ({ message, onConfirm, onCancel }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <p className="mb-4">{message}</p>
+      <div className="flex justify-end space-x-2">
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 text-sm rounded bg-gray-300 hover:bg-gray-400"
+        >
+          No
+        </button>
+        <button
+          onClick={onConfirm}
+          className="px-4 py-2 text-sm rounded bg-red-600 text-white hover:bg-red-700"
+        >
+          Yes, Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+);

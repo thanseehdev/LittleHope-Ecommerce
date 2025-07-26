@@ -32,6 +32,11 @@ const {
   bestSellingProducts,
 } = data;
 
+const chartData = genderSales?.map(item => ({
+  name: item._id,
+  value: item.value,
+})) || [];
+
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -89,17 +94,19 @@ const {
               <ResponsiveContainer width="100%" height={240}>
                 <PieChart>
                   <Pie
-                    data={genderSales}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    label
-                    dataKey="value"
-                  >
-                    {genderSales?.map((_, idx) => (
-                      <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-                    ))}
-                  </Pie>
+  data={chartData} // instead of genderSales
+  cx="50%"
+  cy="50%"
+  outerRadius={80}
+  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+  labelLine={false}
+  dataKey="value"
+>
+  {chartData?.map((_, idx) => (
+    <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+  ))}
+</Pie>
+
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>

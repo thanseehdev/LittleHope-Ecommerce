@@ -14,7 +14,7 @@ const CouponCard = ({ amount, code, expiry }) => (
 
 
     {/* Right: Coupon Details */}
-    <div className="flex-1 p-2  flex flex-col justify-center">
+    <div className="flex-1 p-7  flex flex-col justify-center item-center">
        <div>
       <p className="lg:text-base text-xs font-bold text-gray-800">
   Use code: <span className="inline-block bg-gray-100 p-2 lg:w-[200px]  w-[160px] lg:text-2xl text-xl text-blue-600">{code}</span>

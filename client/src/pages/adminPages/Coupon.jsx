@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCoupon } from "../../redux/features/admin/adminCoupon/couponAction";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import AdminNavbar from "../../components/adminCom/common/Navbar";
+import { Link } from "react-router-dom";
 
 export default function CouponAdminPage() {
   const dispatch = useDispatch();
@@ -24,16 +25,14 @@ export default function CouponAdminPage() {
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4 sm:mb-0">
             Coupon Management
           </h1>
+          <Link to='/admin/addCoupon'>
           <button
-            onClick={() => {
-              // Navigate to AddCoupon page or open modal
-              window.location.href = "/admin/add-coupon"; // Update path as needed
-            }}
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-transform transform hover:scale-105"
           >
             <PlusIcon className="w-5 h-5" />
             Add New Coupon
           </button>
+          </Link>
         </div>
 
         {/* Error and Loading States */}

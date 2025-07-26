@@ -11,7 +11,7 @@ import { useMemo } from "react";
 const ProductGrid = () => {
 
   const [page, setPage] = useState(1)
-  const limit = 6
+  const limit = 25
   const dispatch = useDispatch()
   const { items: allProducts, loading, totalPages, error } = useSelector((state) => state.allProducts)
 
@@ -174,28 +174,33 @@ const ProductGrid = () => {
               ))}
             </div>
           )}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center flex-wrap gap-4 mt-10 px-4 sm:px-0">
+
+              <button
+                onClick={handlePrevPage}
+                disabled={page === 1}
+                className="lg:text-base text-xs px-5 py-3 rounded-xl bg-gray-100 text-gray-700 shadow-neumorph
+             disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed
+             hover:shadow-neumorph-hover focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+              >prev</button>
+
+              <span className="lg:text-base text-xs px-4 py-2">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={page === totalPages}
+                className="lg:text-base text-xs px-5 py-3 rounded-xl bg-gray-100 text-gray-700 shadow-neumorph
+             disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed
+             hover:shadow-neumorph-hover focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
-        {totalPages > 1 && (
-          <div className="flex justify-center space-x-4 mt-6">
-            <button
-              onClick={handlePrevPage}
-              disabled={page === 1}
-              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            <span className="px-4 py-2">
-              Page {page} of {totalPages}
-            </span>
-            <button
-              onClick={handleNextPage}
-              disabled={page === totalPages}
-              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        )}
+
       </div>
     </>
   );
