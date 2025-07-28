@@ -66,7 +66,7 @@ export default function ForgotPassword() {
   }, [message, error, dispatch]);
 
   return (
-    <div className="min-h-screen flex  flex-col md:flex-row">
+    <div className="min-h-screen flex  flex-col md:flex-row ">
       {/* Promo Section */}
       <div
         className=" w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-purple-900 text-white text-center"
@@ -125,7 +125,7 @@ export default function ForgotPassword() {
 
         {/* Step 1: Email */}
         {!otpSent && (
-          <form onSubmit={handleEmailSubmit} className="w-full max-w-md space-y-6">
+          <form onSubmit={handleEmailSubmit} className="w-full  max-w-md space-y-6">
             <div>
               <label className="block mb-2 text-sm font-semibold text-gray-700">
                 Email Address <span className="text-red-500">*</span>

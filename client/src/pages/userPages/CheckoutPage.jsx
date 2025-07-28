@@ -7,6 +7,7 @@ import { getCartItems } from "../../redux/features/user/cart/cartAction";
 import { TagIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from "react-router-dom";
 import { postOrder } from "../../redux/features/user/order/orderAction";
+import { clearMessages } from "../../redux/features/user/message";
 import {
     FaCreditCard,
     FaWallet,
@@ -15,7 +16,11 @@ import {
     FaMobileAlt,
 } from "react-icons/fa";
 import { HiLockClosed } from "react-icons/hi";
-
+import {
+    XMarkIcon,
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+} from "@heroicons/react/24/solid";
 
 
 
@@ -33,12 +38,14 @@ export default function CheckoutPage() {
     const navigate = useNavigate();
     const { addresses = [], coupons = [] } = useSelector((state) => state.profile);
     const { items } = useSelector((state) => state.cart);
-
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [selectedPayment, setSelectedPayment] = useState("cod");
     const [selectedCoupon, setSelectedCoupon] = useState(null);
-    const [placeOrderLoading, setPlaceOrderLoading] = React.useState(false);
+    const [placeOrderLoading, setPlaceOrderLoading] = useState(false);
+    const [couponMessage, setCouponMessage] = useState("");
+
+    const { message, error } = useSelector((state) => state.message);
 
     useEffect(() => {
         dispatch(getAddress());
@@ -67,7 +74,13 @@ export default function CheckoutPage() {
         const couponId = e.target.value;
         const selected = coupons.find((c) => c._id === couponId);
         setSelectedCoupon(selected || null);
+        if (selected) {
+            setCouponMessage(`🎉 Hurray! You saved  ₹${selected.discount}`);
+        } else {
+            setCouponMessage("");
+        }
     };
+
 
     const cartSummary = items?.length
         ? items.reduce(
@@ -93,7 +106,7 @@ export default function CheckoutPage() {
     const couponDiscount = selectedCoupon?.discount || 0;
     const totalAfterCoupon = totalAmount - couponDiscount;
 
-    const handlePlaceOrder = () => {
+    const handlePlaceOrder = async() => {
         if (!selectedAddressId) {
             alert("Please select an address.");
             return;
@@ -135,16 +148,66 @@ export default function CheckoutPage() {
                 finalAmount: totalAfterCoupon,
             },
         };
-        dispatch(postOrder(orderData, navigate));
-        setTimeout(() => {
-            navigate("/orderSuccess");
-        }, 2500); // simulate loading
+        try {
+            const resultAction = await dispatch(postOrder(orderData));
+
+            if (postOrder.fulfilled.match(resultAction)) {
+                navigate("/orderSuccess");
+            } 
+        } catch (error) {
+            console.error("Order placement error:", error);
+            alert("An error occurred while placing the order.");
+        } finally {
+            setPlaceOrderLoading(false);
+        }
     };
+
+    useEffect(() => {
+        if (message || error) {
+            // Show the message or error
+            const timer = setTimeout(() => {
+                // Only dispatch clearMessages if the message/error is still present
+                if (message || error) {
+                    dispatch(clearMessages());
+                }
+            }, 3000);
+            return () => clearTimeout(timer); // Clear the timeout if the component is unmounted or before re-triggering
+        }
+    }, [message, error, dispatch]);
 
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-white px-4 py-6 md:px-8">
+            {(message || error) && (
+                <div
+                    className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md flex items-center justify-between left-1/2 -translate-x-1/2 bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
+                    role="alert"
+                    aria-live="assertive" // Announce the message dynamically
+                >
+                    <span className="flex items-center gap-2">
+                        {/* Conditional Icon */}
+                        {error ? (
+                            <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
+                        ) : (
+                            <CheckCircleIcon className="h-5 w-5 text-pink-500" />
+                        )}
+
+                        {/* Message or Error */}
+                        {error || message}
+                    </span>
+
+                    <button
+                        onClick={() => {
+                            dispatch(clearMessages());
+                        }}
+                        className="text-pink-500 hover:text-pink-400 transition ml-2"
+                        aria-label="Close alert"
+                    >
+                        <XMarkIcon className="h-5 w-5" />
+                    </button>
+                </div>
+            )}
+            <div className="min-h-screen bg-white px-4 py-6 md:px-8 ">
                 <div className="max-w-5xl mx-auto space-y-6">
                     {/* Page Title */}
                     <h1 className="lg:text-xl text-lg md:text-2xl font-semibold text-gray-800">Checkout</h1>
@@ -279,6 +342,30 @@ export default function CheckoutPage() {
                                         <span>Total</span>
                                         <span>₹{totalAfterCoupon}</span>
                                     </div>
+                                    {couponMessage && (
+  <div className="mt-4 max-w-md flex items-center gap-5 rounded-md border border-blue-200 bg-white px-5 py-3 shadow-sm">
+    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
+      <svg
+        className="w-4 h-4 text-blue-600"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M5 13l4 4L19 7"
+        />
+      </svg>
+    </div>
+    <span className="text-sm text-gray-800 font-medium">{couponMessage}</span>
+  </div>
+)}
+
+
+
                                 </div>
                             </div>
 
@@ -306,6 +393,8 @@ export default function CheckoutPage() {
                                     ) : (
                                         <span className="text-sm text-gray-400 italic">No coupons available</span>
                                     )}
+
+
                                 </div>
 
                                 {/* Divider */}

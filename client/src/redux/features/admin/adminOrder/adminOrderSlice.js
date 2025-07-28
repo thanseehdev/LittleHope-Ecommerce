@@ -9,6 +9,7 @@ const initialState={
     loading:false,
     success:null,
     message:null,
+    totalPages: 1,
 }
 
 const orderSlice=createSlice({
@@ -23,7 +24,8 @@ const orderSlice=createSlice({
         })
         .addCase(getAllOrders.fulfilled,(state,action)=>{
             state.loading=false;
-            state.orders=action.payload;
+            state.orders=action.payload.order;
+            state.totalPages = action.payload.totalPages;
             state.error=null
         })
         .addCase(getAllOrders.rejected,(state,action)=>{

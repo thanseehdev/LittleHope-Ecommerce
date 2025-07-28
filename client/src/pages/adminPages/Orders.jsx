@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminNavbar from "../../components/adminCom/common/Navbar";
 import {
@@ -21,19 +21,30 @@ export default function AdminOrderPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { orders, loading, error } = useSelector((state) => state.adminOrder);
+  const [page, setPage] = useState(1)
+  const limit = 10
+
+  const { orders, loading, error, totalPages } = useSelector((state) => state.adminOrder);
 
   useEffect(() => {
-    dispatch(getAllOrders());
-  }, [dispatch]);
+    dispatch(getAllOrders({ page, limit }));
+  }, [dispatch, page]);
+
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await dispatch(updateOrderStatus({ orderId, Ostatus: newStatus })).unwrap();
-      dispatch(getAllOrders());
+      dispatch(getAllOrders({ page, limit }));
     } catch (err) {
       console.error("Status update failed:", err);
     }
+  };
+  const handlePrevPage = () => {
+    if (page > 1) setPage((prev) => prev - 1);
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages) setPage((prev) => prev + 1);
   };
 
   return (
@@ -154,6 +165,31 @@ export default function AdminOrderPage() {
               ))}
             </div>
           </>
+        )}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center flex-wrap gap-4 mt-10 px-4 sm:px-0">
+
+            <button
+              onClick={handlePrevPage}
+              disabled={page === 1}
+              className="lg:text-base text-xs px-5 py-3 rounded-xl bg-gray-100 text-gray-700 shadow-neumorph
+             disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed
+             hover:shadow-neumorph-hover focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+            >prev</button>
+
+            <span className="lg:text-base text-xs px-4 py-2">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={page === totalPages}
+              className="lg:text-base text-xs px-5 py-3 rounded-xl bg-gray-100 text-gray-700 shadow-neumorph
+             disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed
+             hover:shadow-neumorph-hover focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+            >
+              Next
+            </button>
+          </div>
         )}
       </div>
     </>

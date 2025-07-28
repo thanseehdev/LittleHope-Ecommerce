@@ -6,7 +6,8 @@ const initialState = {
     products: [],
     product:null,
     error: null,
-    updateSuccess:null
+    updateSuccess:null,
+    totalPages: 1,
 }
 
 const adminProductSlice=createSlice({
@@ -35,7 +36,8 @@ const adminProductSlice=createSlice({
         })
         .addCase(fetchAllProducts.fulfilled,(state,action)=>{
             state.loading=false;
-            state.products=action.payload;
+            state.products=action.payload.products
+            state.totalPages = action.payload.totalPages;
             state.error=null
         })
         .addCase(fetchAllProducts.rejected,(state,action)=>{

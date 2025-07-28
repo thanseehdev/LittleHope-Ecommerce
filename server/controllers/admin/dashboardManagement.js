@@ -84,35 +84,37 @@ const getDashData = async (req, res) => {
     ]);
 
     const bestSellingProducts = await Order.aggregate([
-      { $unwind: '$items' },
-      {
-        $group: {
-          _id: '$items.productId',
-          unitsSold: { $sum: '$items.quantity' },
-          revenue: { $sum: '$items.discountPriceAtPurchase' },
-        },
-      },
-      { $sort: { unitsSold: -1 } },
-      { $limit: 10 },
-      {
-        $lookup: {
-          from: 'products',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'productInfo',
-        },
-      },
-      { $unwind: '$productInfo' },
-      {
-        $project: {
-          id: '$_id',
-          name: '$productInfo.name',
-          category: '$productInfo.category',
-          unitsSold: 1,
-          revenue: 1,
-        },
-      },
-    ]);
+  { $unwind: '$items' },
+  {
+    $group: {
+      _id: '$items.productId',
+      unitsSold: { $sum: '$items.quantity' },
+      revenue: { $sum: '$items.discountPriceAtPurchase' },
+    },
+  },
+  { $sort: { unitsSold: -1 } },
+  { $limit: 10 },
+  {
+    $lookup: {
+      from: 'products',
+      localField: '_id',
+      foreignField: '_id',
+      as: 'productInfo',
+    },
+  },
+  { $unwind: '$productInfo' },
+  {
+    $project: {
+      id: '$_id',
+      name: '$productInfo.name',
+      category: '$productInfo.category',
+      images: '$productInfo.images', // ✅ added
+      unitsSold: 1,
+      revenue: 1,
+    },
+  },
+]);
+
 
     res.json({
       totalRevenue,

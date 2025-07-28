@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllUsers, blockUser, deleteUser } from "./adminUserAction";
+import { fetchAllUsers, blockUser, deleteUser, unblockUser } from "./adminUserAction";
 
 const initialState = {
     users: [],
     loading: false,
     error: null,
-    successMessage: null
+    successMessage: null,
+    totalPages: 1,
+    currentPage: 1,
 }
 
 const adminUserSlice = createSlice({
@@ -21,9 +23,10 @@ const adminUserSlice = createSlice({
             })
             .addCase(fetchAllUsers.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users = action.payload;
+                state.users = action.payload.users
                 state.error = null;
                 state.successMessage = action.payload.successMessage
+                state.totalPages = action.payload.totalPages;
             })
             .addCase(fetchAllUsers.rejected, (state, action) => {
                 state.loading = false;
@@ -55,6 +58,25 @@ const adminUserSlice = createSlice({
             })
 
             .addCase(blockUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+
+
+            .addCase(unblockUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(unblockUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                const user = state.users.find(u => u._id === action.payload.userId);
+                if (user) user.isBlocked = false;
+            })
+
+
+            .addCase(unblockUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })

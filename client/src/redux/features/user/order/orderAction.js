@@ -1,15 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../../api/axios";
+import { setSuccessMessage,setErrorMessage } from "../message";
 
 
-export const postOrder=createAsyncThunk('user/postOrder',async(orderData,{rejectWithValue})=>{
+export const postOrder=createAsyncThunk('user/postOrder',async(orderData,{rejectWithValue,dispatch})=>{
     try {
         console.log('inside postOrder action');
-        
         const res=await api.post('/user/createOrder',orderData)
         return res.data
     } catch (error) {
-        return rejectWithValue(error.response?.data?.message || "Failed to Create Order");
+        const msg=error.response?.data?.message || "Failed to Create Order"
+        dispatch(setErrorMessage(msg))
+        return rejectWithValue()
     }
 })
 

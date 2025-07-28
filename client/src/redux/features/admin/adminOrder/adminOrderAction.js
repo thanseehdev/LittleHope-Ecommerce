@@ -2,9 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../../api/axios"
 
 
-export const getAllOrders=createAsyncThunk('admin/getOrders',async(_,{rejectWithValue})=>{
+export const getAllOrders=createAsyncThunk('admin/getOrders',async({page,limit},{rejectWithValue})=>{
     try {
-        const res=await api.get('/admin/getAllOrders')
+        const res=await api.get(`/admin/getAllOrders?page=${page}&limit=${limit}`)
         return res.data
     } catch (error) {
         return rejectWithValue(error.response?.data?.message || "failed to fetch allOrders")

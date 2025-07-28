@@ -83,7 +83,7 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 space-y-8">
+      <main className="max-w-5xl mx-auto px-4 space-y-6">
 
         {/* Items */}
         <section className="space-y-3">
@@ -141,6 +141,46 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
             {order.addressInfo.city} - {order.addressInfo.zipCode}
           </div>
         </section>
+{/* Pricing Summary */}
+<section className="bg-white border p-4 text-sm max-w-md mt-3">
+  <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Billing Summary</h3>
+
+  <div className="text-gray-700 lg:text-base space-y-2">
+    <div className="flex justify-between">
+      <span>Total MRP</span>
+      <span>₹{order.pricingSummary.totalMRP.toFixed(2)}</span>
+    </div>
+    <div className="flex justify-between">
+      <span>Total Discount</span>
+      <span className="text-green-600">-₹{order.pricingSummary.totalDiscount.toFixed(2)}</span>
+    </div>
+    <div className="flex justify-between">
+      <span>Platform Fee</span>
+      <span>₹{order.pricingSummary.platformFee.toFixed(2)}</span>
+    </div>
+    {order.pricingSummary.couponDiscount > 0 && (
+      <div className="flex justify-between">
+        <span>Coupon Discount</span>
+        <span className="text-green-600">-₹{order.pricingSummary.couponDiscount.toFixed(2)}</span>
+      </div>
+    )}
+    <hr />
+    <div className="flex justify-between font-semibold text-gray-800">
+      <span>Final Amount</span>
+      <span>₹{order.pricingSummary.finalAmount.toFixed(2)}</span>
+    </div>
+  </div>
+
+  {/* Payment Method */}
+  <div className="mt-4 text-gray-700 lg:text-base">
+    <span className="font-medium text-gray-800">Payment Method: </span>
+    <span className="capitalize">
+      {order.paymentMethod === "cod"
+        ? "Cash on Delivery"
+        : order.paymentMethod.toUpperCase()}
+    </span>
+  </div>
+</section>
 
 
 

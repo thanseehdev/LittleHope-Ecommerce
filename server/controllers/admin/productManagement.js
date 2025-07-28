@@ -62,12 +62,15 @@ const addProduct = async (req, res) => {
 
 
 const fetchAllProducts=async(req,res)=>{
-    try {
-        console.log('inside admin fetchAllProducts');
-        
-        const products=await Product.find()
+         console.log('inside admin fetchAllProducts');
+         const page = parseInt(req.query.page) || 1;
+         const limit = parseInt(req.query.limit) || 10;
+    try { 
+        const totalProducts=await Product.countDocuments()
+        const products=await Product.find().skip((page - 1) * limit).limit(limit)
+        const totalPages = Math.ceil(totalProducts / limit)
         if(products){
-            res.status(200).json({message:'product fetched successfull',products})
+            res.status(200).json({message:'product fetched successfull',products,totalPages})
         }else{
             res.status(400).json({message:'product not found'})
         }

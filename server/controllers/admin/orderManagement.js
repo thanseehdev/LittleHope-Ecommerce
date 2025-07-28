@@ -1,12 +1,19 @@
-const Order=require('../../models/orderModel')
+const Order = require('../../models/orderModel')
 
-const getAllOrder=async(req,res)=>{
+const getAllOrder = async (req, res) => {
     console.log('inside getOrders');
-    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
     try {
-        const order=await Order.find()
-        if(order){
-            res.status(200).json(order)
+        const totalOrder = await Order.countDocuments()
+        const order = await Order.find()
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+        const totalPages = Math.ceil(totalOrder / limit);
+        if (order) {
+            res.status(200).json({ order, totalPages })
         }
     } catch (error) {
         console.error(error);
@@ -35,15 +42,15 @@ const getOrderDetails = async (req, res) => {
     }
 };
 
-const updateOrderStatus=async(req,res)=>{
+const updateOrderStatus = async (req, res) => {
     console.log('inside updateOrderStatus');
-    
-    const {orderId,Ostatus}=req.body
+
+    const { orderId, Ostatus } = req.body
     try {
-        const order=await Order.findById(orderId)
-        order.status=Ostatus
+        const order = await Order.findById(orderId)
+        order.status = Ostatus
         await order.save()
-        res.status(200).json({message:'order status changed'})
+        res.status(200).json({ message: 'order status changed' })
     } catch (error) {
         console.error("update Order status failed:", error);
         res.status(500).json({ message: "Server Error" });
@@ -51,7 +58,7 @@ const updateOrderStatus=async(req,res)=>{
 }
 
 
-module.exports={
+module.exports = {
     getAllOrder,
     getOrderDetails,
     updateOrderStatus

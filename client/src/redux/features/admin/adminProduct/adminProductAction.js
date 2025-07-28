@@ -15,12 +15,12 @@ export const createProduct = createAsyncThunk('product/create', async (formData,
     }
 })
 
-export const fetchAllProducts=createAsyncThunk('admin/fetchAllProducts',async(_,{rejectWithValue})=>{
+export const fetchAllProducts=createAsyncThunk('admin/fetchAllProducts',async({page,limit},{rejectWithValue})=>{
     try {
         console.log('inside admin fetch product action');
         
-        const res=await api.get('/admin/fetchAllProducts')
-        return res.data.products
+        const res=await api.get(`/admin/fetchAllProducts?page=${page}&limit=${limit}`)
+        return res.data
     } catch (error) {
         return rejectWithValue(
             error.response?.data?.message || "Product fetch failed"

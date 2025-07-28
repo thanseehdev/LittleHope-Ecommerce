@@ -120,22 +120,29 @@ const chartData = genderSales?.map(item => ({
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="bg-gray-100 text-gray-600 text-left">
-                    {['Product ID', 'Product Name', 'Category', 'Units Sold', 'Revenue'].map((head) => (
+                    {['Product ID','Image',  'Product Name','Category', 'Units Sold', 'Revenue'].map((head) => (
                       <th key={head} className="p-2 whitespace-nowrap">{head}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody>
-                  {bestSellingProducts?.map((product) => (
-                    <tr key={product.id} className="border-t text-gray-700">
-                      <td className="p-2">{product.id}</td>
-                      <td className="p-2">{product.name}</td>
-                      <td className="p-2">{product.category}</td>
-                      <td className="p-2">{product.unitsSold}</td>
-                      <td className="p-2">₹{product.revenue.toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
+           <tbody>
+  {bestSellingProducts?.map((product) => (
+    <tr key={product.id} className="border-t text-gray-700">
+      <td className="p-2">{product.id}</td>
+
+      {/* Image column */}
+      <td className="p-2">
+        <img src={product?.images?.[0]} alt={product.name} className="w-12 h-12  rounded" />
+      </td>
+
+      <td className="p-2">{product.name}</td>
+      <td className="p-2">{product.category}</td>
+      <td className="p-2">{product.unitsSold}</td>
+      <td className="p-2">₹{product.revenue.toLocaleString()}</td>
+    </tr>
+  ))}
+</tbody>
+
               </table>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect,useState } from "react";
 import Navbar from "../../components/userCom/common/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartItems, updateQuantity, removeFromCart } from "../../redux/features/user/cart/cartAction";
@@ -14,7 +14,7 @@ import {
 export default function CartPage() {
   const navigate = useNavigate()
   const dispatch = useDispatch();
-  const [checkoutLoading, setCheckoutLoading] = React.useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const { items = [], loading } = useSelector((state) => state.cart);
   const { message, error } = useSelector((state) => state.message);
@@ -80,7 +80,7 @@ export default function CartPage() {
         if (message || error) {
           dispatch(clearMessages());
         }
-      }, 3000);
+      }, 2500);
       return () => clearTimeout(timer); // Clear the timeout if the component is unmounted or before re-triggering
     }
   }, [message, error, dispatch]);
@@ -94,7 +94,7 @@ export default function CartPage() {
         <div
           className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md flex items-center justify-between left-1/2 -translate-x-1/2 bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
           role="alert"
-          aria-live="assertive" // Announce the message dynamically
+          aria-live="assertive"
         >
           <span className="flex items-center gap-2">
             {/* Conditional Icon */}
@@ -123,11 +123,10 @@ export default function CartPage() {
 
 
 
-      <div className="bg-gray-100 min-h-screen py-6 px-4 md:px-8">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+     
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-2">
-            <div className="flex items-center justify-between ">
+          <div className="bg-gray-50 min-h-screen px-4 pt-4 md:px-8 mb-10">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="lg:text-xl text-lg font-semibold">My Cart</h2>
               <span className="text-gray-500 lg:text-sm text-xs">{cartItems.length || 0} items</span>
             </div>
@@ -135,11 +134,11 @@ export default function CartPage() {
             {loading ? (
               <p className="text-gray-600">Loading...</p>
             ) : cartItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center mt-10 lg:mt-20flex flex-col items-center justify-center pt-10 lg:pt-24">
+              <div className="flex flex-col items-center justify-center border-none ">
                 <img
                   src="/emptyCartTSP.png"
                   alt="Empty Cart"
-                  className=" object-contain lg:h-[500px]"
+                  className="mt-10 object-contain lg:h-[500px]"
                 />
 
               </div>
@@ -147,7 +146,7 @@ export default function CartPage() {
               cartItems.map((item) => (
                 <div
                   key={`${item.id}-${item.size}`}
-                  className="bg-white p-4 rounded-sm shadow flex flex-row items-start gap-4 relative"
+                  className="bg-white p-4 mt-2 rounded-sm shadow flex flex-row items-start gap-4 relative"
                 >
                   <button
                     className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-lg font-bold"
@@ -214,11 +213,9 @@ export default function CartPage() {
               ))
 
             )}
-          </div>
-
-           {/* RIGHT SIDE: Price Summary – Only if cart has items */}
-    {cartItems.length > 0 && (
-      <div className="bg-white p-6 rounded-lg shadow-md h-fit sticky top-4">
+            {cartItems.length > 0 && (
+            <div class="lg:flex lg:justify-end ">
+      <div className="lg:w-1/2 bg-white mt-10 p-6 rounded-lg shadow-md h-fit sticky top-6">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Price Details</h3>
         <div className="space-y-3 text-sm text-gray-700">
           <div className="flex justify-between">
@@ -239,11 +236,11 @@ export default function CartPage() {
             <span>₹{totalAmount}</span>
           </div>
         </div>
-
+       <div class="flex justify-end">
         <button
           onClick={handleCheckout}
           disabled={checkoutLoading}
-          className={`mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden transition-colors ${
+          className={`lg:w-[200px] mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden transition-colors ${
             checkoutLoading ? "bg-pink-700" : "bg-pink-600 hover:bg-pink-700"
           }`}
         >
@@ -276,10 +273,15 @@ export default function CartPage() {
             {checkoutLoading ? "Processing" : "CHECKOUT"}
           </span>
         </button>
-      </div>
-    )}
         </div>
       </div>
+</div>
+    )}
+          </div>
+
+           {/* RIGHT SIDE: Price Summary – Only if cart has items */}
+    
+      
     </>
   );
 }
