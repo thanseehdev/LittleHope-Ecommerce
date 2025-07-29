@@ -4,7 +4,6 @@ const Address = require('../../models/addressModel')
 
 const getProfile = async (req, res) => {
     try {
-        console.log('inside profile controller');
 
         const user = await User.findById(req.user._id)
         if (user) {
@@ -19,7 +18,6 @@ const getProfile = async (req, res) => {
 }
 const getCoupons = async (req, res) => {
     try {
-        console.log('inside user fetchCoupon ');
         const coupon = await Coupon.find().sort({ createdAt: -1 });
 
         res.status(200).json(coupon);
@@ -30,7 +28,7 @@ const getCoupons = async (req, res) => {
 const addAddress = async (req, res) => {
     try {
         const { name, landmark, city, zip, mobile } = req.body;
-//console.log('req.user',req.user._id);
+
         const newAddress = new Address({
             fullName:name,
             landmark,
@@ -49,7 +47,7 @@ const addAddress = async (req, res) => {
 
 const getAddress = async (req, res) => {
     try {
-        //console.log('req.user',req.user._id);
+  
         const addresses = await Address.find({user:req.user._id});
 
         res.status(200).json({ success: true, message: "Addresses fetched successfully", addresses })

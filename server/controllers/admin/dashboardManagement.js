@@ -2,7 +2,6 @@ const User=require('../../models/userModel')
 const Order=require('../../models/orderModel')
 
 const getDashData = async (req, res) => {
-  console.log('inside dashboard controller');
   try {
     const totalUsers = await User.countDocuments();
 

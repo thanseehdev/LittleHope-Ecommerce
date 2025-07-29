@@ -32,7 +32,6 @@ const productDetails = async (req, res) => {
 
 
 const getAllProducts = async (req, res) => {
-  console.log("inside getAllproduct controller");
 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -60,7 +59,6 @@ const getAllProducts = async (req, res) => {
 
 
 const searchResult = async (req, res) => {
-    console.log('inside search controller');
     
     const query = (req.query.q || '').trim();
 

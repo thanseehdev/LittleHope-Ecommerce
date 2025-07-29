@@ -6,7 +6,6 @@ const CouponUsage = require('../../models/couponUsageModel')
 
 
 const createOrder = async (req, res) => {
-    console.log('inside create order controller');
 
     const userId = req.user._id;
     const { items, coupon } = req.body;
@@ -65,7 +64,6 @@ const createOrder = async (req, res) => {
 
 
 const getUserOrders = async (req, res) => {
-  console.log('inside getUserOrders');
 
   const userId = req.user._id;
   const page = parseInt(req.query.page) || 1;      // Current page number, default 1
@@ -95,7 +93,7 @@ const getUserOrders = async (req, res) => {
 
 
 const getSingleOrder = async (req, res) => {
-    console.log('inside getSingleOrder')
+   
     const orderId = req.params.id;
 
     try {

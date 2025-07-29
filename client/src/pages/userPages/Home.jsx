@@ -1,5 +1,6 @@
 
 import CategoryScroller from "../../components/userCom/CategoryScoller";
+import BottomNav from "../../components/userCom/common/BottomNav";
 import Footer from "../../components/userCom/common/Footer";
 import Navbar from "../../components/userCom/common/Navbar";
 import NewArrivals from "../../components/userCom/products/newArrivals";
@@ -22,6 +23,7 @@ function Home() {
       </div>
 
       <NewArrivals />
+      <BottomNav/>
       <Footer />
     </div>
   );

@@ -10,6 +10,7 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
+import BottomNav from "../../components/userCom/common/BottomNav";
 
 export default function CartPage() {
   const navigate = useNavigate()
@@ -278,8 +279,6 @@ export default function CartPage() {
 </div>
     )}
           </div>
-
-           {/* RIGHT SIDE: Price Summary – Only if cart has items */}
     
       
     </>

@@ -1,284 +1,83 @@
-import React, {useEffect,useState } from "react";
-import Navbar from "../../components/userCom/common/Navbar";
-import { useDispatch, useSelector } from "react-redux";
-import { getCartItems, updateQuantity, removeFromCart } from "../../redux/features/user/cart/cartAction";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { clearMessages } from "../../redux/features/user/message";
-import {
-  XMarkIcon,
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/solid";
+// BottomNav.jsx
+import { FaHome, FaThList, FaUser } from 'react-icons/fa';
 
-export default function CartPage() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch();
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+const navItems = [
+  { icon: <FaHome size={20} />, label: 'Home' },
+  { icon: <FaThList size={20} />, label: 'Category' },
+  { icon: <FaUser size={20} />, label: 'Profile' },
+];
 
-  const { items = [], loading } = useSelector((state) => state.cart);
-  const { message, error } = useSelector((state) => state.message);
-
-  useEffect(() => {
-    dispatch(getCartItems());
-  }, [dispatch]);
-
-  const cartItems = items.map((item, index) => ({
-    id: item.productId._id || index,
-    title: item.productId.name,
-    subtitle: item.productId.description,
-    price: item.productId.discountPrice,
-    originalPrice: item.productId.price,
-    discount: Math.round(
-      ((item.productId.price - item.productId.discountPrice) /
-        item.productId.price) *
-      100
-    ),
-    size: item.size,
-    qty: item.quantity,
-    image: item.productId.images[0],
-  }));
-
-  const totalMRP = cartItems.reduce((sum, item) => sum + item.originalPrice * item.qty, 0);
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const discount = totalMRP - totalPrice;
-  const platformFee = 20;
-  const totalAmount = totalPrice + platformFee;
-
-  const handleQtyChange = async (id, newQty, size) => {
-    const item = items.find((i) => i.productId._id === id && i.size === size);
-    if (item) {
-      await dispatch(
-        updateQuantity({
-          productId: id,
-          size: item.size,
-          quantity: parseInt(newQty),
-        })
-      );
-      dispatch(getCartItems());
-    }
-  };
-
-  const handleRemove = async (id, size) => {
-
-    await dispatch(removeFromCart({ productId: id, size }));
-    dispatch(getCartItems());
-  };
-
-  const handleCheckout = async () => {
-    setCheckoutLoading(true);
-    setTimeout(() => {
-      navigate("/checkoutPayment");
-    }, 3000); // simulate loading
-  };
-
-  useEffect(() => {
-    if (message || error) {
-      // Show the message or error
-      const timer = setTimeout(() => {
-        // Only dispatch clearMessages if the message/error is still present
-        if (message || error) {
-          dispatch(clearMessages());
-        }
-      }, 3000);
-      return () => clearTimeout(timer); // Clear the timeout if the component is unmounted or before re-triggering
-    }
-  }, [message, error, dispatch]);
-
-
-  return (
-    <>
-      <Navbar />
-
-      {(message || error) && (
-        <div
-          className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md flex items-center justify-between left-1/2 -translate-x-1/2 bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
-          role="alert"
-          aria-live="assertive" // Announce the message dynamically
-        >
-          <span className="flex items-center gap-2">
-            {/* Conditional Icon */}
-            {error ? (
-              <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
-            ) : (
-              <CheckCircleIcon className="h-5 w-5 text-pink-500" />
-            )}
-
-            {/* Message or Error */}
-            {error || message}
-          </span>
-
-          <button
-            onClick={() => {
-              dispatch(clearMessages());
-            }}
-            className="text-pink-500 hover:text-pink-400 transition ml-2"
-            aria-label="Close alert"
-          >
-            <XMarkIcon className="h-5 w-5" />
-          </button>
-        </div>
-      )}
-
-
-
-
-     
-          {/* Cart Items */}
-          <div className="bg-white min-h-screen px-4 pt-4 md:px-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="lg:text-xl text-lg font-semibold">My Cart</h2>
-              <span className="text-gray-500 lg:text-sm text-xs">{cartItems.length || 0} items</span>
-            </div>
-
-            {loading ? (
-              <p className="text-gray-600">Loading...</p>
-            ) : cartItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center border-none ">
-                <img
-                  src="/emptyCartTSP.png"
-                  alt="Empty Cart"
-                  className=" object-contain lg:h-[500px]"
-                />
-
-              </div>
-            ) : (
-              cartItems.map((item) => (
-                <div
-                  key={`${item.id}-${item.size}`}
-                  className="bg-white p-4 mt-2 rounded-sm shadow flex flex-row items-start gap-4 relative"
-                >
-                  <button
-                    className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-lg font-bold"
-                    onClick={() => handleRemove(item.id, item.size)}
-                  >
-                    ✕
-                  </button>
-                  <Link key={item.id} to={`/productDetails/${item.id}`}>
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] object-cover rounded"
-                    />
-                  </Link>
-
-                  <div className="flex-1 flex flex-col justify-between gap-2">
-                    <h3 className="lg:text-lg lg:font-semibold text-sm font-bold text-gray-800">{item.title}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">{item.subtitle}</p>
-
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 ">
-                      <div className="flex items-center text-sm gap-1">
-                        <span className="font-medium text-gray-700">Size:</span>
-                        <span className="border lg:text-sm text-xs border-gray-300 px-2 py-0.5 rounded-md bg-gray-50">
-                          {item.size}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center text-sm gap-1">
-                        <span className="font-medium text-gray-700">Qty:</span>
-                        <select
-                          value={item.qty}
-                          onChange={(e) => handleQtyChange(item.id, e.target.value, item.size)}
-                          className="lg:text-base text-xs border rounded  bg-white text-sm"
-                        >
-                          {[1, 2, 3, 4, 5].map((qty) => (
-                            <option key={qty} value={qty}>
-                              {qty}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="lg:text-lg font-bold text-gray-800">
-                        ₹{item.price * item.qty}
-                      </span>
-                      <span className="line-through text-gray-500">
-                        ₹{item.originalPrice * item.qty}
-                      </span>
-                      <span className=" text-xs text-orange-600 font-semibold bg-orange-100 px-2 py-0.5 rounded-md">
-                        {item.discount}% OFF
-                      </span>
-                    </div>
-
-                    <div className="text-xs text-gray-500">14 days return available</div>
-                    <div className="text-xs text-green-600 font-medium">
-                      Delivery by <span className="font-semibold">21 Jul - 23 Jul</span>
-                    </div>
-                  </div>
-                </div>
-              ))
-
-            )}
-            {cartItems.length > 0 && (
-      <div className="bg-white mt-10 p-6 rounded-lg shadow-md h-fit sticky top-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Price Details</h3>
-        <div className="space-y-3 text-sm text-gray-700">
-          <div className="flex justify-between">
-            <span>Total MRP</span>
-            <span>₹{totalMRP}</span>
-          </div>
-          <div className="flex justify-between text-green-600">
-            <span>Discount on MRP</span>
-            <span>-₹{discount}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Platform Fee</span>
-            <span>₹{platformFee}</span>
-          </div>
-          <hr />
-          <div className="flex justify-between font-semibold text-gray-800">
-            <span>Total Amount</span>
-            <span>₹{totalAmount}</span>
-          </div>
-        </div>
-
+const BottomNav = () => (
+  <nav className="fixed bottom-4 left-1/2 transform -translate-x-1/2 sm:hidden z-50 w-[90%] max-w-md">
+    <div className="flex justify-between items-center backdrop-blur-md bg-white/60 border border-white/30 rounded-2xl px-6 py-3 shadow-lg">
+      {navItems.map(({ icon, label }) => (
         <button
-          onClick={handleCheckout}
-          disabled={checkoutLoading}
-          className={`mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden transition-colors ${
-            checkoutLoading ? "bg-pink-700" : "bg-pink-600 hover:bg-pink-700"
-          }`}
+          key={label}
+          className="flex flex-col items-center text-gray-700 text-xs hover:text-black transition transform hover:scale-105"
         >
-          {checkoutLoading && (
-            <span className="absolute left-0 top-0 h-full w-full bg-pink-700 button-progress-bg z-0"></span>
-          )}
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            {checkoutLoading && (
-              <svg
-                className="animate-spin h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                ></path>
-              </svg>
-            )}
-            {checkoutLoading ? "Processing" : "CHECKOUT"}
-          </span>
+          {icon}
+          <span className="mt-1">{label}</span>
         </button>
-      </div>
-    )}
-          </div>
+      ))}
+    </div>
+  </nav>
+);
 
-           {/* RIGHT SIDE: Price Summary – Only if cart has items */}
-    
-      
-    </>
-  );
-}
+export default BottomNav;
+
+
+// FabNav.jsx
+import { FaHome, FaPlusCircle, FaUser } from 'react-icons/fa';
+
+const BottomNav = () => (
+  <nav className="fixed bottom-0 w-full bg-white border-t sm:hidden z-50">
+    <div className="flex justify-around items-center py-3 relative">
+      <FaHome size={20} className="text-gray-600" />
+      <button className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition">
+        <FaPlusCircle size={24} />
+      </button>
+      <FaUser size={20} className="text-gray-600" />
+    </div>
+  </nav>
+);
+
+export default BottomNav;
+
+
+// SidebarStyleNav.jsx
+import { FaHome, FaThList, FaUser } from 'react-icons/fa';
+
+const items = [FaHome, FaThList, FaUser];
+
+const BottomNav = () => (
+  <nav className="fixed bottom-0 left-0 w-full sm:hidden z-50">
+    <div className="flex justify-evenly bg-white border-t py-3">
+      {items.map((Icon, idx) => (
+        <button key={idx} className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-black">
+          <Icon size={20} />
+          <span className="hidden xs:inline text-sm">Menu {idx + 1}</span>
+        </button>
+      ))}
+    </div>
+  </nav>
+);
+
+export default BottomNav;
+
+
+// MediaPlayerNav.jsx
+import { FaHome, FaPlay, FaUser } from 'react-icons/fa';
+
+const BottomNav = () => (
+  <nav className="fixed bottom-0 w-full sm:hidden z-50 bg-white border-t px-4">
+    <div className="flex justify-between items-center py-3 relative">
+      <FaHome size={20} className="text-gray-600" />
+      <button className="absolute left-1/2 -translate-x-1/2 -top-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition">
+        <FaPlay size={22} />
+      </button>
+      <FaUser size={20} className="text-gray-600" />
+    </div>
+  </nav>
+);
+
+export default BottomNav;

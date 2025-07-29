@@ -10,7 +10,6 @@ const storage = new CloudinaryStorage({
     allowed_formats: ["jpg", "jpeg", "png","webp"],
   },
 });
-console.log('inside cloudinary');
 
 const upload = multer({ storage });
 

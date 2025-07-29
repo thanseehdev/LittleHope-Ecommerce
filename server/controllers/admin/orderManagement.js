@@ -1,7 +1,7 @@
 const Order = require('../../models/orderModel')
 
 const getAllOrder = async (req, res) => {
-    console.log('inside getOrders');
+    
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
@@ -22,7 +22,7 @@ const getAllOrder = async (req, res) => {
 }
 
 const getOrderDetails = async (req, res) => {
-    console.log('inside getOrderDetails');
+   
     const { id } = req.params;
 
     try {
@@ -43,7 +43,6 @@ const getOrderDetails = async (req, res) => {
 };
 
 const updateOrderStatus = async (req, res) => {
-    console.log('inside updateOrderStatus');
 
     const { orderId, Ostatus } = req.body
     try {

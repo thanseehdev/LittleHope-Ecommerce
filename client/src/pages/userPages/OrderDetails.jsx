@@ -207,7 +207,7 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
               <h3 className="text-lg font-semibold mb-5">Order Tracking</h3>
               <div className="relative mb-8">
                 {/* Base Progress Bar */}
-                <div className="absolute top-5 left-8 right-8 h-1 bg-gray-300 z-0"></div>
+                <div className="absolute lg:top-6 top-5 left-8 right-8 h-1 bg-gray-300 z-0"></div>
 
                 {/* Progress Fill */}
                 <div
@@ -219,17 +219,17 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
                 ></div>
 
                 {/* Step Icons */}
-                <div className="flex justify-between items-center relative z-20">
+                <div className="flex justify-between  lg:gap-40 items-center relative z-20">
                   {steps.map((step, index) => (
-                    <div key={index} className="flex flex-col mr-2 items-center text-center">
+                    <div key={index} className="flex  flex-col mr-2 items-center text-center">
                       <div
                         className={`rounded-full p-2 mb-2 ${index <= currentStep ? "bg-pink-500 text-white" : "bg-gray-300 text-gray-500"
                           }`}
                       >
-                        <step.icon className="w-6 h-6" />
+                        <step.icon className="lg:w-10 lg:h-10 w-6 h-6" />
                       </div>
                       <p
-                        className={`lg:text text-xs ${index <= currentStep ? "text-blue-900" : "text-gray-500"
+                        className={`lg:text-base text-xs ${index <= currentStep ? "text-blue-900" : "text-gray-500"
                           }`}
                       >
                         {step.title}

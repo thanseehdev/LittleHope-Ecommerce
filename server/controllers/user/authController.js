@@ -36,7 +36,6 @@ const register = async (req, res) => {
 
 const verifyOTP = async (req, res) => {
     const { email, otp } = req.body;
-    console.log('inside verify otp');
 
     try {
         // Check if tempUser exists in session
@@ -60,8 +59,6 @@ const verifyOTP = async (req, res) => {
             isVerified: true,
         });
 
-
-        console.log('otp entered successfully');
 
         // Clear session tempUser data
         req.session.tempUser = null;

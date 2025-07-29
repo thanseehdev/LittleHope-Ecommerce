@@ -2,7 +2,6 @@ const Coupon = require('../../models/couponModel')
 
 const addCoupon = async (req, res) => {
     try {
-        console.log('inside admin addcoupon ');
         
         const { code, discount, expiry } = req.body;
 

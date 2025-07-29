@@ -6,10 +6,10 @@ import { useEffect } from "react";
 import { getCartItems } from "../../../redux/features/user/cart/cartAction";
 import { Link } from 'react-router-dom';
 import { setQuery } from "../../../redux/features/user/product/newArrivalSlice";
-
+import { HiOutlineShoppingBag } from 'react-icons/hi';
+import { HiOutlineHeart } from 'react-icons/hi';
 import {
   FaSearch,
-  FaRegUser,
   FaHeart,
   FaShoppingBag,
   FaBox,
@@ -17,8 +17,7 @@ import {
   FaTag,
   FaUser
 } from "react-icons/fa";
-import { AiOutlineShoppingCart, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { MdFavoriteBorder } from "react-icons/md";
 
 
 const DrawerItem = ({ icon, label, onClick }) => (
@@ -123,13 +122,13 @@ const Navbar = () => {
 
               <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
                 <Link to="/wishlist" title="wishlist">
-                  <MdFavoriteBorder size={21} />
+                  <HiOutlineHeart size={23}/>
                 </Link>
               </div>
 
               <div className="relative flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
                 <Link to="/cart" title="Cart">
-                  <AiOutlineShoppingCart size={23} />
+                  <HiOutlineShoppingBag size={23} />
                   {cartCount > 0 && (
                     <span className="absolute top-0 right-0 bg-pink-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
                       {cartCount}
@@ -137,11 +136,7 @@ const Navbar = () => {
                   )}
                 </Link>
               </div>
-              <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
-                <Link to="/account" title="account">
-                  <FaRegUser size={18} />
-                </Link>
-              </div>
+
             </div>
 
             {/* Show these on md and above */}
@@ -219,8 +214,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
 
 
 

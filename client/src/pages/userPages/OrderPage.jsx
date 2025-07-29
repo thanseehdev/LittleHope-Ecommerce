@@ -79,7 +79,7 @@ export default function OrdersPage() {
                           : order.status === "delivered"
                             ? "text-green-600"
                             : order.status === "pending"
-                              ? "text-orange-500"
+                              ? "text-yellow-500"
                               : order.status === "confirmed"
                                 ? "text-blue-500"
                                 : order.status === "shipped"

@@ -4,8 +4,6 @@ const Product=require('../../models/productModel')
 
 const addToCart = async (req, res) => {
 
-    console.log('inside addToCart controller');
-
     const userId = req.user._id
     const { productId, quantity, size } = req.body;
 
@@ -41,7 +39,6 @@ const addToCart = async (req, res) => {
 }
 
 const getCartItems = async (req, res) => {
-    console.log('inside get cart item');
 
     try {
         const userId = req.user._id;
@@ -58,7 +55,6 @@ const getCartItems = async (req, res) => {
 }
 
 const updateQuantity = async (req, res) => {
-    console.log('>>>>inside update Quantity');
 
     const { productId, size, quantity } = req.body;
 
@@ -113,7 +109,6 @@ const updateQuantity = async (req, res) => {
 const removeFromCart = async (req, res) => {
     const { productId, size } = req.body
     const userId = req.user._id
-    console.log('inside remove from cart')
   try {
     if (!productId || !size) {
       return res.status(400).json({ message: "Product ID and size are required." });

@@ -21,6 +21,8 @@ import {
 import { AiOutlineGift } from "react-icons/ai";
 import { logout } from '../../redux/features/user/userSlice'
 import { logoutUser } from "../../redux/features/user/userActions";
+import BottomNav from "../../components/userCom/common/BottomNav";
+import AboutUs from "../../components/userCom/profileComponents/About";
 
 const quickActions = [
   { name: "Orders", icon: <FiPackage size={19} />, path: "/order" },
@@ -226,12 +228,12 @@ const AccountPage = () => {
               </button>
             </div>
           </div>
+          
         </div>
+        
       )}
+   <AboutUs/>
     </>
-
-
-
   );
 };
 

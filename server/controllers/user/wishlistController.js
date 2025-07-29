@@ -2,10 +2,8 @@ const Wishlist=require('../../models/wishlistModel')
 const Product=require('../../models/productModel')
 
 const addToWishlist = async (req, res) => {
-  console.log('inside addToWIsh contorller');
   const userId = req.user._id;
   const productId = req.params.id;
-  console.log(`productId:`, productId);
 
   try {
     let wishlist = await Wishlist.findOne({ user: userId });
@@ -22,7 +20,7 @@ const addToWishlist = async (req, res) => {
     );
 
     if (!alreadyExists) {
-      wishlist.products.push({ product: productId }); // ✅ Correct structure
+      wishlist.products.push({ product: productId })
       await wishlist.save();
     }
 
@@ -36,7 +34,6 @@ const addToWishlist = async (req, res) => {
 
 
 const removeFromWish = async (req, res) => {
-  console.log('inside removeFromWish controller');
 
   const userId = req.user._id;
   const { productId } = req.params;
@@ -62,7 +59,6 @@ const removeFromWish = async (req, res) => {
 
 
 const getWishItem=async(req,res)=>{
-    console.log('inside getWish contorller');
     const userId=req.user._id
     try {
     const wishlist = await Wishlist.findOne({ user: userId }).populate('products.product');

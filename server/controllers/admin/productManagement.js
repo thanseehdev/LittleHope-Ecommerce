@@ -2,7 +2,6 @@ const Product = require('../../models/productModel')
 
 const addProduct = async (req, res) => {
   try {
-    console.log('Inside addProduct');
 
     const {
       name,
@@ -62,7 +61,7 @@ const addProduct = async (req, res) => {
 
 
 const fetchAllProducts=async(req,res)=>{
-         console.log('inside admin fetchAllProducts');
+
          const page = parseInt(req.query.page) || 1;
          const limit = parseInt(req.query.limit) || 10;
     try { 
@@ -80,7 +79,6 @@ const fetchAllProducts=async(req,res)=>{
 }
 const getEditProduct=async(req,res)=>{
     try {
-        console.log('inside get editProduct');
         
         const product=await Product.findById(req.params.id)
         if (!product) {
