@@ -131,6 +131,7 @@ export default function WishlistCard() {
                       src={product?.images?.[0] || "/default-product.jpg"}
                       alt={product?.name || "Product"}
                       className="w-full h-40 lg:h-[250px] lg:w-[250px] rounded-md object-cover"
+                      loading="lazy"
                     />
                   </Link>
                   <div className="mt-2">

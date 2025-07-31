@@ -99,6 +99,7 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
                     src={item.productId.images[0]}
                     alt={item.productId.name}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </Link>
               </div>
@@ -189,14 +190,14 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
 
 
           {order.status === "cancelled" ? (
-            <div className="lg:max-w-[600px] justify-center flex items-center bg-red-500 text-white px-6 py-4 rounded-md mb-5 shadow-md mt-6">
+            <div className="lg:max-w-[600px] rounded-sm justify-center flex items-center bg-red-500 text-white px-6 py-4 rounded-md mb-5 shadow mt-6">
               <XCircleIcon className="w-6 h-6 mr-3" />
               <div>
                 <p className="lg:text-base text-sm">Your order has been cancelled.</p>
               </div>
             </div>
           ) : order.status === "delivered" ? (
-            <div className="flex lg:max-w-[600px] justify-center items-center bg-green-600 text-white px-6 py-4 mb-5 shadow-md mt-6">
+            <div className="flex lg:max-w-[600px] rounded-sm justify-center items-center bg-green-600 text-white px-6 py-4 mb-5 shadow mt-6">
               <CheckCircleIcon className="w-6 h-6 mr-3" />
               <div>
                 <p className="lg:text-base text-sm">Order was delivered successfully.</p>
@@ -211,7 +212,7 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
 
                 {/* Progress Fill */}
                 <div
-                  className="absolute top-5 left-8 h-1 bg-pink-500 z-10 transition-all duration-500"
+                  className="absolute lg:top-6 top-5 left-8 h-1 bg-pink-500 z-10 transition-all duration-500"
                   style={{
                     width: `calc(${(currentStep / (steps.length - 1)) * 100}% - ${currentStep === steps.length - 1 ? "4rem" : "2rem"
                       })`,
@@ -219,7 +220,7 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
                 ></div>
 
                 {/* Step Icons */}
-                <div className="flex justify-between  lg:gap-40 items-center relative z-20">
+                <div className="flex justify-between  lg:gap-28 items-center relative z-20">
                   {steps.map((step, index) => (
                     <div key={index} className="flex  flex-col mr-2 items-center text-center">
                       <div
@@ -229,10 +230,10 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
                         <step.icon className="lg:w-10 lg:h-10 w-6 h-6" />
                       </div>
                       <p
-                        className={`lg:text-base text-xs ${index <= currentStep ? "text-blue-900" : "text-gray-500"
+                        className={`lg:text-lg text-xs ${index <= currentStep ? "text-blue-900" : "text-gray-500"
                           }`}
                       >
-                        {step.title}
+                        <span className="lg:text-sm text-xs">{step.title}</span>
                       </p>
                     </div>
                   ))}

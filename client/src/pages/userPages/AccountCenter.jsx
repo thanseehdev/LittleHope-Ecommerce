@@ -86,7 +86,7 @@ const AccountPage = () => {
           <aside className="space-y-6 lg:col-span-1">
             {/* Profile Card */}
 
-            <div className="max-w-sm mx-auto bg-white border border-gray-200  shadow overflow-hidden">
+            <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-sm   overflow-hidden">
               <div className="bg-gradient-to-tr from-blue-500 to-indigo-700 px-6 py-4">
                 <h2 className="text-white text-xl font-bold">
                   {profileUser?.name || "Guest"}
@@ -94,7 +94,7 @@ const AccountPage = () => {
                 <p className="text-blue-100 text-sm">{profileUser?.email || "No email provided"}</p>
               </div>
               <div className="p-6 flex items-center space-x-4">
-                <div className="w-14 shadow-md -rotate-12 h-14 rounded bg-gradient-to-tr from-blue-500 to-indigo-700 flex items-center justify-center text-white text-xl font-semibold">
+                <div className="w-14 shadow-lg -rotate-12 h-14 rounded bg-gradient-to-tr from-blue-500 to-indigo-700 flex items-center justify-center text-white text-xl font-semibold">
                   {profileUser?.name?.charAt(0).toUpperCase() || "G"}
                 </div>
                 <div className="flex-1">
@@ -112,7 +112,7 @@ const AccountPage = () => {
     <Link
       to={item.path}
       key={item.name}
-      className="flex lg:max-w-sm lg:mx-auto  justify-between items-center p-4 lg:py-6 lg:h-14 lg:w-40 bg-white border rounded-sm hover:shadow transition"
+      className="flex lg:max-w-sm lg:mx-auto  justify-between items-center p-4 lg:py-6 lg:h-14 lg:w-40 bg-white border rounded-sm hover:bg-gray-100  transition"
     >
       <div className="flex items-center gap-3">
         <div className="text-gray-500">{item.icon}</div>
@@ -204,6 +204,7 @@ const AccountPage = () => {
         <div className="sm:hidden flex justify-center mt-5">
           <p className="text-xs text-gray-400 text-right">Beta Version 4.2506.20</p>
         </div>
+        <AboutUs/>
       </main>
 
 
@@ -232,7 +233,7 @@ const AccountPage = () => {
         </div>
         
       )}
-   <AboutUs/>
+   
     </>
   );
 };

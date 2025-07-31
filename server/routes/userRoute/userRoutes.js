@@ -1,5 +1,5 @@
 const express = require('express')
-const {register,verifyOTP,login,me,FPEmailOtp,verifyFPOTP,conFirmForgetPassword,logout}=require('../../controllers/user/authController')
+const {register,verifyOTP,resendOTP,login,me,FPEmailOtp,verifyFPOTP,conFirmForgetPassword,logout}=require('../../controllers/user/authController')
 const router=express.Router()
 const protect=require('../../middleware/authMiddleware')
 const {getNewArrivals, productDetails,getAllProducts,searchResult }=require('../../controllers/user/productController')
@@ -10,6 +10,7 @@ const {addToWishlist,removeFromWish,getWishItem} =require('../../controllers/use
 
 router.post('/register',register)
 router.post('/verify-otp',verifyOTP)
+router.post('/resendOtp',resendOTP)
 router.post('/login',login)
 router.get('/me',protect,me)
 

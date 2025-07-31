@@ -5,6 +5,7 @@ import { validateLoginForm } from "../../utils/validateLoginForm";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { clearMessages } from "../../redux/features/user/message";
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,6 +41,8 @@ export default function Login() {
     password: "",
   });
   const [formErrors, setFormErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleInputChange = (field, value) => {
@@ -86,11 +89,11 @@ export default function Login() {
       <div
         className="w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-indigo-900 text-white text-center"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80')",
+          backgroundImage: "url('/login.webp')", // ✅ add leading slash
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
+
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-opacity-60 md:bg-opacity-60 bg-indigo-900"></div>
@@ -114,7 +117,7 @@ export default function Login() {
           Welcome Back!
         </h2>
 
-      {(error || message) && (
+        {(error || message) && (
           <div className="max-w-md mx-auto flex items-center bg-gray-50 border border-gray-300 rounded-md shadow-sm p-4 space-x-4 text-gray-800 font-medium text-sm relative">
             {/* Icon */}
             <div className={`flex-shrink-0 text-xl ${error ? 'text-red-500' : 'text-green-500'
@@ -156,30 +159,31 @@ export default function Login() {
             />
           </div>
 
-          <div>
-            <label className="block mb-2 text-sm font-semibold text-gray-700">
-              Password <span className="text-red-500">*</span>
-            </label>
-            {formErrors.password && (
-              <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
-                <span className="w-10 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.password}
-              </p>
-            )}
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              required
-              placeholder="Enter your password"
-              className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${formErrors.password ? 'border-red-500' : 'border-gray-300'
-                }`}
-            />
-            <div className="text-right mt-2">
-              <Link to="/forgotPassword" className="text-indigo-600 hover:underline text-sm font-semibold">
+          <div className="relative">
+  <input
+    type={showPassword ? 'text' : 'password'}
+    value={form.password}
+    onChange={(e) => handleInputChange('password', e.target.value)}
+    required
+    placeholder="Enter your password"
+    className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-indigo-500 transition ${formErrors.password ? 'border-red-500' : 'border-gray-300'
+      }`}
+  />
+
+  <button
+  type="button"
+  onClick={() => setShowPassword(!showPassword)}
+  className="absolute inset-y-0 right-3 flex items-center text-xl text-gray-600 hover:text-indigo-600"
+  tabIndex={-1}
+>
+  {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+</button>
+</div>
+<div className="text-right mt-1">
+              <Link to="/forgotPassword" className="text-indigo-600 hover:underline lg:text-sm text-xs font-semibold">
                 Forgot Password?
               </Link>
             </div>
-          </div>
 
           <button
             type="submit"

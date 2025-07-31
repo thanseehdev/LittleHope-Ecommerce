@@ -28,6 +28,17 @@ export const verifyOTP=createAsyncThunk('auth/verifyOTP',async(userData,{dispatc
     }
 })
 
+export const resendOtp=createAsyncThunk('user/resendOtp',async(email,{dispatch,rejectWithValue})=>{
+    try {
+        const res=await api.post('/user/resendOtp',{email})
+        dispatch(setSuccessMessage('OTP resent to your email'))
+    } catch (error) {
+        const msg=error.response?.data?.message || "Resend Otp Failed";
+        dispatch(setErrorMessage(msg))
+        return rejectWithValue(msg)
+    }
+})
+
 export const login=createAsyncThunk('auth/login',async(userData,{dispatch,rejectWithValue})=>{
     console.log('inside login action');
     try {

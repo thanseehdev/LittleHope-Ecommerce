@@ -11,7 +11,7 @@ import { useMemo } from "react";
 const ProductGrid = () => {
 
   const [page, setPage] = useState(1)
-  const limit = 25
+  const limit = 28
   const dispatch = useDispatch()
   const { items: allProducts, loading, totalPages, error } = useSelector((state) => state.allProducts)
 

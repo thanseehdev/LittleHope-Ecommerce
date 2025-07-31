@@ -13,21 +13,21 @@ const categories = [
 
 export default function CategoryScroller() {
   return (
-    <div className="w-full bg-white border-b border-gray-200 py-4 overflow-x-auto hide-scrollbar sm:border-b-0">
+    <div className="flex w-full bg-white border-b border-gray-200 py-4 overflow-x-auto hide-scrollbar sm:border-b-0">
       <div className="max-w-6xl mx-auto">
-        <div className="flex  lg:gap-9 gap-6 px-4 w-max lg:w-full lg:justify-center">
+        <div className="flex md:gap-9  lg:gap-9 gap-6 px-4 w-max lg:w-full md:justify-center lg:justify-center">
           {categories.map((cat, index) => (
   <Link
     to={cat.path}
     key={index}
-    className="flex flex-col items-center text-xs text-gray-700 hover:text-pink-500 transition"
+    className="flex flex-col items-center  lg:text-sm text-xs text-gray-700 hover:text-pink-500 transition"
   >
     <img
       src={cat.img}
       alt={cat.label}
       className="lg:w-[100px] lg:h-[100px] w-20 h-20 object-cover rounded shadow"
     />
-    <span className="mt-1">{cat.label}</span>
+    <span className=" mt-1">{cat.label}</span>
   </Link>
 ))}
 

@@ -160,6 +160,7 @@ export default function CartPage() {
                       src={item.image}
                       alt={item.title}
                       className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] object-cover rounded"
+                      loading="lazy"
                     />
                   </Link>
 

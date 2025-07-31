@@ -1,83 +1,341 @@
-// BottomNav.jsx
-import { FaHome, FaThList, FaUser } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  FPEmailOtp,
+  conFirmForgetPassword,
+  verifyFPOTP,
+} from '../../redux/features/user/userActions';
+import { clearMessages } from '../../redux/features/user/message';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
-const navItems = [
-  { icon: <FaHome size={20} />, label: 'Home' },
-  { icon: <FaThList size={20} />, label: 'Category' },
-  { icon: <FaUser size={20} />, label: 'Profile' },
-];
+export default function ForgotPassword() {
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.user);
+  const { message, error } = useSelector((state) => state.message);
 
-const BottomNav = () => (
-  <nav className="fixed bottom-4 left-1/2 transform -translate-x-1/2 sm:hidden z-50 w-[90%] max-w-md">
-    <div className="flex justify-between items-center backdrop-blur-md bg-white/60 border border-white/30 rounded-2xl px-6 py-3 shadow-lg">
-      {navItems.map(({ icon, label }) => (
-        <button
-          key={label}
-          className="flex flex-col items-center text-gray-700 text-xs hover:text-black transition transform hover:scale-105"
-        >
-          {icon}
-          <span className="mt-1">{label}</span>
-        </button>
-      ))}
+  const [email, setEmail] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [form, setForm] = useState({
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [formErrors, setFormErrors] = useState({});
+
+  const handleInputChange = (field, value) => {
+  setForm((prev) => ({ ...prev, [field]: value }));
+
+  // Clear the error message for the field being edited
+  setFormErrors((prevErrors) => ({
+    ...prevErrors,
+    [field]: '',
+  }));
+};
+
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(FPEmailOtp({ email })).unwrap();
+      setOtpSent(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(verifyFPOTP({ email, otp })).unwrap();
+      setIsOtpVerified(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const validatePasswords = () => {
+    const errors = {};
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+
+    if (!passwordRegex.test(form.password)) {
+      errors.password =
+        'Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character.';
+    }
+
+    if (form.password !== form.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match.';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    if (!validatePasswords()) return;
+
+    try {
+      await dispatch(
+        conFirmForgetPassword({ email, password: form.password })
+      ).unwrap();
+      alert('Password reset successful. Please log in.');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (message || error) {
+      const timer = setTimeout(() => {
+        if (message || error) {
+          dispatch(clearMessages());
+        }
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message, error, dispatch]);
+
+  return (
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Promo Section */}
+      <div
+        className="w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-purple-900 text-white text-center"
+        style={{
+          backgroundImage: "url('/forgetPass.webp')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-opacity-75 md:bg-opacity-60 bg-purple-900"></div>
+        <div className="relative z-10 max-w-md space-y-6">
+          <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
+            RESET YOUR PASSWORD
+          </h1>
+          <p className="text-base md:text-lg drop-shadow-md">
+            Enter your email, verify OTP, and set a new password to regain access.
+          </p>
+          <div className="bg-purple-700 bg-opacity-80 rounded-lg px-6 py-3 shadow-lg font-semibold tracking-wide text-lg md:text-xl inline-block">
+            We're here to help
+          </div>
+        </div>
+      </div>
+
+      {/* Form Section */}
+      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl relative">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 text-center">
+          Forgot Password
+        </h2>
+
+        {(error || message) && (
+          <div className="max-w-md mx-auto flex items-center bg-gray-50 border border-gray-300 rounded-md shadow-sm p-4 space-x-4 text-gray-800 font-medium text-sm relative">
+            <div
+              className={`flex-shrink-0 text-xl ${
+                error ? 'text-red-500' : 'text-green-500'
+              }`}
+            >
+              {error ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              )}
+            </div>
+            <p className="flex-grow">{error || message}</p>
+          </div>
+        )}
+
+        {/* Step 1: Email */}
+        {!otpSent && (
+          <form
+            onSubmit={handleEmailSubmit}
+            className="w-full max-w-md space-y-6"
+          >
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-gray-700">
+                Email Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="john@example.com"
+                className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-purple-500 transition border-gray-300"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {loading ? 'Processing...' : 'Send OTP'}
+            </button>
+          </form>
+        )}
+
+        {/* Step 2: OTP */}
+        {otpSent && !isOtpVerified && (
+          <form
+            onSubmit={handleOtpSubmit}
+            className="w-full max-w-md space-y-6"
+          >
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-gray-700">
+                OTP Code <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="6-digit code"
+                maxLength={6}
+                className="w-full border rounded-lg px-5 py-3 text-lg tracking-widest text-center focus:outline-none focus:border-purple-500 transition border-gray-300"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {loading ? 'Processing...' : 'Verify OTP'}
+            </button>
+          </form>
+        )}
+
+        {/* Step 3: Reset Password */}
+        {isOtpVerified && (
+          <form
+            onSubmit={handlePasswordReset}
+            className="w-full max-w-md space-y-6"
+          >
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-gray-700">
+                New Password <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={(e) =>
+                    handleInputChange('password', e.target.value)
+                  }
+                  placeholder="Enter your password"
+                  className={`w-full border rounded-lg px-5 py-3 pr-12 focus:outline-none transition ${
+                    formErrors.password
+                      ? 'border-red-500'
+                      : 'focus:border-green-500 border-gray-300'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-xl text-gray-600 hover:text-indigo-600"
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <AiOutlineEyeInvisible />
+                  ) : (
+                    <AiOutlineEye />
+                  )}
+                </button>
+              </div>
+              {formErrors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.password}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-semibold text-gray-700">
+                Confirm Password <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={form.confirmPassword}
+                  onChange={(e) =>
+                    handleInputChange('confirmPassword', e.target.value)
+                  }
+                  placeholder="Confirm password"
+                  className={`w-full border rounded-lg px-5 py-3 pr-12 focus:outline-none transition ${
+                    formErrors.confirmPassword
+                      ? 'border-red-500'
+                      : 'focus:border-green-500 border-gray-300'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowConfirmPassword(!showConfirmPassword)
+                  }
+                  className="absolute inset-y-0 right-3 flex items-center text-xl text-gray-600 hover:text-indigo-600"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? (
+                    <AiOutlineEyeInvisible />
+                  ) : (
+                    <AiOutlineEye />
+                  )}
+                </button>
+              </div>
+              {formErrors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.confirmPassword}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {loading ? 'Processing...' : 'Reset Password'}
+            </button>
+          </form>
+        )}
+      </div>
     </div>
-  </nav>
-);
-
-export default BottomNav;
-
-
-// FabNav.jsx
-import { FaHome, FaPlusCircle, FaUser } from 'react-icons/fa';
-
-const BottomNav = () => (
-  <nav className="fixed bottom-0 w-full bg-white border-t sm:hidden z-50">
-    <div className="flex justify-around items-center py-3 relative">
-      <FaHome size={20} className="text-gray-600" />
-      <button className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition">
-        <FaPlusCircle size={24} />
-      </button>
-      <FaUser size={20} className="text-gray-600" />
-    </div>
-  </nav>
-);
-
-export default BottomNav;
-
-
-// SidebarStyleNav.jsx
-import { FaHome, FaThList, FaUser } from 'react-icons/fa';
-
-const items = [FaHome, FaThList, FaUser];
-
-const BottomNav = () => (
-  <nav className="fixed bottom-0 left-0 w-full sm:hidden z-50">
-    <div className="flex justify-evenly bg-white border-t py-3">
-      {items.map((Icon, idx) => (
-        <button key={idx} className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-black">
-          <Icon size={20} />
-          <span className="hidden xs:inline text-sm">Menu {idx + 1}</span>
-        </button>
-      ))}
-    </div>
-  </nav>
-);
-
-export default BottomNav;
-
-
-// MediaPlayerNav.jsx
-import { FaHome, FaPlay, FaUser } from 'react-icons/fa';
-
-const BottomNav = () => (
-  <nav className="fixed bottom-0 w-full sm:hidden z-50 bg-white border-t px-4">
-    <div className="flex justify-between items-center py-3 relative">
-      <FaHome size={20} className="text-gray-600" />
-      <button className="absolute left-1/2 -translate-x-1/2 -top-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition">
-        <FaPlay size={22} />
-      </button>
-      <FaUser size={20} className="text-gray-600" />
-    </div>
-  </nav>
-);
-
-export default BottomNav;
+  );
+}

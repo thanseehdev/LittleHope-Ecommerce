@@ -159,6 +159,7 @@ export default function ProductDetail() {
                     src={img}
                     alt={`Product thumbnail ${idx + 1}`}
                     className="w-full h-full object-cover block"
+                    loading="lazy"
                   />
                 </div>
 
@@ -170,6 +171,7 @@ export default function ProductDetail() {
                 src={selectedImage || "/comingSoon2.png"}
                 alt="Main Product"
                 className="rounded-sm w-full h-[450px] lg:h-[600px] object-cover"
+                loading="lazy"
               />
               <button
                 onClick={handleWishlistToggle}

@@ -1,5 +1,5 @@
-const User=require('../../models/userModel')
-const Order=require('../../models/orderModel')
+const User = require('../../models/userModel');
+const Order = require('../../models/orderModel');
 
 const getDashData = async (req, res) => {
   try {
@@ -19,18 +19,24 @@ const getDashData = async (req, res) => {
       createdAt: { $gte: today, $lt: tomorrow },
     });
 
-    // ✅ Calculate today’s revenue (for delivered orders only)
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
     const todaySalesOrders = await Order.find({
-      createdAt: { $gte: today, $lt: tomorrow },
+      createdAt: { $gte: startOfToday, $lte: endOfToday },
       status: 'delivered',
     });
 
     const todayRevenue = todaySalesOrders.reduce(
       (sum, order) => sum + order.pricingSummary.finalAmount,
       0
-    );
+    )
+    
 
-    // Other analytics (unchanged)
+    // Category-based Orders
     const categoryOrders = await Order.aggregate([
       { $unwind: '$items' },
       {
@@ -50,6 +56,7 @@ const getDashData = async (req, res) => {
       },
     ]);
 
+    // Gender-based Sales
     const genderSales = await Order.aggregate([
       { $unwind: '$items' },
       {
@@ -69,6 +76,7 @@ const getDashData = async (req, res) => {
       },
     ]);
 
+    // Weekly User Signups
     const customerGrowth = await User.aggregate([
       {
         $group: {
@@ -82,44 +90,44 @@ const getDashData = async (req, res) => {
       { $sort: { '_id.year': 1, '_id.week': 1 } },
     ]);
 
+    // Best-Selling Products
     const bestSellingProducts = await Order.aggregate([
-  { $unwind: '$items' },
-  {
-    $group: {
-      _id: '$items.productId',
-      unitsSold: { $sum: '$items.quantity' },
-      revenue: { $sum: '$items.discountPriceAtPurchase' },
-    },
-  },
-  { $sort: { unitsSold: -1 } },
-  { $limit: 10 },
-  {
-    $lookup: {
-      from: 'products',
-      localField: '_id',
-      foreignField: '_id',
-      as: 'productInfo',
-    },
-  },
-  { $unwind: '$productInfo' },
-  {
-    $project: {
-      id: '$_id',
-      name: '$productInfo.name',
-      category: '$productInfo.category',
-      images: '$productInfo.images', // ✅ added
-      unitsSold: 1,
-      revenue: 1,
-    },
-  },
-]);
-
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: '$items.productId',
+          unitsSold: { $sum: '$items.quantity' },
+          revenue: { $sum: '$items.discountPriceAtPurchase' },
+        },
+      },
+      { $sort: { unitsSold: -1 } },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: 'products',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'productInfo',
+        },
+      },
+      { $unwind: '$productInfo' },
+      {
+        $project: {
+          id: '$_id',
+          name: '$productInfo.name',
+          category: '$productInfo.category',
+          images: '$productInfo.images',
+          unitsSold: 1,
+          revenue: 1,
+        },
+      },
+    ]);
 
     res.json({
       totalRevenue,
       totalOrders,
       todayOrders: todayOrders.length,
-      todayRevenue, // ✅ Send today’s revenue
+      todayRevenue,
       totalUsers,
       categoryOrders,
       genderSales,
@@ -131,6 +139,8 @@ const getDashData = async (req, res) => {
     return res.status(500).json({ message: 'dashboard data fetch failed' });
   }
 };
-module.exports={
-    getDashData
-}
+
+module.exports = {
+  getDashData,
+};
+

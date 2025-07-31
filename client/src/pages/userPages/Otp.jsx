@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { verifyOTP } from '../../redux/features/user/userActions';
+import { verifyOTP,resendOtp } from '../../redux/features/user/userActions';
 import { useNavigate } from 'react-router-dom';
 import { clearMessages } from '../../redux/features/user/message';
 
@@ -30,8 +30,7 @@ export default function EnterOtp() {
   };
 
   const handleResendOTP = () => {
-    // TODO: Implement actual resend logic (API call or Redux action)
-    console.log('Resend OTP triggered');
+    dispatch(resendOtp(email))
   };
 
   useEffect(() => {
@@ -39,18 +38,28 @@ export default function EnterOtp() {
       navigate('/login');
     }
   }, [email, navigate]);
-
+  
+const OTP_RESENT_MSG = 'OTP resent to your email';
 useEffect(() => {
-  if (message || err) {
-    const timer = setTimeout(() => {
-      dispatch(clearMessages());
-      if (message) {
-        navigate('/home');
-      }
-    }, 2000);
-    return () => clearTimeout(timer);
-  }
+if (message) {
+  const timer = setTimeout(() => {
+    dispatch(clearMessages());
+    if (message !== OTP_RESENT_MSG) {
+      navigate('/home');
+    }
+  }, 2000);
+  return () => clearTimeout(timer);
+}
+
+if (err) {
+  const timer = setTimeout(() => {
+    dispatch(clearMessages());
+  }, 3000);
+  return () => clearTimeout(timer);
+}
+
 }, [message, err, dispatch, navigate]);
+
 
 
   return (

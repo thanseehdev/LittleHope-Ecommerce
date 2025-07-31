@@ -89,6 +89,37 @@ const verifyOTP = async (req, res) => {
     }
 };
 
+const resendOTP = async (req, res) => {
+    console.log('inside resend otp');
+    
+    const { email } = req.body;
+
+    try {
+        // Check if tempUser exists in session and matches the email
+        if (
+            !req.session.tempUser ||
+            req.session.tempUser.email !== email
+        ) {
+            return res.status(400).json({ message: 'Please Try Again Later.' });
+        }
+
+        // Generate a new OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        req.session.tempUser.otp = otp;
+        req.session.tempUser.otpExpires = Date.now() + 10 * 60 * 1000; // Extend expiry
+
+        console.log('Resent OTP is', otp);
+
+        await sendOTPEmail(email, otp);
+
+        res.status(200).json({ message: 'OTP resent to your email' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error while resending OTP' });
+    }
+};
+
+
 
 
 const login = async (req, res) => {
@@ -222,6 +253,7 @@ const logout = async (req, res) => {
 module.exports = {
     register,
     verifyOTP,
+    resendOTP,
     login,
     me,
     FPEmailOtp,

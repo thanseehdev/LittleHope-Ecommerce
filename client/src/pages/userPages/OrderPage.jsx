@@ -12,7 +12,7 @@ export default function OrdersPage() {
   console.log("totalPages:", totalPages);
 
   const [page, setPage] = useState(1)
-  const limit = 5
+  const limit = 6
 
   useEffect(() => {
     dispatch(getOrders({ page, limit }))

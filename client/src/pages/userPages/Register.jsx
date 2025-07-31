@@ -1,10 +1,11 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../redux/features/user/userActions';
 import { validateRegisterForm } from '../../utils/validation';
 import { clearMessages } from '../../redux/features/user/message.js';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -13,6 +14,10 @@ export default function Register() {
     password: '',
     confirmPassword: '',
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [formErrors, setFormErrors] = useState({})
   const { loading } = useSelector((state) => state.user);
   const { message, error } = useSelector((state) => state.message);
@@ -61,7 +66,7 @@ export default function Register() {
     if (error) {
       const timer = setTimeout(() => {
         dispatch(clearMessages());
-        
+
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -75,7 +80,7 @@ export default function Register() {
         className="w-full md:w-1/2 relative overflow-hidden flex items-center justify-center p-8 md:p-12 bg-green-900 text-white text-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80')",
+            "url('/register.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -102,7 +107,7 @@ export default function Register() {
           Register
         </h2>
 
-         {(error || message) && (
+        {(error || message) && (
           <div className="max-w-md mx-auto flex items-center bg-gray-50 border border-gray-300 rounded-md shadow-sm p-4 space-x-4 text-gray-800 font-medium text-sm relative">
             {/* Icon */}
             <div className={`flex-shrink-0 text-xl ${error ? 'text-red-500' : 'text-green-500'
@@ -167,17 +172,26 @@ export default function Register() {
             </label>
             {formErrors.password && (
               <p className="text-red-600 text-xs mb-1 flex items-center gap-2">
-                <span className="w-10 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.password}
+                <span className="w-5 mr-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.password}
               </p>
             )}
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              placeholder="Enter your password"
-              className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-green-500 transition ${formErrors.password ? 'border-red-500' : 'border-gray-300'
-                }`}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={form.password}
+                onChange={(e) => handleInputChange('password', e.target.value)}
+                placeholder="Enter your password"
+                className={`w-full border rounded-lg px-5 py-3 pr-12 focus:outline-none focus:border-green-500 transition ${formErrors.password ? 'border-red-500' : 'border-gray-300'}`}
+              />
+                <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-xl text-gray-600 hover:text-indigo-600"
+                tabIndex={-1}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </button>
+            </div>
           </div>
 
           <div>
@@ -189,15 +203,25 @@ export default function Register() {
                 <span className="w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">!</span> {formErrors.confirmPassword}
               </p>
             )}
-            <input
-              type="password"
-              value={form.confirmPassword}
-              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-              placeholder="Confirm password"
-              className={`w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-green-500 transition ${formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                }`}
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={form.confirmPassword}
+                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                placeholder="Confirm password"
+                className={`w-full border rounded-lg px-5 py-3 pr-12 focus:outline-none focus:border-green-500 transition ${formErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-xl text-gray-600 hover:text-indigo-600"
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </button>
+            </div>
           </div>
+
 
           <p className="text-xs text-gray-500 mt-1 text-center">
             An OTP will be sent to your email address.
@@ -233,8 +257,8 @@ export default function Register() {
         </p>
       </div>
 
-  
-      
+
+
     </div>
 
   );

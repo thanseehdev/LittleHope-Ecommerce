@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="hidden lg:grid md:grid grid lg:text-base text-sm grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-center md:text-left">
           <div className="flex items-center justify-center md:justify-end gap-3 flex-wrap">
             <HiOutlineMail className="text-indigo-600 text-xl" />
-            <span className="font-semibold">littlehope@gmail.com</span>
+            <span className="font-semibold">littlehope.ecommerce@gmail.com</span>
           </div>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <MdHelp className="text-indigo-600 text-xl" />

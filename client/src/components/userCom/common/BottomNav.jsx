@@ -11,12 +11,14 @@ const BottomNav = () => (
       </Link>
    <Link to='/allProducts'>
   <div className="relative w-full flex justify-center">
-    <button className="absolute  -top-10 transform  bg-gray-800 to-indigo-700  animate-spin-border rounded-full shadow hover:bg-blue-500 transition w-11 h-11 flex items-center justify-center">
+    <button className="absolute  -top-10 transform  bg-black animate-spin-border rounded-full shadow hover:bg-blue-500 transition w-11 h-11 flex items-center justify-center">
       <img
-        src="/hangerIcon.png"
+        src="/LittleHope-Official-Logo2.png"
         alt="hanger icon"
         className="w-full h-full object-contain"
+        loading="lazy"
       />
+      
     </button>
   </div>
 </Link>
