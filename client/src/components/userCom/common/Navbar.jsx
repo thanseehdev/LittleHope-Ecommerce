@@ -85,7 +85,7 @@ const Navbar = () => {
           <div className="w-full block lg:hidden  mr-5">
             <div className="relative flex items-center border border-gray-300 rounded-full bg-white px-2">
               <div className="mr-2">
-                <Link to="/home">
+                <Link to="/">
                   <img
                     src={isHome ? '/LittleHope-Official-Logo2.png' : '/homeLogo.png'}
                     alt="Site Logo"

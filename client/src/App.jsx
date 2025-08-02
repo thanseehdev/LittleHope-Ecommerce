@@ -53,7 +53,7 @@ function App() {
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/otp' element={<EnterOtp />} />
-        <Route path='/home' element={<Home />} />
+        <Route path='/' element={<Home />} />
         <Route path='/allProducts' element={<ProductGrid />} />
         <Route path='/productDetails/:id' element={<ProductDetail />} />
         <Route path='/cart' element={<PrivateRoute><CartPage /></PrivateRoute>} />

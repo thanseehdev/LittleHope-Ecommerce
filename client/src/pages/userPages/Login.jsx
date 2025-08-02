@@ -20,7 +20,7 @@ export default function Login() {
           if (user.role === 'admin') {
             navigate('/admin/dashboard');
           } else {
-            navigate('/home');
+            navigate('/');
           }
         }, 2000); // Delay for 3 seconds to show the message
         return () => clearTimeout(timer); // Clean up the timeout
@@ -29,7 +29,7 @@ export default function Login() {
         if (user.role === 'admin') {
           navigate('/admin/dashboard');
         } else {
-          navigate('/home');
+          navigate('/');
         }
       }
     }
