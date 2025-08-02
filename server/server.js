@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser())
 
 app.use(cors({
-  origin: ['https://little-hope-ecommerce-up2l.vercel.app'],
+  origin: ['https://littlehope-frontend.vercel.app'],
   credentials: true
 }));
 
