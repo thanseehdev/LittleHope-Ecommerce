@@ -43,7 +43,7 @@ const CouponCard = ({ amount, code, expiry }) => {
 
 
 // Main Component
-const UserCoupon = () => {
+const CouponPage = () => {
   const dispatch = useDispatch();
   const { coupons = [], loading, error } = useSelector((state) => state.profile);
 
@@ -74,7 +74,7 @@ const UserCoupon = () => {
   );
 };
 
-export default UserCoupon;
+export default CouponPage;
 
 
 

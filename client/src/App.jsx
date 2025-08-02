@@ -35,7 +35,7 @@ import ForgetPassword from './pages/userPages/forgetPassword'
 import AdminOrderDetails from './pages/adminPages/AdminOrderDetails'
 import ComingSoon from './pages/userPages/ComingSoon'
 import SearchResultPage from './pages/userPages/SearchResult'
-import UserCoupon from './pages/userPages/Coupon'
+import CouponPage from './pages/userPages/Coupon'
 
 
 
@@ -69,7 +69,7 @@ function App() {
         <Route path='/forgotPassword' element={<ForgetPassword />} />
         <Route path='/comingSoon' element={<ComingSoon />} />
         <Route path='/search' element={<SearchResultPage />} />
-        <Route path='/coupon' element={<UserCoupon />} />
+        <Route path='/coupon' element={<CouponPage />} />
 
 
 
