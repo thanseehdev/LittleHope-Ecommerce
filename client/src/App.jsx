@@ -31,11 +31,11 @@ import AdminGetCoupon from './pages/adminPages/Coupon'
 import AdminGetEditProduct from './components/adminCom/EditProduct'
 import AccountPage from './pages/userPages/AccountCenter'
 import AddAdress from './components/userCom/address/AddAddressModal'
-import ForgetPassword from './pages/userPages/forgetPassword'
+import ForgetPassword from './pages/userPages/ForgetPassword'
 import AdminOrderDetails from './pages/adminPages/AdminOrderDetails'
 import ComingSoon from './pages/userPages/ComingSoon'
 import SearchResultPage from './pages/userPages/SearchResult'
-import CouponPage from './pages/userPages/Coupon'
+import CouponPage from './pages/userPages/CouponUser'
 
 
 
