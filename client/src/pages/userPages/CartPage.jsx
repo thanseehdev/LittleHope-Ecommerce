@@ -70,19 +70,17 @@ export default function CartPage() {
     setCheckoutLoading(true);
     setTimeout(() => {
       navigate("/checkoutPayment");
-    }, 3000); // simulate loading
+    }, 1500);
   };
 
   useEffect(() => {
     if (message || error) {
-      // Show the message or error
       const timer = setTimeout(() => {
-        // Only dispatch clearMessages if the message/error is still present
         if (message || error) {
           dispatch(clearMessages());
         }
-      }, 2500);
-      return () => clearTimeout(timer); // Clear the timeout if the component is unmounted or before re-triggering
+      }, 2000);
+      return () => clearTimeout(timer)
     }
   }, [message, error, dispatch]);
 
@@ -147,7 +145,7 @@ export default function CartPage() {
               cartItems.map((item) => (
                 <div
                   key={`${item.id}-${item.size}`}
-                  className="bg-white p-4 mt-2 rounded-sm shadow flex flex-row items-start gap-4 relative"
+                  className="bg-white p-4 mt-2  shadow flex flex-row items-start gap-4 relative"
                 >
                   <button
                     className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-lg font-bold"
@@ -232,8 +230,8 @@ export default function CartPage() {
             <span>Platform Fee</span>
             <span>₹{platformFee}</span>
           </div>
-          <hr />
-          <div className="flex justify-between font-semibold text-gray-800">
+          <hr className="border-t border-dashed border-gray-300"/>
+          <div className="flex justify-between font-semibold text-gray-800 ">
             <span>Total Amount</span>
             <span>₹{totalAmount}</span>
           </div>
@@ -243,7 +241,7 @@ export default function CartPage() {
           onClick={handleCheckout}
           disabled={checkoutLoading}
           className={`lg:w-[200px] mt-6 w-full py-2 rounded-md font-semibold text-white relative overflow-hidden transition-colors ${
-            checkoutLoading ? "bg-pink-700" : "bg-pink-600 hover:bg-pink-700"
+            checkoutLoading ? "bg-pink-700" : "bg-pink-600 hover:bg-pink-700 active:bg-pink-700 focus:bg-pink-700"
           }`}
         >
           {checkoutLoading && (

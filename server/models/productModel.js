@@ -63,7 +63,6 @@ const productSchema = new mongoose.Schema({
 });
 
 
-// Validation: max 20 size variants
 function arrayLimit(val) {
   return val.length <= 20;
 }

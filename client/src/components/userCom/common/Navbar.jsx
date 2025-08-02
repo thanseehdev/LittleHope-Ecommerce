@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getCartItems } from "../../../redux/features/user/cart/cartAction";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { setQuery } from "../../../redux/features/user/product/newArrivalSlice";
 import { HiOutlineShoppingBag } from 'react-icons/hi';
 import { HiOutlineHeart } from 'react-icons/hi';
@@ -17,7 +17,7 @@ import {
   FaTag,
   FaUser
 } from "react-icons/fa";
-import { MdFavoriteBorder } from "react-icons/md";
+
 
 
 const DrawerItem = ({ icon, label, onClick }) => (
@@ -35,7 +35,8 @@ const Navbar = () => {
   const cartCount = cartItems.length;
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
-
+  const location = useLocation();
+  const isHome = location.pathname === '/home';
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const placeholderWords = ['Boys', 'Girls', 'Casual'];
 
@@ -65,23 +66,30 @@ const Navbar = () => {
       navigate(`/search?q=${encodeURIComponent(searchInput)}`);
     }
   };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowLittleHope(prev => !prev);
+    }, 1500); // toggle every 1.5 seconds
+
+    return () => clearInterval(interval); // cleanup
+  }, []);
   return (
     <>
-      <nav className="w-full border-b sticky top-0 z-50 bg-gradient-to-b from-white to-pink-50">
+      <nav className="w-full border-b border-gray-100 sticky top-0 z-50 bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-[1300px] mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/home">
             <img src="/LittleHope-Official-Logo2.png" alt="Logo" className="h-20  hidden lg:block" />
           </Link>
           {/* Mobile Search Box with Logo inside (visible only on small screens) */}
-          <div className="w-full block lg:hidden mr-5">
+          <div className="w-full block lg:hidden  mr-5">
             <div className="relative flex items-center border border-gray-300 rounded-full bg-white px-2">
               <div className="mr-2">
                 <Link to="/home">
                   <img
-                    src="/LittleHope-Official-Logo2.png"
-                    alt="Little Hope Logo"
-                    className="w-auto h-10 rounded-full "
+                    src={isHome ? '/LittleHope-Official-Logo2.png' : '/homeLogo.png'}
+                    alt="Site Logo"
+                    className="w-auto h-10 rounded-full transition-opacity duration-500"
                   />
                 </Link>
               </div>
@@ -116,13 +124,13 @@ const Navbar = () => {
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center space-x-6 text-gray-700 text-xs">
+          <div className="flex items-center lg:space-x-6 text-gray-700 text-xs">
             {/* On small devices: Show User icon + Account text instead of Menu */}
             <div className="md:hidden flex items-center space-x-3">
 
               <div className="flex flex-col items-center hover:text-pink-600 transition cursor-pointer">
                 <Link to="/wishlist" title="wishlist">
-                  <HiOutlineHeart size={23}/>
+                  <HiOutlineHeart size={23} />
                 </Link>
               </div>
 

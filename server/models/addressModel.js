@@ -19,7 +19,7 @@ const addressSchema = new mongoose.Schema({
   zipCode: {
     type: String,
     required: true,
-    match: /^[1-9][0-9]{5}$/, // Regex for Indian PIN code (6 digits)
+    match: /^[1-9][0-9]{5}$/,
     trim: true
   },
   mobileNo: {
@@ -33,7 +33,7 @@ const addressSchema = new mongoose.Schema({
     required: true
   }
 }, {
-  timestamps: true // Will automatically add createdAt and updatedAt fields
+  timestamps: true 
 });
 
 const Address = mongoose.model('Address', addressSchema);

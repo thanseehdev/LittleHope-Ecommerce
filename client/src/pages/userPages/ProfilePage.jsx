@@ -10,12 +10,12 @@ export default function ProfilePage() {
   return (
     <>
     <Navbar/>
-    <div className="min-h-screen p-4 md:p-8 bg-gray-100">
-      <div className="max-w-4xl mx-auto bg-white min-h-[650px] rounded shadow p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 bg-white">
+      <div className="max-w-4xl mx-auto bg-white min-h-[650px]  p-4 md:p-8">
         
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b pb-2">
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-2">
           {tabs.map((tab) => (
             <button
               key={tab}

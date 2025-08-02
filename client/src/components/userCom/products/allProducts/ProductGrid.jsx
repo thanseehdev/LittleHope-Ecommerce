@@ -111,7 +111,7 @@ const ProductGrid = () => {
 
         {/* Filter Modal for mobile */}
         {isFilterOpen && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-40 sm:hidden">
+          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 sm:hidden">
             <div className="bg-white w-full p-4 max-h-[80vh] overflow-y-auto rounded shadow-md mt-20 mx-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Filters</h2>
@@ -138,7 +138,7 @@ const ProductGrid = () => {
 
         {/* Sort Modal for mobile */}
         {isSortOpen && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-40 sm:hidden">
+          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 sm:hidden">
             <div className="bg-white w-full p-4 max-h-[80vh] overflow-y-auto rounded shadow-md mt-20 mx-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Sort Options</h2>

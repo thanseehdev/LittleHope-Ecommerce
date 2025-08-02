@@ -21,7 +21,6 @@ import {
 import { AiOutlineGift } from "react-icons/ai";
 import { logout } from '../../redux/features/user/userSlice'
 import { logoutUser } from "../../redux/features/user/userActions";
-import BottomNav from "../../components/userCom/common/BottomNav";
 import AboutUs from "../../components/userCom/profileComponents/About";
 
 const quickActions = [
@@ -112,7 +111,7 @@ const AccountPage = () => {
     <Link
       to={item.path}
       key={item.name}
-      className="flex lg:max-w-sm lg:mx-auto  justify-between items-center p-4 lg:py-6 lg:h-14 lg:w-40 bg-white border rounded-sm hover:bg-gray-100  transition"
+      className="flex lg:max-w-sm lg:mx-auto  justify-between items-center p-4 lg:py-6 lg:h-14 lg:w-40 bg-white border border-gray-200 rounded-sm hover:bg-gray-100 active:bg-gray-100 focus:bg-gray-100  transition"
     >
       <div className="flex items-center gap-3">
         <div className="text-gray-500">{item.icon}</div>
@@ -124,13 +123,15 @@ const AccountPage = () => {
 </div>
 
 
-            <div className="lg:ml-4 hidden lg:block md:block flex justify-center mt-5">
-          <button
-            onClick={() => setShowLogoutConfirm(true)}
-            className=" w-[330px] py-2 text-red-600 border border-red-300 rounded-md font-semibold hover:bg-red-100 transition"
-          >
-            LOG OUT
-          </button>
+            <div className="hidden md:flex justify-center mt-5 lg:ml-4">
+<button
+  onClick={() => setShowLogoutConfirm(true)}
+  className="w-[330px] py-2 text-red-600 border border-red-300 rounded-md font-semibold 
+             hover:bg-red-100 active:bg-red-100 focus:bg-red-100 transition"
+>
+  LOG OUT
+</button>
+
         </div>
         <div className="hidden lg:block flex justify-center mt-5">
           <p className="text-xs text-gray-400 text-center">Beta Version 4.2506.20</p>
@@ -210,7 +211,7 @@ const AccountPage = () => {
 
       {/* Logout Modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40  flex justify-center items-center z-50">
           <div className="bg-white rounded-xl w-[90%] sm:w-80 p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-2 text-gray-800">Are you sure?</h2>
             <p className="text-sm text-gray-500 mb-6">Do you really want to log out?</p>

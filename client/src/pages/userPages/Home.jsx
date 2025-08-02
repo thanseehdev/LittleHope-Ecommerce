@@ -20,6 +20,7 @@ function Home() {
           src="/comingSoon4.png" 
           alt="" 
           className=" lg:h-[800px] lg:w-full border-none" 
+          loading="lazy"
         />
       </div>
 
@@ -30,6 +31,7 @@ function Home() {
       src="/bannerOf2.avif" 
       alt="" 
       className="w-full h-full object-cover border-none" 
+      loading="lazy"
     />
     <div className="absolute inset-0 flex items-center justify-center">
       <Link to="/allProducts">
@@ -45,6 +47,7 @@ function Home() {
       src="/bannerOf3.avif" 
       alt="" 
       className="w-full h-full object-cover border-none" 
+      loading="lazy"
     />
     <div className="absolute inset-0 flex items-center justify-center">
       <Link to="/allProducts">

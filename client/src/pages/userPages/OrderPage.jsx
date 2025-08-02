@@ -40,7 +40,7 @@ export default function OrdersPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <div className="min-h-screen  p-4 md:p-8">
         <h2 className="lg:text-xl text-lg font-semibold mb-6">My Orders</h2>
 
         {loading && <p className="text-sm text-gray-500">Loading orders...</p>}
@@ -55,16 +55,18 @@ export default function OrdersPage() {
             orderData.orders.map((order) => (
               <div
                 key={order._id}
-                className="bg-white shadow rounded p-4 md:flex md:items-center md:justify-between cursor-pointer hover:bg-gray-100 transition"
+                className="bg-white border border-gray-200 shadow rounded p-4 md:flex md:items-center md:justify-between cursor-pointer hover:bg-gray-100 transition"
                 onClick={() => navigate(`/order/${order._id}`)}
               >
                 <div className="space-y-1">
                   <p className="lg:text-lg text-sm text-gray-700 font-medium flex items-center space-x-2">
                     <span>Order #{order._id.slice(-6).toUpperCase()}</span>
                     {isOrderNew(order.createdAt) && (
-                      <span className="bg-green-600 text-white lg:text-sm text-xs px-2 py-0.5 rounded-full">
+                      <span className="text-white bg-slate-800  lg:text-sm text-xs px-3 py-0.5 rounded-full bg-gray-50">
                         New
                       </span>
+
+
                     )}
                   </p>
                   <p className="lg:text-sm text-xs text-gray-500">
@@ -74,21 +76,33 @@ export default function OrdersPage() {
                     Status:{" "}
                     <span
                       className={
-                        order.status === "cancelled"
-                          ? "text-red-500"
-                          : order.status === "delivered"
-                            ? "text-green-600"
-                            : order.status === "pending"
-                              ? "text-yellow-500"
-                              : order.status === "confirmed"
-                                ? "text-blue-500"
-                                : order.status === "shipped"
-                                  ? "text-purple-500"
-                                  : "text-gray-500"
+                        [
+                          // Text color based on status
+                          order.status === "cancelled"
+                            ? "text-red-500"
+                            : order.status === "delivered"
+                              ? "text-green-600"
+                              : order.status === "pending"
+                                ? "text-orange-500"
+                                : order.status === "confirmed"
+                                  ? "text-blue-500"
+                                  : order.status === "shipped"
+                                    ? "text-purple-500"
+                                    : "text-gray-500",
+
+                          // Static background color
+                          "bg-gray-100",
+                          'shadow-inner',
+
+                          // Common styles
+                          "font-semibold px-2 py-1 rounded"
+                        ].join(" ")
                       }
                     >
-                      {order.status}
+                      {order.status.slice().toUpperCase()}
                     </span>
+
+
                   </p>
 
 

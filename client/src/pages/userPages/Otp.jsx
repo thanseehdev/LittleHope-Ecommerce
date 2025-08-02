@@ -74,7 +74,7 @@ if (err) {
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-opacity-75 md:bg-opacity-60 bg-green-900"></div>
+        <div className="absolute inset-0  bg-green-900/60"></div>
         <div className="relative z-10 max-w-md space-y-6">
           <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
             VERIFY YOUR ACCOUNT
@@ -89,7 +89,7 @@ if (err) {
       </div>
 
       {/* OTP Form Section */}
-      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl shadow-lg">
+      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl ">
         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 text-center">
           Enter OTP
         </h2>
@@ -129,7 +129,7 @@ if (err) {
               maxLength={6}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="Enter OTP"
-              className={`w-full border rounded-lg px-5 py-3 text-lg tracking-widest text-center focus:outline-none focus:border-green-500 transition ${
+              className={`w-full lg:text-base text-sm border rounded-lg px-5 py-3  tracking-widest text-center focus:outline-none focus:border-green-500 transition ${
                 error ? 'border-red-500' : 'border-gray-300'
               }`}
             />

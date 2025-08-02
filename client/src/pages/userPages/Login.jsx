@@ -96,7 +96,7 @@ export default function Login() {
 
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-opacity-60 md:bg-opacity-60 bg-indigo-900"></div>
+         <div className="absolute inset-0 bg-indigo-900/60"></div>
 
         <div className="relative z-10 max-w-md space-y-6">
           <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
@@ -105,7 +105,7 @@ export default function Login() {
           <p className="text-base md:text-lg drop-shadow-md">
             Join us and enjoy exclusive discounts plus free shipping on your first order.
           </p>
-          <div className="bg-indigo-700 bg-opacity-80 rounded-lg px-6 py-3 shadow-lg font-semibold tracking-wide text-lg md:text-xl inline-block">
+          <div className="bg-indigo-700/80 bg-opacity-80 rounded-lg px-6 py-3 shadow-lg font-semibold tracking-wide text-lg md:text-xl inline-block">
             COUPON: <span className="uppercase">HOPE100</span>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function Login() {
         )}
 
 
-        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6 lg:text-base text-sm">
           <div>
             <label className="block mb-2 text-sm font-semibold text-gray-700">
               Email Id <span className="text-red-500">*</span>

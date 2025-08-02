@@ -26,7 +26,7 @@ const orderSchema = new mongoose.Schema(
       zipCode: {
         type: String,
         required: true,
-        match: /^[1-9][0-9]{5}$/, // Regex for Indian PIN code (6 digits)
+        match: /^[1-9][0-9]{5}$/,
         trim: true
       },
       mobileNo: {

@@ -5,7 +5,7 @@ const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useSelector(state => state.user);
 
   if (loading) {
-    // Show loading indicator or blank while user is being fetched
+   
     return <div>Loading...</div>;
   }
 

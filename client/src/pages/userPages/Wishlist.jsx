@@ -101,7 +101,7 @@ export default function WishlistCard() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full text-sm border ${activeTab === tab ? "border-pink-500 text-pink-500" : "text-gray-600"
+              className={`px-4 py-2 rounded-full text-sm border border-gray-300 ${activeTab === tab ? "border-pink-500 text-pink-500" : "text-gray-600"
                 }`}
             >
               {tab}
@@ -119,7 +119,7 @@ export default function WishlistCard() {
             {items.map((item) => {
               const product = item.product;
               return (
-                <div key={item._id} className=" border rounded  p-3 relative">
+                <div key={item._id} className=" border border-gray-200 rounded  p-3 relative">
                   <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
                     <XMarkIcon
                       onClick={() => handleRemove(product._id)}
@@ -174,7 +174,7 @@ export default function WishlistCard() {
 
         {/* Size Modal */}
         {showSizeModal && selectedProduct && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-end md:items-center justify-center px-4">
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-end md:items-center justify-center px-4">
             <div className="bg-white w-full md:w-[400px] rounded-t-lg md:rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">Select Size</h3>
@@ -188,7 +188,7 @@ export default function WishlistCard() {
                     key={s.size}
                     onClick={() => s.stock > 0 && setSelectedSize(s.size)}
                     disabled={s.stock === 0}
-                    className={`relative border rounded text-center text-sm font-medium h-8 w-20
+                    className={`relative border  border-gray-200 rounded text-center text-sm font-medium h-8 w-20
         ${selectedSize === s.size ? "bg-pink-600 text-white" : "bg-gray-200 text-black"}
         ${s.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                   >

@@ -45,7 +45,7 @@ export default function CouponAdminPage() {
             coupons.map((coupon) => (
               <div
                 key={coupon._id}
-                className="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between hover:shadow-xl transition-shadow"
+                className="bg-white border border-gray-400 rounded-md shadow p-6 flex flex-col justify-between hover:shadow-xl transition-shadow"
               >
                 <div>
                   <h2 className="text-2xl font-semibold text-blue-700 mb-2">{coupon.code}</h2>

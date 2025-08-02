@@ -18,7 +18,6 @@ const createOrder = async (req, res) => {
             }
         }
 
-        // 2. Decrease stock (only if sufficient stock exists)
         for (const item of items) {
             const updatedProduct = await Product.findOneAndUpdate(
                 {
@@ -66,9 +65,8 @@ const createOrder = async (req, res) => {
 const getUserOrders = async (req, res) => {
 
   const userId = req.user._id;
-  const page = parseInt(req.query.page) || 1;      // Current page number, default 1
-  const limit = parseInt(req.query.limit) || 10;   // Items per page, default 10
-  console.log('limit '+limit);
+  const page = parseInt(req.query.page) || 1;     
+  const limit = parseInt(req.query.limit) || 10
 
   try {
     const totalOrders = await Order.countDocuments({ user: userId });

@@ -33,10 +33,8 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ message: "Invalid sizeAndStock format" });
     }
 
-    // Handle images
     const imageUrls = req.files.map(file => file.path);
 
-    // Create product
     const product = new Product({
       name,
       description,
@@ -49,7 +47,6 @@ const addProduct = async (req, res) => {
     });
 
     const savedProduct = await product.save();
-    console.log(`---savedProduct=${savedProduct}---`);
 
     res.status(200).json({ message: 'Product added successfully', savedProduct });
   } catch (error) {

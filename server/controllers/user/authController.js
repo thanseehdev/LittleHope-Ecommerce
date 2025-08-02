@@ -16,7 +16,7 @@ const register = async (req, res) => {
         req.session.tempUser = {
             name,
             email,
-            password: hashedPassword,  // store hashed password in session
+            password: hashedPassword,
             otp,
             otpExpires: Date.now() + 10* 60 * 1000
         };
@@ -38,7 +38,6 @@ const verifyOTP = async (req, res) => {
     const { email, otp } = req.body;
 
     try {
-        // Check if tempUser exists in session
         const tempUser = req.session.tempUser;
         console.log(tempUser.eamil);
         
@@ -51,27 +50,23 @@ const verifyOTP = async (req, res) => {
             return res.status(400).json({ message: "Invalid or expired OTP" });
         }
 
-        // use the hashed password directly from session:
+      
         const newUser = await User.create({
             name: tempUser.name,
             email: tempUser.email,
-            password: tempUser.password,  // already hashed
+            password: tempUser.password,  
             isVerified: true,
         });
 
-
-        // Clear session tempUser data
         req.session.tempUser = null;
 
-        // Generate JWT token
         const token = generateToken(newUser._id, newUser.role);
 
-        // Set cookie
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'Lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            maxAge: 2 * 24 * 60 * 60 * 1000 
         });
 
         res.status(200).json({
@@ -90,12 +85,11 @@ const verifyOTP = async (req, res) => {
 };
 
 const resendOTP = async (req, res) => {
-    console.log('inside resend otp');
     
     const { email } = req.body;
 
     try {
-        // Check if tempUser exists in session and matches the email
+       
         if (
             !req.session.tempUser ||
             req.session.tempUser.email !== email
@@ -103,10 +97,9 @@ const resendOTP = async (req, res) => {
             return res.status(400).json({ message: 'Please Try Again Later.' });
         }
 
-        // Generate a new OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         req.session.tempUser.otp = otp;
-        req.session.tempUser.otpExpires = Date.now() + 10 * 60 * 1000; // Extend expiry
+        req.session.tempUser.otpExpires = Date.now() + 10 * 60 * 1000;
 
         console.log('Resent OTP is', otp);
 
@@ -124,7 +117,7 @@ const resendOTP = async (req, res) => {
 
 const login = async (req, res) => {
     const { email, password } = req.body
-    console.log('inside login')
+
     try {
         const user = await User.findOne({ email })
         if (!user) {
@@ -142,8 +135,8 @@ const login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax', // Or 'Strict' / 'None'
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            sameSite: 'Lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         res.status(200).json({
@@ -173,7 +166,6 @@ const me = async (req, res) => {
 }
 
 const FPEmailOtp = async (req, res) => {
-    console.log('inside getFPEmailOtp');
 
     const { email } = req.body;
     try {
@@ -202,7 +194,7 @@ const FPEmailOtp = async (req, res) => {
 
 const verifyFPOTP = async (req, res) => {
     const { email, otp } = req.body
-    console.log('inside FP verify otp');
+
     try {
         const user = await User.findOne({ email })
         if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
@@ -220,7 +212,6 @@ const verifyFPOTP = async (req, res) => {
 
 const conFirmForgetPassword = async (req, res) => {
     const { email, password } = req.body
-    console.log('inside conFirmForgerPassword');
 
     try {
         const user = await User.findOne({ email });
@@ -234,7 +225,6 @@ const conFirmForgetPassword = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-    console.log('inside logout controleer');
 
     try {
         res.cookie('token', '', {

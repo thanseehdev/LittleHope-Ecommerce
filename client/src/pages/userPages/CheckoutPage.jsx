@@ -46,6 +46,10 @@ export default function CheckoutPage() {
     const [couponMessage, setCouponMessage] = useState("");
 
     const { message, error } = useSelector((state) => state.message);
+    const validCoupons = coupons.filter(
+        (c) => new Date(c.expiry) > new Date()
+    );
+
 
     useEffect(() => {
         dispatch(getAddress());
@@ -106,7 +110,7 @@ export default function CheckoutPage() {
     const couponDiscount = selectedCoupon?.discount || 0;
     const totalAfterCoupon = totalAmount - couponDiscount;
 
-    const handlePlaceOrder = async() => {
+    const handlePlaceOrder = async () => {
         if (!selectedAddressId) {
             alert("Please select an address.");
             return;
@@ -153,7 +157,7 @@ export default function CheckoutPage() {
 
             if (postOrder.fulfilled.match(resultAction)) {
                 navigate("/orderSuccess");
-            } 
+            }
         } catch (error) {
             console.error("Order placement error:", error);
             alert("An error occurred while placing the order.");
@@ -164,14 +168,12 @@ export default function CheckoutPage() {
 
     useEffect(() => {
         if (message || error) {
-            // Show the message or error
             const timer = setTimeout(() => {
-                // Only dispatch clearMessages if the message/error is still present
                 if (message || error) {
                     dispatch(clearMessages());
                 }
-            }, 3000);
-            return () => clearTimeout(timer); // Clear the timeout if the component is unmounted or before re-triggering
+            }, 2000);
+            return () => clearTimeout(timer)
         }
     }, [message, error, dispatch]);
 
@@ -343,26 +345,26 @@ export default function CheckoutPage() {
                                         <span>₹{totalAfterCoupon}</span>
                                     </div>
                                     {couponMessage && (
-  <div className="mt-4 max-w-md flex items-center gap-5 rounded-md border border-blue-200 bg-white px-5 py-3 shadow-sm">
-    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-      <svg
-        className="w-4 h-4 text-blue-600"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M5 13l4 4L19 7"
-        />
-      </svg>
-    </div>
-    <span className="text-sm text-gray-800 font-medium">{couponMessage}</span>
-  </div>
-)}
+                                        <div className="mt-4 max-w-md flex items-center gap-5 rounded-md border border-blue-200 bg-white px-5 py-3 shadow-sm">
+                                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
+                                                <svg
+                                                    className="w-4 h-4 text-blue-600"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M5 13l4 4L19 7"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <span className="text-sm text-gray-800 font-medium">{couponMessage}</span>
+                                        </div>
+                                    )}
 
 
 
@@ -377,14 +379,14 @@ export default function CheckoutPage() {
                                         <TagIcon className="w-5 h-5 text-purple-600" />
                                         <h3 className="text-sm font-semibold text-gray-800">Discount Coupon</h3>
                                     </div>
-                                    {coupons.length > 0 ? (
+                                    {validCoupons.length > 0 ? (
                                         <select
                                             onChange={handleApplyCoupon}
                                             value={selectedCoupon?._id || ""}
                                             className="bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         >
                                             <option value="">Choose one</option>
-                                            {coupons.map((coupon) => (
+                                            {validCoupons.map((coupon) => (
                                                 <option key={coupon._id} value={coupon._id}>
                                                     {coupon.code}
                                                 </option>
@@ -393,9 +395,8 @@ export default function CheckoutPage() {
                                     ) : (
                                         <span className="text-sm text-gray-400 italic">No coupons available</span>
                                     )}
-
-
                                 </div>
+
 
                                 {/* Divider */}
                                 <hr className="border-gray-200" />
@@ -409,7 +410,7 @@ export default function CheckoutPage() {
                                     className={`w-full py-3 rounded-lg font-semibold text-white relative overflow-hidden transition-colors
     ${!selectedAddressId || !selectedPayment || items.length === 0
                                             ? "bg-gray-300 cursor-not-allowed"
-                                            : "bg-pink-600 hover:bg-pink-700"
+                                            : "bg-pink-600 hover:bg-pink-700 active:bg-pink-700 focus:bg-pink-700"
                                         }`}
                                 >
                                     {/* Animated fill background */}

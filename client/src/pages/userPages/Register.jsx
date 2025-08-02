@@ -86,7 +86,7 @@ export default function Register() {
         }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-opacity-60 md:bg-opacity-60 bg-green-900"></div>
+        <div className="absolute inset-0  bg-green-900/60"></div>
 
         <div className="relative z-10 max-w-md space-y-6">
           <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
@@ -127,7 +127,7 @@ export default function Register() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6 lg:text-base text-sm">
           <div>
             <label className="block mb-2 text-sm font-semibold text-gray-700">
               Full Name <span className="text-red-500">*</span>

@@ -128,8 +128,8 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
 
 
         {/* Address */}
-        <section className="bg-white border  p-4 text-sm max-w-md">
-          <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Delivery Address</h3>
+        <section className="bg-white border border-gray-200  p-4 text-sm max-w-md">
+          <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">Delivery Address</h3>
 
           <div className="flex items-center lg:text-base font-semibold text-gray-800 mb-2 space-x-2">
             <span>{order.addressInfo.fullName}</span>
@@ -143,8 +143,8 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
           </div>
         </section>
 {/* Pricing Summary */}
-<section className="bg-white border p-4 text-sm max-w-md mt-3">
-  <h3 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Billing Summary</h3>
+<section className="bg-white border border-gray-200  p-4 text-sm max-w-md mt-3">
+  <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200  pb-2 mb-3">Billing Summary</h3>
 
   <div className="text-gray-700 lg:text-base space-y-2">
     <div className="flex justify-between">
@@ -165,7 +165,7 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
         <span className="text-green-600">-₹{order.pricingSummary.couponDiscount.toFixed(2)}</span>
       </div>
     )}
-    <hr />
+    <hr className="text-gray-200"/>
     <div className="flex justify-between font-semibold text-gray-800">
       <span>Final Amount</span>
       <span>₹{order.pricingSummary.finalAmount.toFixed(2)}</span>
@@ -186,7 +186,7 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
 
 
         {/* Tracking or Status Message */}
-       <section className="relative top-5 bg-gray-50 flex justify-center border-t bg-white p-3 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+       <section className="relative top-5 bg-gray-50 flex justify-center border-t border-gray-200  p-3 w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
 
 
           {order.status === "cancelled" ? (
@@ -262,8 +262,8 @@ const [showConfirmModal, setShowConfirmModal] = useState(false);
 
 
 const ConfirmModal = ({ message, onConfirm, onCancel }) => (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-gray-50 p-6 rounded-lg shadow-lg">
       <p className="mb-4">{message}</p>
       <div className="flex justify-end space-x-2">
         <button

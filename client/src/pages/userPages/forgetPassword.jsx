@@ -117,7 +117,7 @@ export default function ForgotPassword() {
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-opacity-75 md:bg-opacity-60 bg-purple-900"></div>
+        <div className="absolute inset-0 bg-purple-900/60"></div>
         <div className="relative z-10 max-w-md space-y-6">
           <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
             RESET YOUR PASSWORD
@@ -196,7 +196,7 @@ export default function ForgotPassword() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john@example.com"
-                className="w-full border rounded-lg px-5 py-3 focus:outline-none focus:border-purple-500 transition border-gray-300"
+                className=" w-full border rounded-lg lg:text-base text-sm px-5 py-3 focus:outline-none focus:border-purple-500 transition border-gray-300"
               />
             </div>
 
@@ -229,7 +229,7 @@ export default function ForgotPassword() {
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="6-digit code"
                 maxLength={6}
-                className="w-full border rounded-lg px-5 py-3 text-lg tracking-widest text-center focus:outline-none focus:border-purple-500 transition border-gray-300"
+                className="w-full border lg:text-base text-sm rounded-lg px-5 py-3 text-lg tracking-widest text-center focus:outline-none focus:border-purple-500 transition border-gray-300"
               />
             </div>
 
@@ -263,7 +263,7 @@ export default function ForgotPassword() {
                     handleInputChange('password', e.target.value)
                   }
                   placeholder="Enter your password"
-                  className={`w-full border rounded-lg px-5 py-3 pr-12 focus:outline-none transition ${
+                  className={`w-full border lg:text-base text-sm rounded-lg px-5 py-3 pr-12 focus:outline-none transition ${
                     formErrors.password
                       ? 'border-red-500'
                       : 'focus:border-green-500 border-gray-300'
@@ -301,7 +301,7 @@ export default function ForgotPassword() {
                     handleInputChange('confirmPassword', e.target.value)
                   }
                   placeholder="Confirm password"
-                  className={`w-full border rounded-lg px-5 py-3 pr-12 focus:outline-none transition ${
+                  className={`w-full lg:text-base text-sm border rounded-lg px-5 py-3 pr-12 focus:outline-none transition ${
                     formErrors.confirmPassword
                       ? 'border-red-500'
                       : 'focus:border-green-500 border-gray-300'

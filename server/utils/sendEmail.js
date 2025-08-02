@@ -13,7 +13,7 @@ const sendOTPEmail = async (email, otp) => {
   const message = {
     from: process.env.EMAIL,
     to: email,
-    subject: 'LittleHope OTP CODE',
+    subject: 'LittleHope OTP Code',
     text: `Your OTP is: ${otp}`,
   };
 

@@ -1,8 +1,7 @@
 const Coupon = require('../../models/couponModel')
 
 const addCoupon = async (req, res) => {
-    try {
-        
+    try { 
         const { code, discount, expiry } = req.body;
 
         if (!code || !discount || !expiry) {
@@ -20,7 +19,7 @@ const addCoupon = async (req, res) => {
         res.status(201).json({ message: 'Coupon created successfully.' });
     } catch (error) {
         if (error.code === 11000) {
-            // Duplicate key error for unique code
+           
             return res.status(409).json({ message: 'Coupon code already exists.' });
         }
         res.status(500).json({ message: 'Server error.', error: error.message });
@@ -30,7 +29,7 @@ const addCoupon = async (req, res) => {
 
 const getCoupons = async (req, res) => {
    try {
-    console.log('inside admin fetchCoupon ');
+    
     const coupon = await Coupon.find().sort({ createdAt: -1 });
     
     res.status(200).json( coupon );

@@ -34,7 +34,7 @@ export default function ProductDetail() {
   );
   const wishState = useSelector((state) => state.wishlist);
   const cartState = useSelector((state) => state.cart);
-  const { message, error:err } = useSelector((state) => state.message);
+  const { message, error: err } = useSelector((state) => state.message);
 
   useEffect(() => {
     if (id) {
@@ -61,18 +61,18 @@ export default function ProductDetail() {
 
 
   useEffect(() => {
-  if (message || err) {
-    const timer = setTimeout(() => {
-      dispatch(clearMessages());
-    }, 1500);
+    if (message || err) {
+      const timer = setTimeout(() => {
+        dispatch(clearMessages());
+      }, 1500);
 
-    // Cleanup: clear the timeout if message or err changes or component unmounts
-    return () => clearTimeout(timer);
-  }
-}, [message, err, dispatch]);
+      // Cleanup: clear the timeout if message or err changes or component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [message, err, dispatch]);
 
 
-  const handleAddToCart = async() => {
+  const handleAddToCart = async () => {
     const selectedVariant = product.sizeAndStock.find(
       (item) => item.size === selectedSize
     );
@@ -116,31 +116,31 @@ export default function ProductDetail() {
     <>
       <Navbar />
 
-    {(message || err) && (
-  <div
-    className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
+      {(message || err) && (
+        <div
+          className="fixed z-50 w-[92%] max-w-sm px-4 py-2 rounded-full text-sm font-semibold shadow-md
       flex items-center justify-between left-1/2 -translate-x-1/2
       bottom-4 sm:top-6 sm:bottom-auto bg-[#2e3142] text-white"
-    role="alert"
-  >
-    <span className="flex items-center gap-2">
-      {err ? (
-        <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
-      ) : (
-        <CheckCircleIcon className="h-5 w-5 text-pink-500" />
-      )}
-      {message || (typeof err === 'string' ? err : 'An error occurred')}
-    </span>
+          role="alert"
+        >
+          <span className="flex items-center gap-2">
+            {err ? (
+              <ExclamationCircleIcon className="h-5 w-5 text-pink-500" />
+            ) : (
+              <CheckCircleIcon className="h-5 w-5 text-pink-500" />
+            )}
+            {message || (typeof err === 'string' ? err : 'An error occurred')}
+          </span>
 
-    <button
-      onClick={() => dispatch(clearMessages())}
-      className="text-pink-500 hover:text-pink-400 transition ml-2"
-      aria-label="Close alert"
-    >
-      <XMarkIcon className="h-5 w-5" />
-    </button>
-  </div>
-)}
+          <button
+            onClick={() => dispatch(clearMessages())}
+            className="text-pink-500 hover:text-pink-400 transition ml-2"
+            aria-label="Close alert"
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+        </div>
+      )}
 
 
       <div className="max-w-6xl mx-auto px-4 py-6">
@@ -203,7 +203,10 @@ export default function ProductDetail() {
               </span>
             </div>
 
-            <p className="text-xs text-gray-500 uppercase">{product.category}</p>
+            <div className="flex items-center gap-4 text-xs text-gray-500 uppercase mb-2">
+              <span> {product.category}</span>
+              <span>{product.gender}</span>
+            </div>
 
 
 
@@ -217,15 +220,15 @@ export default function ProductDetail() {
                     key={size}
                     onClick={() => setSelectedSize(size)}
                     disabled={stock === 0}
-                    className={`relative min-w-[60px] text-sm sm:text-base px-2 py-2 border rounded-md transition
+                    className={`relative min-w-[60px] text-sm sm:text-base px-2 py-2 border border-gray-300 rounded-md transition
         ${selectedSize === size
-                        ? "bg-gray-200 border-gray"
-                        : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"}
+                        ? "bg-gray-100 border-gray"
+                        : "bg-white text-gray-800  hover:bg-gray-100"}
         ${stock === 0 ? "cursor-not-allowed opacity-50" : ""}`}
                   >
                     {size}
                     {stock === 0 && (
-                      <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-xs font-bold text-red-600 bg-white bg-opacity-80">
+                      <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-xs font-semibold text-red-600 bg-white/60">
                         Stock Out
                       </span>
                     )}
@@ -274,7 +277,7 @@ export default function ProductDetail() {
                 disabled={!selectedSize || cartState.status === "loading"}
                 className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize || cartState.status === "loading"
                   ? "bg-orange-300 cursor-not-allowed"
-                  : "bg-orange-500 hover:bg-orange-600"
+                  : "bg-orange-500 hover:bg-orange-600 active:bg-orange-600 focus:bg-orange-600"
                   }`}
               >
                 {cartState.status === "loading" ? "Adding..." : "Add to Cart"}
@@ -287,7 +290,7 @@ export default function ProductDetail() {
                 disabled={!selectedSize}
                 className={`flex-1 px-6 py-3 rounded text-white font-medium transition ${!selectedSize
                   ? 'bg-red-300 cursor-not-allowed'
-                  : 'bg-red-500 hover:bg-red-600'
+                  : 'bg-red-500 hover:bg-red-600 active:bg-red-600 focus:bg-red-600'
                   }`}
               >
                 Buy Now
@@ -319,7 +322,7 @@ export default function ProductDetail() {
         {/* Similar Products Section */}
         {similarProducts.length > 0 && (
           <div className="mt-10">
-            <h3 className="text-xl font-semibold mb-4">
+            <h3 className="lg:text-xl text-lg font-semibold mb-4">
               Explore more like this
             </h3>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
@@ -330,7 +333,7 @@ export default function ProductDetail() {
                 return (
                   <div
                     key={item._id}
-                    className="border rounded-sm overflow-hidden hover:shadow-lg transition"
+                    className="border border-gray-200 rounded-sm overflow-hidden hover:shadow-lg transition"
                   >
                     <Link to={`/productDetails/${item._id}`}>
                       <img

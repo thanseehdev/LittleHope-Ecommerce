@@ -11,8 +11,7 @@ const addToWishlist = async (req, res) => {
     if (!wishlist) {
       wishlist = new Wishlist({ user: userId, products: [] });
     }
-
-    // Optional: Clean up invalid entries
+    
     wishlist.products = wishlist.products.filter(p => p && p.product);
 
     const alreadyExists = wishlist.products.some(p =>

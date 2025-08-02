@@ -42,7 +42,7 @@ const getCartItems = async (req, res) => {
 
     try {
         const userId = req.user._id;
-        const cart = await Cart.findOne({ userId }).populate('items.productId'); // Assuming productId is a ref
+        const cart = await Cart.findOne({ userId }).populate('items.productId');
 
         if (!cart || cart.items.length === 0) {
             return res.status(200).json({ items: [], message: 'cart is empty' });
@@ -120,7 +120,6 @@ const removeFromCart = async (req, res) => {
       return res.status(404).json({ message: "Cart not found." });
     }
 
-    // Filter out the item matching both productId and size
     const updatedItems = cart.items.filter(
       (item) => !(item.productId.equals(productId) && item.size === size)
     );

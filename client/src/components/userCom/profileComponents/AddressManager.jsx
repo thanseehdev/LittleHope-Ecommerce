@@ -56,7 +56,7 @@ export default function AddressManager() {
       ) : (
         <ul className="space-y-4 mb-6">
           {addresses.map((address) => (
-            <li key={address._id} className="border p-4 rounded">
+            <li key={address._id} className="border border-pink-500  p-4 rounded">
               <div className="flex items-center lg:text-base text-sm font-semibold text-gray-800 mb-2 space-x-2">
         <span>{address.fullName}</span>
         <span className="text-gray-400">|</span>
@@ -80,7 +80,7 @@ export default function AddressManager() {
 
       <button
         onClick={() => setShowForm((prev) => !prev)}
-        className="mt-4 bg-pink-600 text-white px-4 py-2 rounded"
+        className="mt-4 bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 active:bg-pink-800 focus:bg-pink-700"
       >
         {showForm ? "Cancel" : "Add New Address"}
       </button>
@@ -93,41 +93,41 @@ export default function AddressManager() {
               name="name"
               value={newAddress.name}
               onChange={handleChange}
-              className="border p-2 rounded"
+              className="border border-gray-300 text-sm p-2 rounded focus:outline-none focus:border-pink-500 transition"
               placeholder="Full Name"
             />
             <input
               name="landmark"
               value={newAddress.landmark}
               onChange={handleChange}
-              className="border p-2 rounded"
+              className="border border-gray-300 text-sm p-2 rounded focus:outline-none focus:border-pink-500 transition"
               placeholder="Landmark Address"
             />
             <input
               name="city"
               value={newAddress.city}
               onChange={handleChange}
-              className="border p-2 rounded"
+              className="border border-gray-300 text-sm p-2 rounded focus:outline-none focus:border-pink-500 transition"
               placeholder="City"
             />
             <input
               name="zip"
               value={newAddress.zip}
               onChange={handleChange}
-              className="border p-2 rounded"
+              className="border border-gray-300 text-sm p-2 rounded focus:outline-none focus:border-pink-500 transition"
               placeholder="ZIP Code"
             />
             <input
               name="mobile"
               value={newAddress.mobile}
               onChange={handleChange}
-              className="border p-2 rounded"
+              className="border border-gray-300 text-sm   p-2 rounded focus:outline-none focus:border-pink-500 transition"
               placeholder="Mobile Number"
             />
           </div>
           <button
             onClick={handleAddAddress}
-            className="mt-4 bg-pink-600 text-white px-4 py-2 rounded"
+            className="mt-4 bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 active:bg-pink-800 focus:bg-pink-700"
           >
             Add Address
           </button>

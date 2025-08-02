@@ -19,9 +19,9 @@ const productDetails = async (req, res) => {
         }
         const similarProducts = await Product.find({
             _id: { $ne: product._id },
-            //category: product.category,
+            category: product.category,
             gender: product.gender,
-        }).limit(6)
+        }).limit(8)
         res.status(200).json({ product, similarProducts })
 
     } catch (error) {

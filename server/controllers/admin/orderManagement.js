@@ -27,10 +27,9 @@ const getOrderDetails = async (req, res) => {
 
     try {
         const order = await Order.findById(id)
-            .populate('user', 'name email') // customize fields as needed
-            .populate('items.productId', 'name price images') // customize fields
-            .populate('coupon', 'code discount'); // optional
-
+            .populate('user', 'name email')
+            .populate('items.productId', 'name price images') 
+            .populate('coupon', 'code discount')
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
