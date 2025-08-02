@@ -18,10 +18,10 @@ const register = async (req, res) => {
             email,
             password: hashedPassword,
             otp,
-            otpExpires: Date.now() + 10* 60 * 1000
+            otpExpires: Date.now() + 10 * 60 * 1000
         };
-        console.log('otp is',otp);
-        
+        console.log('otp is', otp);
+
 
         await sendOTPEmail(email, otp);
         res.status(201).json({ message: 'OTP sent to your email', email });
@@ -40,7 +40,7 @@ const verifyOTP = async (req, res) => {
     try {
         const tempUser = req.session.tempUser;
         console.log(tempUser.eamil);
-        
+
 
         if (!tempUser || tempUser.email !== email) {
             return res.status(400).json({ message: "No registration in progress for this email" });
@@ -50,11 +50,11 @@ const verifyOTP = async (req, res) => {
             return res.status(400).json({ message: "Invalid or expired OTP" });
         }
 
-      
+
         const newUser = await User.create({
             name: tempUser.name,
             email: tempUser.email,
-            password: tempUser.password,  
+            password: tempUser.password,
             isVerified: true,
         });
 
@@ -64,10 +64,11 @@ const verifyOTP = async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax',
-            maxAge: 2 * 24 * 60 * 60 * 1000 
+            secure: true,
+            sameSite: 'None',
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
+
 
         res.status(200).json({
             message: "OTP verified successfully",
@@ -85,11 +86,11 @@ const verifyOTP = async (req, res) => {
 };
 
 const resendOTP = async (req, res) => {
-    
+
     const { email } = req.body;
 
     try {
-       
+
         if (
             !req.session.tempUser ||
             req.session.tempUser.email !== email
@@ -134,10 +135,11 @@ const login = async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax',
+            secure: true,
+            sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
+
 
         res.status(200).json({
             message: 'Login successful', user: {

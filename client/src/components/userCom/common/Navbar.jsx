@@ -36,7 +36,7 @@ const Navbar = () => {
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
   const location = useLocation();
-  const isHome = location.pathname === '/home';
+  const isHome = location.pathname === '/';
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const placeholderWords = ['Boys', 'Girls', 'Casual'];
 
