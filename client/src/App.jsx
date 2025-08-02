@@ -31,7 +31,7 @@ import AdminGetCoupon from './pages/adminPages/Coupon'
 import AdminGetEditProduct from './components/adminCom/EditProduct'
 import AccountPage from './pages/userPages/AccountCenter'
 import AddAdress from './components/userCom/address/AddAddressModal'
-import ForgetPassword from './pages/userPages/ForgetPassword'
+import ForgotPassword from './pages/userPages/FPassword'
 import AdminOrderDetails from './pages/adminPages/AdminOrderDetails'
 import ComingSoon from './pages/userPages/ComingSoon'
 import SearchResultPage from './pages/userPages/SearchResult'
@@ -66,7 +66,7 @@ function App() {
         <Route path='/contact' element={<ContactPage />} />
         <Route path='/account' element={<PrivateRoute><AccountPage /></PrivateRoute>} />
         <Route path='/addAddress' element={<PrivateRoute><AddAdress /></PrivateRoute>} />
-        <Route path='/forgotPassword' element={<ForgetPassword />} />
+        <Route path='/forgotPassword' element={<ForgotPassword />} />
         <Route path='/comingSoon' element={<ComingSoon />} />
         <Route path='/search' element={<SearchResultPage />} />
         <Route path='/coupon' element={<CouponPage />} />
