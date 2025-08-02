@@ -66,13 +66,7 @@ const Navbar = () => {
       navigate(`/search?q=${encodeURIComponent(searchInput)}`);
     }
   };
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShowLittleHope(prev => !prev);
-    }, 1500); // toggle every 1.5 seconds
 
-    return () => clearInterval(interval); // cleanup
-  }, []);
   return (
     <>
       <nav className="w-full border-b border-gray-100 sticky top-0 z-50 bg-gradient-to-b from-white to-pink-50">
