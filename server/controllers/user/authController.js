@@ -2,6 +2,7 @@ const User = require('../../models/userModel')
 const { sendOTPEmail } = require('../../utils/sendEmail')
 const generateToken = require('../../utils/generateToken')
 const bcrypt = require('bcryptjs')
+const TempUser =require('../../models/tempUser')
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -10,17 +11,21 @@ const register = async (req, res) => {
         if (userExist) {
             return res.status(400).json({ message: "User already exists, please login" });
         }
+
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        req.session.tempUser = {
+        await TempUser.findOneAndUpdate(
+          { email },
+          {
             name,
             email,
             password: hashedPassword,
             otp,
             otpExpires: Date.now() + 10 * 60 * 1000
-        };
-
+          },
+          { upsert: true }
+        );
 
         await sendOTPEmail(email, otp);
         res.status(201).json({ message: 'OTP sent to your email', email });
@@ -37,17 +42,15 @@ const verifyOTP = async (req, res) => {
     const { email, otp } = req.body;
 
     try {
-        const tempUser = req.session.tempUser;
+        const tempUser = await TempUser.findOne({ email });
 
-
-        if (!tempUser || tempUser.email !== email) {
+        if (!tempUser) {
             return res.status(400).json({ message: "No registration in progress for this email" });
         }
 
         if (tempUser.otp !== otp || tempUser.otpExpires < Date.now()) {
             return res.status(400).json({ message: "Invalid or expired OTP" });
         }
-
 
         const newUser = await User.create({
             name: tempUser.name,
@@ -56,7 +59,7 @@ const verifyOTP = async (req, res) => {
             isVerified: true,
         });
 
-        req.session.tempUser = null;
+        await TempUser.deleteOne({ email });
 
         const token = generateToken(newUser._id, newUser.role);
 
@@ -66,7 +69,6 @@ const verifyOTP = async (req, res) => {
             sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-
 
         res.status(200).json({
             message: "OTP verified successfully",
@@ -84,21 +86,21 @@ const verifyOTP = async (req, res) => {
 };
 
 const resendOTP = async (req, res) => {
-
     const { email } = req.body;
 
     try {
+        const tempUser = await TempUser.findOne({ email });
 
-        if (
-            !req.session.tempUser ||
-            req.session.tempUser.email !== email
-        ) {
+        if (!tempUser) {
             return res.status(400).json({ message: 'Please Try Again Later.' });
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        req.session.tempUser.otp = otp;
-        req.session.tempUser.otpExpires = Date.now() + 10 * 60 * 1000;
+
+        tempUser.otp = otp;
+        tempUser.otpExpires = Date.now() + 10 * 60 * 1000;
+
+        await tempUser.save();
 
         await sendOTPEmail(email, otp);
 
