@@ -120,7 +120,7 @@ const login = async (req, res) => {
     try {
         const user = await User.findOne({ email })
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found, please Register' });
         }
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) {
@@ -230,7 +230,7 @@ const logout = async (req, res) => {
             httpOnly: true,
             expires: new Date(0),
             sameSite: 'None',
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
         });
 
         res.status(200).json({ message: 'Logged out successfully' });
