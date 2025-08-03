@@ -231,7 +231,6 @@ const logout = async (req, res) => {
             expires: new Date(0),
             sameSite: 'None',
             secure: true,
-            domain: '.littlehope.online',
         });
 
         res.status(200).json({ message: 'Logged out successfully' });
