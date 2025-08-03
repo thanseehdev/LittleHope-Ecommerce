@@ -38,7 +38,6 @@ const verifyOTP = async (req, res) => {
 
     try {
         const tempUser = req.session.tempUser;
-        console.log(tempUser.eamil);
 
 
         if (!tempUser || tempUser.email !== email) {
