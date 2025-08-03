@@ -67,7 +67,8 @@ const verifyOTP = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'None',
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            domain: '.littlehope.online',
         });
 
         res.status(200).json({
@@ -135,7 +136,8 @@ const login = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'None',
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            domain: '.littlehope.online',
         });
 
 
@@ -231,6 +233,7 @@ const logout = async (req, res) => {
             expires: new Date(0),
             sameSite: 'None',
             secure: true,
+            domain: '.littlehope.online',
         });
 
         res.status(200).json({ message: 'Logged out successfully' });
