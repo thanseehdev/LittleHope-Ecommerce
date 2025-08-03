@@ -2,7 +2,7 @@ const User = require('../../models/userModel')
 const { sendOTPEmail } = require('../../utils/sendEmail')
 const generateToken = require('../../utils/generateToken')
 const bcrypt = require('bcryptjs')
-const TempUser =require('../../models/tempUser')
+const TempUser = require('../../models/tempUser')
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -16,15 +16,15 @@ const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await TempUser.findOneAndUpdate(
-          { email },
-          {
-            name,
-            email,
-            password: hashedPassword,
-            otp,
-            otpExpires: Date.now() + 10 * 60 * 1000
-          },
-          { upsert: true }
+            { email },
+            {
+                name,
+                email,
+                password: hashedPassword,
+                otp,
+                otpExpires: Date.now() + 10 * 60 * 1000
+            },
+            { upsert: true }
         );
 
         await sendOTPEmail(email, otp);
@@ -225,20 +225,21 @@ const conFirmForgetPassword = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-
     try {
         res.cookie('token', '', {
             httpOnly: true,
             expires: new Date(0),
-            sameSite: 'lax',
+            sameSite: 'None',
             secure: process.env.NODE_ENV === 'production',
         });
+
         res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
-        console.error('logout error:', error);
+        console.error('Logout error:', error);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
+
 
 module.exports = {
     register,
