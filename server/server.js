@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser())
 
 app.use(cors({
-  origin: ['https://littlehope-frontend.vercel.app'],
+  origin: ['https://littlehope.online'],
   credentials: true
 }));
 
@@ -22,6 +22,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 10 * 60 * 1000
   }
 }));

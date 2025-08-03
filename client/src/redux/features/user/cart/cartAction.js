@@ -5,7 +5,6 @@ import { setSuccessMessage,setErrorMessage } from "../message";
 
 export const addToCart = createAsyncThunk('user/addToCart', async ({ productId, quantity, size }, { rejectWithValue,dispatch }) => {
     try {
-        console.log('inside addToCart Action');
         const res = await api.post('/user/addToCart', { productId, quantity, size })
         dispatch(setSuccessMessage('Added to cart successfully.'))
         return res.data
@@ -38,7 +37,6 @@ export const updateQuantity = createAsyncThunk('user/updateQuantity', async ({ p
 })
 
 export const removeFromCart = createAsyncThunk('user/removeFromCart', async ({ productId, size }, { rejectWithValue }) => {
-    console.log('inside removecart action');
 
     try {
         const res = await api.delete('/user/removeFromCart', {data: { productId, size }})

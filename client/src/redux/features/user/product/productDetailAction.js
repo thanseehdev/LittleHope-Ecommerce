@@ -3,7 +3,6 @@ import api from '../../../../api/axios'
 
 export const productDetail=createAsyncThunk('product/detail',async(id,{rejectWithValue})=>{
     try {
-        console.log('inside product detail');
         
         const res=await api.get(`/user/productDetail/${id}`)
         return res.data

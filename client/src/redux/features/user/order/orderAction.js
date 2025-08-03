@@ -5,7 +5,7 @@ import { setSuccessMessage,setErrorMessage } from "../message";
 
 export const postOrder=createAsyncThunk('user/postOrder',async(orderData,{rejectWithValue,dispatch})=>{
     try {
-        console.log('inside postOrder action');
+       
         const res=await api.post('/user/createOrder',orderData)
         return res.data
     } catch (error) {
@@ -17,7 +17,7 @@ export const postOrder=createAsyncThunk('user/postOrder',async(orderData,{reject
 
 export const getOrders=createAsyncThunk('user/getOrders',async({ page, limit },{rejectWithValue})=>{
     try {
-        console.log('inside get Orders')
+        
         const res=await api.get(`/user/getOrders?page=${page}&limit=${limit}`)
         return res.data
     } catch (error) {
@@ -27,7 +27,7 @@ export const getOrders=createAsyncThunk('user/getOrders',async({ page, limit },{
 
 export const getOrderDetails=createAsyncThunk('user/getOrderDetails',async(orderId,{rejectWithValue})=>{
     try {
-        console.log('inside get OrderDetails action')
+        
         const res=await api.get(`/user/orderDetails/${orderId}`)
         return res.data
         
@@ -38,7 +38,7 @@ export const getOrderDetails=createAsyncThunk('user/getOrderDetails',async(order
 
 export const cancellOrder=createAsyncThunk('user/cancellOrder',async(orderId,{rejectWithValue})=>{
     try {
-        console.log('inside cancellOrder action')
+       
         const res=await api.put(`/user/cancellOrder/${orderId}`)
         return res.data
     } catch (error) {

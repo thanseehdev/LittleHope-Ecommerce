@@ -24,8 +24,7 @@ export const getWishItem=createAsyncThunk('user/getWishItem',async(_,{rejectWith
 })
 
 export const removeWishItem=createAsyncThunk('user/removeWishItem',async(ProductId,{rejectWithValue})=>{
-    console.log('inside remove wish action');
-    
+  
     try {
         const res=await api.delete(`/user/removeWishItem/${ProductId}`)
         return res.data

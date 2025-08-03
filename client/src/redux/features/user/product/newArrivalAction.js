@@ -3,7 +3,6 @@ import api from '../../../../api/axios'
 
 export const newArrivals=createAsyncThunk('newArrival/product',async(_,{rejectWithValue})=>{
     try {
-        console.log('inside new arrival action');
         
         const res=await api.get('/user/newArrivals')
         return res.data
@@ -15,7 +14,6 @@ export const newArrivals=createAsyncThunk('newArrival/product',async(_,{rejectWi
 })
 
 export const fetchSearchResults=createAsyncThunk('product/fetchSearchResult',async(query,{rejectWithValue})=>{
-    console.log('inside search action');
     
     try {
         const res=await api.get(`/user/search?q=${query}`)

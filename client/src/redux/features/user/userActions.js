@@ -3,7 +3,7 @@ import api from '../../../api/axios'
 import { setSuccessMessage,setErrorMessage } from './message'
 
 export const registerUser=createAsyncThunk('auth/register',async(userData,{dispatch,rejectWithValue})=>{
-    console.log('inside register user action')
+
     try {
         const res = await api.post('/user/register',userData)
         dispatch(setSuccessMessage('Please wait, redirecting to OTP'))
@@ -16,7 +16,7 @@ export const registerUser=createAsyncThunk('auth/register',async(userData,{dispa
 })
 
 export const verifyOTP=createAsyncThunk('auth/verifyOTP',async(userData,{dispatch,rejectWithValue})=>{
-    console.log('inside verify action')
+
     try {
         const res= await api.post("/user/verify-otp",userData)
         dispatch(setSuccessMessage('Registration successful. Welcome'))
@@ -40,7 +40,7 @@ export const resendOtp=createAsyncThunk('user/resendOtp',async(email,{dispatch,r
 })
 
 export const login=createAsyncThunk('auth/login',async(userData,{dispatch,rejectWithValue})=>{
-    console.log('inside login action');
+  
     try {
         const res=await api.post("/user/login",userData)
         dispatch(setSuccessMessage('You’ve successfully logged in.'))
