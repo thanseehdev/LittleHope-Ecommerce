@@ -68,7 +68,6 @@ const verifyOTP = async (req, res) => {
             secure: true,
             sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            domain: '.littlehope.online',
         });
 
         res.status(200).json({
@@ -137,7 +136,6 @@ const login = async (req, res) => {
             secure: true,
             sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            domain: '.littlehope.online',
         });
 
 
