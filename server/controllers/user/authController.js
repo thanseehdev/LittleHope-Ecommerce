@@ -20,7 +20,6 @@ const register = async (req, res) => {
             otp,
             otpExpires: Date.now() + 10 * 60 * 1000
         };
-        console.log('otp is', otp);
 
 
         await sendOTPEmail(email, otp);
@@ -101,8 +100,6 @@ const resendOTP = async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         req.session.tempUser.otp = otp;
         req.session.tempUser.otpExpires = Date.now() + 10 * 60 * 1000;
-
-        console.log('Resent OTP is', otp);
 
         await sendOTPEmail(email, otp);
 

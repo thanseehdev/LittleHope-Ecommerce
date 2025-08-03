@@ -7,6 +7,7 @@ const userRoute = require('./routes/userRoute/userRoutes')
 const adminRoute = require('./routes/adminRoute/adminRoute')
 const cookieParser = require('cookie-parser')
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 app.use(express.json());
 app.use(cookieParser())
@@ -16,10 +17,15 @@ app.use(cors({
   credentials: true
 }));
 
+
 app.use(session({
   secret: process.env.SESSIONPASS,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: 'sessions',
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',

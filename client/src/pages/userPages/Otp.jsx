@@ -45,7 +45,7 @@ if (message) {
   const timer = setTimeout(() => {
     dispatch(clearMessages());
     if (message !== OTP_RESENT_MSG) {
-      navigate('/home');
+      navigate('/');
     }
   }, 2000);
   return () => clearTimeout(timer);
@@ -54,7 +54,7 @@ if (message) {
 if (err) {
   const timer = setTimeout(() => {
     dispatch(clearMessages());
-  }, 3000);
+  }, 2000);
   return () => clearTimeout(timer);
 }
 

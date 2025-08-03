@@ -72,7 +72,7 @@ const Navbar = () => {
       <nav className="w-full border-b border-gray-100 sticky top-0 z-50 bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-[1300px] mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/home">
+          <Link to="/">
             <img src="/LittleHope-Official-Logo2.png" alt="Logo" className="h-20  hidden lg:block" />
           </Link>
           {/* Mobile Search Box with Logo inside (visible only on small screens) */}
