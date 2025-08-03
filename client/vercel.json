@@ -1,14 +1,23 @@
 {
-    "version":2,
-    "builds":[
+    "version": 2,
+    "builds": [
         {
-            "src":"package.json",
-            "use":"@vercel/static-build",
-            "config":{"distDir":"dist"}
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
         }
     ],
-    "rewrites":[
-        {"source":"/(.*)","destination":"/"}
+    "rewrites": [
+        {
+            "source": "/api/:match*",
+            "destination": "https://api.littlehope.online/api/:match*"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/"
+        }
     ],
     "cleanUrls": true
 }
