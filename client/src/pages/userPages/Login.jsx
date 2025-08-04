@@ -112,7 +112,7 @@ export default function Login() {
       </div>
 
       {/* Login Form Section */}
-      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl shadow-lg">
+      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-10 md:p-12 rounded-t-3xl md:rounded-r-3xl ">
         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 text-center">
           Welcome Back!
         </h2>

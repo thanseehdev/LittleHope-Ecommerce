@@ -5,6 +5,7 @@ import { HiOutlineMail } from "react-icons/hi";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 
+
 export default function Footer() {
   return (
     <footer className="bg-gray-100 text-gray-700 border-t border-gray-300">
@@ -44,9 +45,15 @@ export default function Footer() {
           
           {/* Right - Social Icons */}
           <div className="flex justify-center space-x-6 text-gray-600">
+            <a href="https://www.facebook.com/share/1VTa5Hq5en/?mibextid=wwXIfr">
             <FaFacebookF className="cursor-pointer text-[#1877F2] transition text-lg" />
+            </a>
+             <a href="https://x.com/littlehopeeshop?s=11">
             <RxCross2 className="cursor-pointer text-gray-900 transition text-lg" />
+            </a>
+             <a href="https://www.instagram.com/little_hop_e?igsh=MXY2ZWViem42aDdtMQ==">
             <FaInstagram className="cursor-pointer text-[#E4405F] transition text-lg" />
+            </a>
           </div>
         </div>
       </div>
