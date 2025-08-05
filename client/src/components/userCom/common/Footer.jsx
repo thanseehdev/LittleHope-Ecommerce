@@ -19,7 +19,7 @@ export default function Footer() {
           </div>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <MdHelp className="text-indigo-600 text-xl" />
-            <span className="font-semibold">help@littlehope.shop</span>
+            <span className="font-semibold">help@littlehope.online</span>
           </div>
           <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
             <FaPhoneAlt className="text-indigo-600 text-xl" />
