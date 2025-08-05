@@ -8,6 +8,7 @@ const AdminNavbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleConfirmLogout = async () => {
     try {
@@ -27,7 +28,7 @@ const AdminNavbar = () => {
         {/* Logo */}
         <div className="text-xl font-bold tracking-wide">Little-Hope</div>
 
-        {/* Navigation Links */}
+        {/* Navigation Links (Desktop) */}
         <ul className="hidden md:flex gap-6 text-sm font-medium">
           <Link to="/admin/dashboard"><li className="hover:text-yellow-400 cursor-pointer">Dashboard</li></Link>
           <Link to="/admin/user"><li className="hover:text-yellow-400 cursor-pointer">Users</li></Link>
@@ -36,6 +37,16 @@ const AdminNavbar = () => {
           <Link to="/admin/coupon"><li className="hover:text-yellow-400 cursor-pointer">Coupons</li></Link>
           <li className="hover:text-yellow-400 cursor-pointer">Reports</li>
         </ul>
+
+        {/* Hamburger Icon for Mobile */}
+        <button
+          className="md:hidden text-white"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
 
         {/* Profile & Logout */}
         <div className="flex items-center gap-4">
@@ -53,6 +64,18 @@ const AdminNavbar = () => {
           </button>
         </div>
       </nav>
+
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
+        <ul className="md:hidden absolute top-16 left-0 right-0 bg-[#2874F0] text-white flex flex-col gap-4 p-6 text-sm font-medium">
+          <Link to="/admin/dashboard"><li className="hover:text-yellow-400 cursor-pointer">Dashboard</li></Link>
+          <Link to="/admin/user"><li className="hover:text-yellow-400 cursor-pointer">Users</li></Link>
+          <Link to="/admin/orders"><li className="hover:text-yellow-400 cursor-pointer">Orders</li></Link>
+          <Link to="/admin/product"><li className="hover:text-yellow-400 cursor-pointer">Products</li></Link>
+          <Link to="/admin/coupon"><li className="hover:text-yellow-400 cursor-pointer">Coupons</li></Link>
+          <li className="hover:text-yellow-400 cursor-pointer">Reports</li>
+        </ul>
+      )}
 
       {/* Confirm Modal */}
       {showModal && (
