@@ -13,7 +13,7 @@ const categories = [
 
 export default function CategoryScroller() {
   return (
-    <div className="flex w-full bg-white border-b border-gray-200 py-4 overflow-x-auto hide-scrollbar sm:border-b-0">
+    <div className="flex w-full bg-white py-4 overflow-x-auto hide-scrollbar sm:border-b-0">
       <div className="max-w-6xl mx-auto">
         <div className="flex md:gap-9  lg:gap-9 gap-6 px-4 w-max lg:w-full md:justify-center lg:justify-center">
           {categories.map((cat, index) => (

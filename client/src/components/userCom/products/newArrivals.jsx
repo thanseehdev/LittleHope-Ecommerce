@@ -22,7 +22,7 @@ const LatestProducts = () => {
   };
 
   return (
-    <div className="py-10 px-6 bg-gray-50">
+    <div className="py-10 px-6 bg-white">
       <h2 className="lg:text-3xl text-2xl font-semibold text-center text-gray-800 mb-8">New Arrivals</h2>
       <div className="relative">
         {/* Left Scroll Button */}
