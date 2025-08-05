@@ -123,7 +123,7 @@ const AccountPage = () => {
 </div>
 
 
-            <div className="hidden md:flex justify-center mt-5 lg:ml-4">
+            <div className="hidden md:flex justify-center mt-5 ">
 <button
   onClick={() => setShowLogoutConfirm(true)}
   className="w-[330px] py-2 text-red-600 border border-red-300 rounded-md font-semibold 
