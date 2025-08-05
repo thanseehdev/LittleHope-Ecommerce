@@ -15,7 +15,7 @@ function Home() {
       <CategoryScroller />
 
       {/* Image Row */}
-      <div className=" lg:w-full lg:mb-0 lg:mt-0 flex justify-center mt-2 mb-2">
+      <div className=" lg:w-full lg:mb-0 lg:mt-0 flex justify-center">
         <img 
           src="/comingSoon4.png" 
           alt="" 
