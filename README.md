@@ -1,4 +1,4 @@
-# LittleHope – eCommerce Website
+# littlehope.online – eCommerce Website
 
 A Simple MERN Stack Application For Littlehope, a Kids Fashion Brand.
 
