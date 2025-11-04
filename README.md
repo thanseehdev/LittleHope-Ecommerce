@@ -2,34 +2,34 @@
 A basic MERN eCommerce app for LittleHope, a kids' fashion brand.
 
 ✨ Features
-User Side
+👕 User Side
 
-View products
+🛍️ View Products – Browse all available kids’ fashion items
 
-Add to cart and place orders
+🛒 Add to Cart & Place Orders – Smooth and secure shopping experience
 
-Apply coupons
+🎟️ Apply Coupons – Get discounts during checkout
 
-Manage addresses
+🏠 Manage Addresses – Save and edit delivery addresses
 
-Filter and sort products
+🔍 Filter & Sort – Quickly find products by category, price, or name
 
-Admin Side
+🧑‍💼 Admin Side
 
-Sales dashboard with detailed insights
+📊 Sales Dashboard – View insights and sales analytics
 
-Product management (add, edit, delete)
+📦 Product Management – Add, edit, and delete products
 
-Order management
+🧾 Order Management – Track and update customer orders
 
-Coupon management
+🎫 Coupon Management – Create and manage discount coupons
 
-User management
+👥 User Management – Manage registered users and their activities
 
 🛠️ Tech Stack
-
-Frontend: React.js, Tailwind CSS
-Backend: Node.js, Express.js
-Authentication: JWT (JSON Web Token)
-Image Storage: Cloudinary
-Database: MongoDB Atlas
+Area	Technologies
+🎨 Frontend	React.js, Tailwind CSS
+⚙️ Backend	Node.js, Express.js
+🔐 Authentication	JWT (JSON Web Token)
+☁️ Image Storage	Cloudinary
+🗄️ Database	MongoDB (or your preferred database)
