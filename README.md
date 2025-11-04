@@ -21,8 +21,8 @@ A Simple MERN Stack Application For Littlehope, a Kids Fashion Brand.
 - User Management – Manage registered users and their activities
 
 ## 🧰 Tech Stack
-- **Backend:***  Node.js, Express
-- **Frontend:***  ReactJS, TailwindCSS
-- **Database:***  MongoDB Atlas
-- **Authentication:***  JWT
-- **Image Storage:*** Cloudinary
+- **Backend:**  Node.js, Express
+- **Frontend:**  ReactJS, TailwindCSS
+- **Database:**  MongoDB Atlas
+- **Authentication:**  JWT
+- **Image Storage:** Cloudinary
