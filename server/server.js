@@ -8,8 +8,6 @@ const userRoute = require('./routes/userRoute/userRoutes')
 const adminRoute = require('./routes/adminRoute/adminRoute')
 
 
-
-
 app.use(cors({
   origin: 'https://littlehope.online',
   credentials: true,

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
-
+* {
+  caret-color: transparent;
+}
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

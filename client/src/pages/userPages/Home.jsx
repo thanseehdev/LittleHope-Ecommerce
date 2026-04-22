@@ -13,7 +13,7 @@ function Home() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <CategoryScroller />
-
+––
       {/* Image Row */}
       <div className=" lg:w-full lg:mb-0 lg:mt-0 flex justify-center">
         <img 
