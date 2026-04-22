@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
-* {
+/* Fix accidental cursor in UI */
+h1, h2, h3, p {
   caret-color: transparent;
+}
+
+/* Keep input usable */
+input, textarea {
+  caret-color: auto;
 }
 .hide-scrollbar {
   -ms-overflow-style: none;
