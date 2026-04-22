@@ -1,14 +1,16 @@
 @import "tailwindcss";
 
 /* Fix accidental cursor in UI */
-h1, h2, h3, p {
+/* GLOBAL FIX */
+*:not(input):not(textarea) {
   caret-color: transparent;
 }
 
-/* Keep input usable */
+/* INPUT FIX */
 input, textarea {
   caret-color: auto;
 }
+
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
