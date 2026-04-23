@@ -86,7 +86,7 @@ const AccountPage = () => {
             {/* Profile Card */}
 
             <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-sm   overflow-hidden">
-              <div className="bg-gradient-to-tr from-pink-500 to-red-500 px-6 py-4">
+              <div className="bg-pink-600 px-6 py-4">
                 <h2 className="text-white text-xl font-bold">
                   {profileUser?.name || "Guest"}
                 </h2>
