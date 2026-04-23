@@ -17,7 +17,7 @@ function Home() {
       {/* Image Row */}
       <div className=" lg:w-full lg:mb-0 lg:mt-0 flex justify-center">
         <img 
-          src="/newLHBannerLap.png" 
+          src="/littlehope-newB.png" 
           alt="" 
           className=" lg:h-[800px] lg:w-full border-none" 
           loading="lazy"
